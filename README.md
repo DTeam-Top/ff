@@ -9,3 +9,7 @@ The directories:
 - frame, farcaster frame
 - indexer, farcaster replicator
 - admin, flow admin site
+
+## Architecture
+
+![ff arch](./assets/arch.png)
