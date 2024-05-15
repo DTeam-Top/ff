@@ -13,3 +13,7 @@ The directories:
 ## Architecture
 
 ![ff arch](./assets/arch.png)
+
+## Basic UI Flow
+
+![ff ui flow](./assets/ui-flow.png)
