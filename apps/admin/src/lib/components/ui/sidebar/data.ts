@@ -10,13 +10,13 @@ export const data = [
 		title: 'Home',
 		icon: HomeIcon,
 		link: '/'
-	}
-	// ,
-	// {
-	// 	title: 'Status',
-	// 	icon: StatusIcon,
-	// 	link: '/admin/status'
-	// },
+	},
+	{
+		title: 'Royalty',
+		icon: StatusIcon,
+		link: '/admin/status'
+	},
+	//,
 	// {
 	// 	title: 'Archives',
 	// 	icon: ArchivesIcon,
@@ -27,14 +27,14 @@ export const data = [
 	// 	icon: CreditsIcon,
 	// 	link: '/admin/credits'
 	// },
-	// {
-	// 	title: 'Settings',
-	// 	icon: SettingsIcon,
-	// 	link: '/admin/settings'
-	// },
-	// {
-	// 	title: 'Documentation',
-	// 	icon: DocumentationIcon,
-	// 	link: '/admin/documentation'
-	// }
+	{
+		title: 'Settings',
+		icon: SettingsIcon,
+		link: '/admin/settings'
+	},
+	{
+		title: 'Docs',
+		icon: DocumentationIcon,
+		link: '/admin/documentation'
+	}
 ];

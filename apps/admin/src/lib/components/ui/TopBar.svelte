@@ -1,5 +1,5 @@
 <script>
-	import { openSidebar } from '$lib/services/store';
+	import { openSidebar, user } from '$lib/services/store';
 	import { removeItem, signed } from '$lib/services/utils';
 	import SWIN from '$lib/components/SWIN.svelte';
 
@@ -61,11 +61,18 @@
 				</div>
 			{/if}
 			<div class="flex items-center justify-end ml-5 p-1 relative w-full sm:mr-0 sm:right-auto">
-				{#if $signed}
+				<span class="block pr-5 cursor-pointer">FAQ</span>
+				<span class="block pr-5 cursor-pointer">Docs</span>
+				<span class="block pr-5 cursor-pointer">
+					<a target="_blank" href="https://github.com/DTeam-Top/ff/tree/main"
+						><img src="/images/github.svg" alt="github" /></a
+					>
+				</span>
+				{#if $signed && $user && $user.pft}
 					<span class="block pr-5">
 						<img
 							alt="User"
-							src="/images/user.png"
+							src={$user.pft}
 							class="h-10 mx-auto object-cover rounded-full w-10 bg-white"
 						/>
 					</span>

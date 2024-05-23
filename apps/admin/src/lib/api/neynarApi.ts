@@ -1,32 +1,61 @@
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
-import { z } from "zod";
+import { lookupSigner, lookupUserByFid } from '$lib/clients';
+import { zValidator } from '@hono/zod-validator';
+import { Hono } from 'hono';
+import { z } from 'zod';
 
-export const verfiyUserRequest = z.object({
-  fid: z.string(),
-  signerUuid: z.string(),
+const verfiyUserRequest = z.object({
+	fid: z.string(),
+	signerUuid: z.string()
 });
-export const ParamRequest = z.object({
-  name: z.string(),
+const paramRequest = z.object({
+	fid: z.string()
 });
 
-export const router = new Hono().post(
-  "/verify-user",
-  zValidator("json", verfiyUserRequest),
-  async (c) => {
-    const { fid, signerUuid } = c.req.valid("json");
-    console.log(fid, signerUuid);
-    console.log(name);
-    if (!fid || !signerUuid) {
-      throw c.json({ message: "Need price, nft, image" }, 400);
-    }
+export const router = new Hono()
+	.post('/verify-user', zValidator('json', verfiyUserRequest), async (c) => {
+		const { fid, signerUuid } = c.req.valid('json');
+		if (!fid || !signerUuid) {
+			throw c.json({ message: 'Need fid, signerUuid' }, 400);
+		}
+		let isVerifiedUser = false;
+		try {
+			const signer = await lookupSigner(signerUuid);
 
-    console.log(name);
+			if (!signer) {
+				throw c.json({ message: 'Signer not found' }, 404);
+			}
 
-    return c.json({ message: "Success" });
-  }
-);
+			if (signer.fid?.toString() === fid) {
+				isVerifiedUser = true;
+			} else {
+				throw c.json({ message: 'Invalid signerUuid' }, 404);
+			}
 
-export const neynarApi = new Hono().route("/api", router);
+			return c.json({ isVerifiedUser: isVerifiedUser, message: 'Success' });
+		} catch (e) {
+			console.log(e);
+			throw c.json({ message: 'Error occured' }, 500);
+		}
+	})
+	.get('/user/:fid', zValidator('param', paramRequest), async (c) => {
+		const { fid } = c.req.valid('param');
+		if (!fid) {
+			throw c.json({ message: 'Need fid' }, 400);
+		}
+		try {
+			const user = await lookupUserByFid(parseInt(fid));
+
+			if (!user) {
+				throw c.json({ message: 'User not found' }, 404);
+			}
+
+			return c.json(user);
+		} catch (e) {
+			console.log(e);
+			throw c.json({ message: 'Error occured' }, 500);
+		}
+	});
+
+export const neynarApi = new Hono().route('/api', router);
 
 export type Router = typeof router;
