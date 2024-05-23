@@ -1,0 +1,9 @@
+{
+  "dialect": "sqlite",
+  "out": "./drizzle",
+  "schema": "./src/schemas/*.ts",
+  "breakpoints": true,
+  "dbCredentials": {
+    "url": "../../flows.db"
+  }
+}
