@@ -1,2 +1,15 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+  import { signed } from "$lib/services/utils";
+  import Content from "$lib/components/Content.svelte";
+  import Landing from "$lib/components/Landing.svelte";
+</script>
+
+<svelte:head>
+  <title>Admin</title>
+</svelte:head>
+
+{#if $signed}
+  <Content title="Status" />
+{:else}
+  <Landing />
+{/if}
