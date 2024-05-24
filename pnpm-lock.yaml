@@ -37,10 +37,10 @@ importers:
     dependencies:
       '@hono/zod-validator':
         specifier: ^0.2.1
-        version: 0.2.1(hono@4.3.9)(zod@3.23.8)
+        version: 0.2.1(hono@4.3.10)(zod@3.23.8)
       '@neynar/nodejs-sdk':
         specifier: ^1.26.0
-        version: 1.26.0(typescript@5.4.5)(zod@3.23.8)
+        version: 1.27.0(typescript@5.4.5)(zod@3.23.8)
       axios:
         specifier: ^1.7.2
         version: 1.7.2
@@ -52,7 +52,7 @@ importers:
         version: 1.11.11
       hono:
         specifier: ^4.3.6
-        version: 4.3.9
+        version: 4.3.10
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -666,8 +666,8 @@ packages:
       '@nestjs/websockets':
         optional: true
 
-  '@neynar/nodejs-sdk@1.26.0':
-    resolution: {integrity: sha512-fGcdMwxKHZBoUMk23cg3XnJa042jF1kiI8RzD4I3uyy38e6idshHk74uWtQckJ56Yxftp0o4EVpj9RNb+EXmDw==}
+  '@neynar/nodejs-sdk@1.27.0':
+    resolution: {integrity: sha512-NIHttc1H2SC3mdms1xp65oD7xIwtXFsdZjrhH3K3CilhQZuA9qm9Npxl5Q2AMEhBacrBVvkib00PzRjgWMz+Tg==}
     engines: {node: '>=19.9.0'}
 
   '@noble/curves@1.2.0':
@@ -1602,8 +1602,8 @@ packages:
   heap@0.2.7:
     resolution: {integrity: sha512-2bsegYkkHO+h/9MGbn6KWcE45cHZgPANo5LXF7EvWdT0yT2EguSVO1nDgU5c8+ZOPwp2vMNa7YFsJhVcDR9Sdg==}
 
-  hono@4.3.9:
-    resolution: {integrity: sha512-6c5LVE23HnIS8iBhY+XPmYJlPeeClznOi7mBNsAsJCgxo8Ciz75LTjqRUf5wv4RYq8kL+1KPLUZHCtKmbZssNg==}
+  hono@4.3.10:
+    resolution: {integrity: sha512-67NRwEpFljCRkdl4th4LH+DKj/skEqtRJE9otdp88CGTIMZ7uG2Avn5DTkKsGwjnm2LxkoIlA+bQfFLg33psvg==}
     engines: {node: '>=16.0.0'}
 
   https-proxy-agent@7.0.4:
@@ -2809,9 +2809,9 @@ snapshots:
 
   '@eslint/js@8.57.0': {}
 
-  '@hono/zod-validator@0.2.1(hono@4.3.9)(zod@3.23.8)':
+  '@hono/zod-validator@0.2.1(hono@4.3.10)(zod@3.23.8)':
     dependencies:
-      hono: 4.3.9
+      hono: 4.3.10
       zod: 3.23.8
 
   '@humanwhocodes/config-array@0.11.14':
@@ -2884,7 +2884,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@neynar/nodejs-sdk@1.26.0(typescript@5.4.5)(zod@3.23.8)':
+  '@neynar/nodejs-sdk@1.27.0(typescript@5.4.5)(zod@3.23.8)':
     dependencies:
       '@openapitools/openapi-generator-cli': 2.13.4
       axios: 1.7.2
@@ -3912,7 +3912,7 @@ snapshots:
 
   heap@0.2.7: {}
 
-  hono@4.3.9: {}
+  hono@4.3.10: {}
 
   https-proxy-agent@7.0.4:
     dependencies:
