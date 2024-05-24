@@ -25,10 +25,8 @@ export const test_abi = [
   },
 ];
 
-export const ERC20_contract = "0xF65cdC7af91a1dD114D369fef6c321f7c8b07b2E";
 export const ERC20_contract_84532 =
   "0x1B633271826B30E86851adf5aa50871CDF9036C6";
-export const ERC721_contract = "0x1A1F2f220E9839B425A141b256491f564D43B8E7";
 
 export const ERC721_contract_84532 =
   "0xce8FEC9a10D4642368f124593098f2E4dD643652";

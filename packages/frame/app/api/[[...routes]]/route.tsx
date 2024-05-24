@@ -26,64 +26,83 @@ const app = new Frog({
   basePath: "/api",
 });
 
-app.frame("/:name", (c) => {
-  console.log("frame", c.req.param(), c.req.method, c.req.query());
+let contract: `0x${string}` = "0x";
+app.frame(
+  "/:facasterId",
+  cors({
+    origin: "*",
+    allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
+    maxAge: 600,
+    credentials: true,
+  }),
+  (c) => {
+    const { facasterId } = c.req.param();
 
-  const { name } = c.req.param();
+    //using facasterId to search data
 
-  const { price, nft, image } = c.req.query();
+    const { name, price, nft, image } = c.req.query();
 
-  console.log("frame", name, price, nft, image);
+    contract = nft as `0x${string}`;
 
-  //const { price, nft, image } = c.req.valid("json");
-  const image1 =
-    "https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png";
-
-  //http://localhost:3000/api/test?price=0.0005&nft=0x0000&image=234
-  const { buttonValue, inputText, status } = c;
-  console.log(inputText);
-  return c.res({
-    action: "/finish/0",
-    image: (
-      <div style={root_css}>
-        <div tw={`text-[30px] text-white `} style={text_css}>
-          Name:&nbsp;&nbsp;{name}
+    return c.res({
+      action: "/finish/0",
+      image: (
+        <div
+          style={{
+            alignItems: "flex-start",
+            background: "black",
+            backgroundSize: "100% 100%",
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "nowrap",
+            height: "100%",
+            justifyContent: "center",
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
+          <div tw={`text-[30px] text-white `} style={text_css}>
+            Name:&nbsp;&nbsp;{name}
+          </div>
+          <div tw={`text-[30px] text-white `} style={text_css}>
+            Price:&nbsp;&nbsp;{price} ETH
+          </div>
+          <div tw={`text-[30px] text-white `} style={text_css}>
+            NFT:&nbsp;&nbsp;{nft}
+          </div>
+          <img
+            src={image}
+            style={{ width: "200px", height: "200px" }}
+            tw={`mx-auto`}
+          />
         </div>
-        <div tw={`text-[30px] text-white `} style={text_css}>
-          Price:&nbsp;&nbsp;{price} ETH
-        </div>
-        <div tw={`text-[30px] text-white `} style={text_css}>
-          NFT:&nbsp;&nbsp;{nft}
-        </div>
-        <img
-          src={image1}
-          style={{ width: "200px", height: "200px" }}
-          tw={`mx-auto`}
-        />
-      </div>
-    ),
-    intents: [
-      //   <TextInput placeholder="Value (ETH)" />,
-      <Button.Transaction target="/mint/erc20">Mint ERC20</Button.Transaction>,
-      <Button.Transaction target="/mint/erc721">
-        Mint ERC721
-      </Button.Transaction>,
-      <Button.Transaction target="/buy/0.0005">Test</Button.Transaction>,
-    ],
-  });
-});
+      ),
+      intents: [
+        //   <TextInput placeholder="Value (ETH)" />,
+        <Button.Transaction target="/mint/erc20">
+          Mint ERC20
+        </Button.Transaction>,
+        // <Button.Transaction target="/mint/erc721">
+        //   Mint ERC721
+        // </Button.Transaction>,
+        // <Button.Transaction target="/buy/0.0005">Test</Button.Transaction>,
+      ],
+    });
+  }
+);
 
 app.transaction("/mint/:type", (c) => {
   const type = c.req.param("type");
   const { address } = c;
-  console.log("$$$$$ mint", type, c);
   return c.contract({
     abi: type === "erc20" ? ERC20_ABI : ERC721_ABI,
     // @ts-ignore   using this to remove the ts error by hwh
     chainId: "eip155:84532",
     functionName: "mint",
     args: type === "erc20" ? [address, 1] : [address, 2],
-    to: type === "erc20" ? ERC20_contract_84532 : ERC721_contract_84532,
+    to: type === "erc20" ? contract : ERC721_contract_84532,
     value: parseEther("0.005"),
   });
 });
@@ -104,10 +123,22 @@ app.transaction("/buy/:price", async (c) => {
 app.frame("/finish/:farcasterId", (c) => {
   const { transactionId } = c;
   const farcasterId = c.req.param("farcasterId");
-  console.log("farcasterId", farcasterId);
   return c.res({
     image: (
-      <div style={root_css}>
+      <div
+        style={{
+          alignItems: "flex-start",
+          background: "black",
+          backgroundSize: "100% 100%",
+          display: "flex",
+          flexDirection: "column",
+          flexWrap: "nowrap",
+          height: "100%",
+          justifyContent: "center",
+          textAlign: "center",
+          width: "100%",
+        }}
+      >
         <div tw={`text-[30px] text-white `} style={text_css}>
           Congratulation! Mint successfully!
         </div>
