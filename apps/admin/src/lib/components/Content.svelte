@@ -4,6 +4,7 @@
 	import dayjs from 'dayjs';
 	import Chart from 'chart.js/auto';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	export let title;
 	onMount(() => {
 		const data = [
@@ -39,6 +40,9 @@
 			}
 		});
 	});
+	const gotoCreate = () => {
+		goto('/create');
+	};
 </script>
 
 <div class="flex flex-wrap">
@@ -57,7 +61,7 @@
 				{/each}
 			</div>
 			<div class="flex items-center mt-4 md:mt-0">
-				<button class="text-white bg-transparent" title="List View">
+				<!-- <button class="text-white bg-transparent" title="List View">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
@@ -76,8 +80,12 @@
 						<line x1="3" y1="12" x2="3.01" y2="12" />
 						<line x1="3" y1="18" x2="3.01" y2="18" />
 					</svg>
-				</button>
-				<button class="text-white bg-gray-700 p-2 ml-2" title="Grid View">
+				</button> -->
+				<button
+					class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2"
+					title="Grid View"
+					on:click={gotoCreate}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="20"
@@ -94,6 +102,7 @@
 						<rect x="14" y="14" width="7" height="7" />
 						<rect x="3" y="14" width="7" height="7" />
 					</svg>
+					Create
 				</button>
 			</div>
 		</div>
