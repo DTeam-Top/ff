@@ -1,5 +1,6 @@
 {
-  "name": "df-demo",
+  "name": "frame",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "scripts": {

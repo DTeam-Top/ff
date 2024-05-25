@@ -19,19 +19,21 @@
 		prviewImage = '';
 	};
 	let prviewImage = '';
-
+	let previewUrl = `${PUBLIC_FRAME_BASE_URL}/api/0?name=${name}&price=${price}&nft=${nft}`;
 	const previewHandler = async () => {
 		frameUrl = '';
-		const res = await axios.get(
-			`${PUBLIC_FRAME_BASE_URL}/api/0?name=${name}&price=${price}&nft=${nft}&image=${image}`
-		);
+		if (image) {
+			previewUrl += `&image=${image}`;
+		}
+		const res = await axios.get(previewUrl);
+
 		const parser = new DOMParser();
 		const document = parser.parseFromString(res.data, 'text/html');
 		prviewImage = document?.querySelector('meta[property="fc:frame:image"]').content;
 	};
 	const saveHandler = () => {};
 	const publishHandler = () => {
-		frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/0?name=${name}&price=${price}&nft=${nft}&image=${image}`;
+		frameUrl = previewUrl;
 	};
 	$: if (!$signed) {
 		goto('/');

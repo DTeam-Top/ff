@@ -27,8 +27,16 @@ const app = new Frog({
 });
 
 let contract: `0x${string}` = "0x";
+let obj = {
+  name: "",
+  price: "",
+  nft: "",
+  image: "",
+  farcasterId: "",
+  contract: "",
+};
 app.frame(
-  "/:facasterId",
+  "/:farcasterId",
   cors({
     origin: "*",
     allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
@@ -38,13 +46,16 @@ app.frame(
     credentials: true,
   }),
   (c) => {
-    const { facasterId } = c.req.param();
+    console.log(c);
+    const { farcasterId } = c.req.param();
 
-    //using facasterId to search data
+    //using farcasterId to search data
 
     const { name, price, nft, image } = c.req.query();
 
     contract = nft as `0x${string}`;
+
+    obj = { name, price, nft, image, farcasterId, contract };
 
     return c.res({
       action: "/finish/0",
@@ -72,11 +83,13 @@ app.frame(
           <div tw={`text-[30px] text-white `} style={text_css}>
             NFT:&nbsp;&nbsp;{nft}
           </div>
-          <img
-            src={image}
-            style={{ width: "200px", height: "200px" }}
-            tw={`mx-auto`}
-          />
+          {image && (
+            <img
+              src={image}
+              style={{ width: "200px", height: "200px" }}
+              tw={`mx-auto`}
+            />
+          )}
         </div>
       ),
       intents: [
@@ -84,6 +97,7 @@ app.frame(
         <Button.Transaction target="/mint/erc20">
           Mint ERC20
         </Button.Transaction>,
+        <Button>finish</Button>,
         // <Button.Transaction target="/mint/erc721">
         //   Mint ERC721
         // </Button.Transaction>,
@@ -124,6 +138,7 @@ app.frame("/finish/:farcasterId", (c) => {
   const { transactionId } = c;
   const farcasterId = c.req.param("farcasterId");
   return c.res({
+    action: `/0?name=${obj.name}&price=${obj.price}&nft=${obj.nft}&image=${obj.image}`,
     image: (
       <div
         style={{
@@ -147,7 +162,7 @@ app.frame("/finish/:farcasterId", (c) => {
         </div>
       </div>
     ),
-    intents: [<Button.Reset>Return</Button.Reset>],
+    intents: [<Button>Return</Button>],
   });
 });
 
