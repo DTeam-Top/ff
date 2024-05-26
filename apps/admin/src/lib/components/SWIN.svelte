@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { PUBLIC_CLIENT_ID } from '$env/static/public';
 	import { USER_STORE_KEY } from '$lib/services/constants';
-	import { getUser } from '$lib/services/userService';
+	import { getCaster } from '$lib/services/casterService';
 	import { setItem } from '$lib/services/utils';
 	import { Hono } from 'hono';
 	import { onDestroy, onMount } from 'svelte';
@@ -33,7 +33,7 @@
 				fid: data.fid
 			};
 			setItem(USER_STORE_KEY, window, JSON.stringify(callbackData));
-			await getUser(callbackData);
+			await getCaster(callbackData);
 		};
 		const signDiv = document.getElementById('sign');
 

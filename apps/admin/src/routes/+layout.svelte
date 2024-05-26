@@ -3,12 +3,13 @@
 	import { USER_STORE_KEY } from '$lib/services/constants';
 	import { getItem } from '$lib/services/utils';
 	import Layout from '$lib/components/ui/Layout.svelte';
-	import { getUser } from '$lib/services/userService';
+	import { getCaster } from '$lib/services/casterService';
 	let loading = true;
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);
 		if (item) {
-			getUser(item).then((data) => {
+			getCaster(item).then((data) => {
+				console.log(data);
 				loading = false;
 			});
 		} else {
