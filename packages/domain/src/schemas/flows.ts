@@ -13,7 +13,7 @@ export const flows = sqliteTable(
     id: integer("id").primaryKey(),
     name: text("name").notNull(), // flow name
     cover: text("cover").notNull(), // cover image url
-    input: blob("input", { mode: "json" }), // flow input json for flow frame
+    input: blob("input", { mode: "json" }).notNull(), // flow input json for flow frame
     creator: integer("creator").notNull(), // flow creator fid
     createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   },

@@ -4,9 +4,9 @@ export const traces = sqliteTable(
   "traces",
   {
     id: integer("id").primaryKey(),
-    cast: text("cast"), // cast id for a flow
+    cast: text("cast").notNull(), // cast id for a flow
     flow: integer("flow_id").notNull(), // flow id
-    parentCast: integer("parent_cast"), // parent cast id
+    parentCast: text("parent_cast"), // parent cast id
     caster: integer("caster").notNull(), // trace caster fid
     createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   },

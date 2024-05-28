@@ -9,5 +9,8 @@ node_modules
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 *.db
+dist
 
 .vercel
+
+bot
