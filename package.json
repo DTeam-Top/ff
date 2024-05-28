@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "domain": "pnpm --filter domain",
+    "dbdomain": "pnpm --filter dbdomain",
     "admin": "pnpm --filter admin",
     "frame": "pnpm --filter frame"
   },
