@@ -57,3 +57,27 @@ export const getFlowById = async (id: number) => {
 	const result = await db.select().from(flows).where(eq(flows.id, id));
 	return result;
 };
+
+export const shareFlow = async (id: number) => {
+	let share;
+	const result = await db.select().from(flows).where(eq(flows.id, id));
+	console.log(result, id);
+	if (result.length > 0) {
+		const flow = result[0];
+		console.log(flow, id);
+
+		share = await db
+			.insert(flows)
+			.values({
+				name: `share ${flow.name} at ${new Date().getTime()} `,
+				cover: flow.cover,
+				input: flow.input,
+				creator: flow.creator,
+				createdAt: new Date()
+			})
+			.returning();
+		console.log('share', share);
+	}
+
+	return share;
+};

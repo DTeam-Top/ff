@@ -22,7 +22,7 @@ export function addressPipe(address: string | `0x${string}` | undefined, start: 
 }
 
 export function errorPipe(message: string) {
-	if (message.indexOf('flows.name')) {
+	if (message.indexOf('flows.name') > -1) {
 		return 'Duplicate flow name';
 	} else {
 		return message;

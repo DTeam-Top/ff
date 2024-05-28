@@ -1,7 +1,7 @@
 import { LOGGER } from '$lib/db/constant';
-import { traces } from 'dbdomain';
+import { tracePayments, traces } from 'dbdomain';
 import { db } from './dbService';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 export type Trace = {
 	cast: string;
 	flow: number;
@@ -30,4 +30,31 @@ export const insertTrace = async (trace: Trace) => {
 export const existTraceByFlow = async (flow: number) => {
 	const result = await db.select().from(traces).where(eq(traces.flow, flow));
 	return result.length > 0;
+};
+
+export const createTracePayment = async (
+	flow: string,
+	cast: string,
+	paymentTx: string,
+	amount: string
+) => {
+	try {
+		const result = await db
+			.select()
+			.from(traces)
+			.where(and(eq(traces.flow, flow), eq(traces.cast, cast)));
+		if (result.length > 0) {
+			const trace = result[0];
+			await db.insert(tracePayments).values({
+				trace: trace.id.toString(),
+				amount: amount,
+				paymentTx: paymentTx
+			});
+		}
+	} catch (e: any) {
+		logger.error(e);
+		throw e;
+	}
+
+	return;
 };
