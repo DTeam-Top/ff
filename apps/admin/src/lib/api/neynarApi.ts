@@ -1,4 +1,4 @@
-import { lookupSigner, lookupUserByFid } from '$lib/clients';
+import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
@@ -9,6 +9,13 @@ const verfiyUserRequest = z.object({
 });
 const paramRequest = z.object({
 	fid: z.string()
+});
+
+const castRequest = z.object({
+	fid: z.string(),
+	signerUuid: z.string(),
+	frameUrl: z.string(),
+	content: z.string()
 });
 
 export const router = new Hono()
@@ -50,6 +57,21 @@ export const router = new Hono()
 			}
 
 			return c.json(user);
+		} catch (e) {
+			console.log(e);
+			throw c.json({ message: 'Error occured' }, 500);
+		}
+	})
+	.post('/publish', zValidator('json', castRequest), async (c) => {
+		const { fid, signerUuid, frameUrl, content } = c.req.valid('json');
+		console.log('publis---', { fid, signerUuid, frameUrl, content });
+		if (!fid || !signerUuid || !frameUrl) {
+			throw c.json({ message: 'Need fid, signerUuid, frameUrl' }, 400);
+		}
+		try {
+			const cast = await createCast(signerUuid, content, frameUrl);
+
+			return c.json(cast);
 		} catch (e) {
 			console.log(e);
 			throw c.json({ message: 'Error occured' }, 500);

@@ -18,7 +18,8 @@ export const getCaster = async (item: { fid: string; signerUuid: string }) => {
 			followerCount: user.follower_count,
 			profile: user.profile,
 			verifications: user.verifications,
-			verifiedAddresses: user.verified_addresses
+			verifiedAddresses: user.verified_addresses,
+			signerUuid: item.signerUuid
 		});
 	}
 };

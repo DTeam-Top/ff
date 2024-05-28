@@ -23,6 +23,7 @@ type User = {
 	profile: { bio: { text: string } };
 	verifications: [];
 	verifiedAddresses: { ethAddresses: []; solAddresses: [] };
+	signerUuid: string;
 };
 const user = writable({
 	fid: 0,
@@ -34,7 +35,8 @@ const user = writable({
 	followerCount: 0,
 	profile: { bio: { text: '' } },
 	verifications: [],
-	verifiedAddresses: { ethAddresses: [], solAddresses: [] }
+	verifiedAddresses: { ethAddresses: [], solAddresses: [] },
+	signerUuid: ''
 });
 
 const setUser = (value: User) => {
@@ -42,3 +44,16 @@ const setUser = (value: User) => {
 };
 
 export { user, setUser };
+
+type Farcaster = {
+	id: number;
+};
+const farcaster = writable({
+	id: 0
+});
+
+const setFarcaster = (value: Farcaster) => {
+	farcaster.update(() => value);
+};
+
+export { farcaster, setFarcaster };

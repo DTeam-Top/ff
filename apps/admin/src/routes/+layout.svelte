@@ -9,7 +9,6 @@
 		const item = getItem(USER_STORE_KEY, window);
 		if (item) {
 			getCaster(item).then((data) => {
-				console.log(data);
 				loading = false;
 			});
 		} else {

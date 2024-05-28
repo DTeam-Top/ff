@@ -3,8 +3,8 @@
 	import { user } from '$lib/services/store';
 	import dayjs from 'dayjs';
 	import Chart from 'chart.js/auto';
+	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 	export let title;
 	onMount(() => {
 		const data = [
@@ -40,9 +40,6 @@
 			}
 		});
 	});
-	const gotoCreate = () => {
-		goto('/create');
-	};
 </script>
 
 <div class="flex flex-wrap">
@@ -81,29 +78,7 @@
 						<line x1="3" y1="18" x2="3.01" y2="18" />
 					</svg>
 				</button> -->
-				<button
-					class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2"
-					title="Grid View"
-					on:click={gotoCreate}
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<rect x="3" y="3" width="7" height="7" />
-						<rect x="14" y="3" width="7" height="7" />
-						<rect x="14" y="14" width="7" height="7" />
-						<rect x="3" y="14" width="7" height="7" />
-					</svg>
-					Create
-				</button>
+				<CreateButton />
 			</div>
 		</div>
 		<div class="flex flex-wrap">

@@ -15,3 +15,23 @@ export const lookupUserByFid = async (fid: number) => {
 	});
 	return user.data.users.length > 0 ? user.data.users[0] : null;
 };
+
+export const createCast = async (uuid: string, text: string, frameUrl: string) => {
+	const cast = await axios.post(
+		`${PUBLIC_NEYNAR_URL}cast`,
+		{
+			signer_uuid: uuid,
+			text: text,
+			embeds: [
+				{
+					url: frameUrl
+				}
+			]
+		},
+		{
+			headers: HEADERS
+		}
+	);
+	console.log(cast);
+	return cast.data;
+};
