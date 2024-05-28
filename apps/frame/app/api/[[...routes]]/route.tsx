@@ -22,10 +22,12 @@ import {
   upateTxById,
 } from "@/app/service/externalApi";
 import { castIdPipe } from "@/app/service/utile";
+import { neynar } from "frog/hubs";
 
 const app = new Frog({
   assetsPath: "/",
   basePath: "/api",
+  // hub: neynar({ apiKey: `${process.env.PUBLIC_NEYNAR_KEY}` }),
 });
 
 let contract: `0x${string}` = "0x";
@@ -33,11 +35,12 @@ let obj = {
   name: "",
   price: "",
   image: "",
-  farcasterId: "",
+  flowId: "",
   contract: "",
 };
+
 app.frame(
-  "/:farcasterId",
+  "/:flowId",
   cors({
     origin: "*",
     allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
@@ -47,23 +50,21 @@ app.frame(
     credentials: true,
   }),
   async (c) => {
-    console.log(c.req.query());
-    console.log(c);
-    const { farcasterId } = c.req.param();
-    if (Number(farcasterId) === 0) {
+    const { flowId } = c.req.param();
+    if (Number(flowId) === 0) {
       const { name, price, nft, image } = c.req.query();
       contract = nft as `0x${string}`;
-      obj = { name, price, image, farcasterId, contract: nft };
+      obj = { name, price, image, flowId, contract: nft };
     } else {
-      console.log("farcasterId", farcasterId);
-      const flow = await getFlowById(farcasterId);
+      console.log("flowId", flowId);
+      const flow = await getFlowById(flowId);
       console.log(c);
       if (flow.length > 0) {
         const { parentId } = c.req.query();
         const { frameData } = c;
         if (frameData)
           await createTrace(
-            Number(farcasterId),
+            Number(flowId),
             castIdPipe(frameData?.castId),
             parentId,
             frameData?.fid
@@ -73,13 +74,13 @@ app.frame(
         name: flow[0].name,
         price: flow[0].input.price,
         image: flow[0].cover,
-        farcasterId,
+        flowId,
         contract: flow[0].input.nft,
       };
     }
 
     return c.res({
-      action: "/finish/0",
+      action: `/finish/${flowId}`,
       image: (
         <div
           style={{
@@ -148,16 +149,99 @@ app.transaction("/buy/:price", async (c) => {
   });
 });
 
-app.frame("/finish/:farcasterId", async (c) => {
-  const { transactionId, buttonIndex, castId } = c;
-  const farcasterId = c.req.param("farcasterId");
-  console.log({ transactionId, buttonIndex, castId });
-  if (buttonIndex === 2) {
-    console.log("share", c);
-    //castId: { fid: 365538, hash: '0xee3e987d8d4dc94975a39a3dec171e02832a6315' }
-    await shareCastById(farcasterId, castId);
+app.frame("/finish/:flowId", async (c) => {
+  console.log("finish", c);
+  console.log(obj);
+  const { transactionId, buttonIndex, frameData } = c;
+  const flowId = c.req.param("flowId");
+  if (frameData) {
+    const castId = castIdPipe(frameData?.castId);
+    if (buttonIndex === 2) {
+      await shareCastById(flowId, castId, frameData.fid);
+      return c.res({
+        action: `/${flowId}`,
+        image: (
+          <div
+            style={{
+              alignItems: "flex-start",
+              background: "black",
+              backgroundSize: "100% 100%",
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "nowrap",
+              height: "100%",
+              justifyContent: "center",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
+            <div tw={`text-[30px] text-white `} style={text_css}>
+              Share successfully!
+            </div>
+          </div>
+        ),
+        intents: [<Button>Return</Button>],
+      });
+    } else {
+      if (transactionId) {
+        await upateTxById(flowId, transactionId, castId, obj.price);
+        return c.res({
+          action: `/${flowId}`,
+          image: (
+            <div
+              style={{
+                alignItems: "flex-start",
+                background: "black",
+                backgroundSize: "100% 100%",
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: "nowrap",
+                height: "100%",
+                justifyContent: "center",
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              <div tw={`text-[30px] text-white `} style={text_css}>
+                Congratulation! Mint successfully!
+              </div>
+              <div tw={`text-[30px] text-white `} style={text_css}>
+                Transaction ID: {addressPipe(transactionId, 60)}
+              </div>
+            </div>
+          ),
+          intents: [<Button>Return</Button>],
+        });
+      } else {
+        return c.res({
+          action: `/${flowId}`,
+          image: (
+            <div
+              style={{
+                alignItems: "flex-start",
+                background: "black",
+                backgroundSize: "100% 100%",
+                display: "flex",
+                flexDirection: "column",
+                flexWrap: "nowrap",
+                height: "100%",
+                justifyContent: "center",
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              <div tw={`text-[30px] text-white `} style={text_css}>
+                Invalidate transaction hash!
+              </div>
+            </div>
+          ),
+          intents: [<Button>Return</Button>],
+        });
+      }
+    }
+  } else {
     return c.res({
-      action: `/${farcasterId}`,
+      action: `/${flowId}`,
       image: (
         <div
           style={{
@@ -174,68 +258,12 @@ app.frame("/finish/:farcasterId", async (c) => {
           }}
         >
           <div tw={`text-[30px] text-white `} style={text_css}>
-            Share successfully!
+            Error!
           </div>
         </div>
       ),
       intents: [<Button>Return</Button>],
     });
-  } else {
-    if (transactionId) {
-      await upateTxById(farcasterId, transactionId);
-      return c.res({
-        action: `/${farcasterId}`,
-        image: (
-          <div
-            style={{
-              alignItems: "flex-start",
-              background: "black",
-              backgroundSize: "100% 100%",
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "nowrap",
-              height: "100%",
-              justifyContent: "center",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            <div tw={`text-[30px] text-white `} style={text_css}>
-              Congratulation! Mint successfully!
-            </div>
-            <div tw={`text-[30px] text-white `} style={text_css}>
-              Transaction ID: {addressPipe(transactionId, 60)}
-            </div>
-          </div>
-        ),
-        intents: [<Button>Return</Button>],
-      });
-    } else {
-      return c.res({
-        action: `/${farcasterId}`,
-        image: (
-          <div
-            style={{
-              alignItems: "flex-start",
-              background: "black",
-              backgroundSize: "100% 100%",
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "nowrap",
-              height: "100%",
-              justifyContent: "center",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            <div tw={`text-[30px] text-white `} style={text_css}>
-              Invalidate transaction hash!
-            </div>
-          </div>
-        ),
-        intents: [<Button>Return</Button>],
-      });
-    }
   }
 });
 

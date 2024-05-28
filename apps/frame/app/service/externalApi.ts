@@ -7,22 +7,34 @@ export const getFlowById = async (id: string) => {
   return result.data;
 };
 
-export const upateTxById = async (id: string, tx: `0x${string}`) => {
-  const result = await axios.post(
-    `${process.env.PUBLIC_BASE_URL}api/flow/update-tx/${id}`,
-    { tx }
-  );
-  return result.data;
+export const upateTxById = async (
+  id: string,
+  tx: `0x${string}`,
+  cast: string,
+  amount: string
+) => {
+  console.log({ paymentTx: tx, amount: amount, cast });
+  try {
+    const result = await axios.post(
+      `${process.env.PUBLIC_BASE_URL}api/flow/update-tx/${id}`,
+      { paymentTx: tx, amount: amount, cast }
+    );
+    return result.data;
+  } catch (e) {
+    console.log("sdfsdf---", JSON.stringify(e.response.data));
+  }
 };
 
 export const shareCastById = async (
   id: string,
-  parentCast: { fid: string; hash: string }
+  parentCast: string,
+  fid: number
 ) => {
   const result = await axios.post(
     `${process.env.PUBLIC_BASE_URL}api/flow/share/${id}`,
     {
       parentCast,
+      fid,
     }
   );
   return result.data;
