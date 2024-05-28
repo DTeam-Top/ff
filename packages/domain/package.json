@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/domain.js",
-  "types": "./dist/domain.d.ts",
+  "main": "./dist/dbdomain.js",
+  "types": "./dist/dbdomain.d.ts",
   "scripts": {
     "build": "tsc && vite build",
     "generate": "drizzle-kit generate",
