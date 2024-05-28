@@ -1,9 +1,6 @@
 /** @jsxImportSource frog/jsx */
-
-import { zValidator } from "@hono/zod-validator";
 import { parseEther } from "ethers";
-import { Interface } from "ethers/abi";
-import { Button, Frog, TextInput } from "frog";
+import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
 // import { neynar } from 'frog/hubs'
 import { handle } from "frog/next";
@@ -11,15 +8,20 @@ import { serveStatic } from "frog/serve-static";
 import { cors } from "hono/cors";
 import {
   ERC20_ABI,
-  ERC20_contract_84532,
   ERC721_ABI,
   ERC721_contract_84532,
-  root_css,
   test_CONTRACT,
   test_abi,
   text_css,
 } from "./constants";
 import { addressPipe } from "./utils";
+import {
+  createTrace,
+  getFlowById,
+  shareCastById,
+  upateTxById,
+} from "@/app/service/externalApi";
+import { castIdPipe } from "@/app/service/utile";
 
 const app = new Frog({
   assetsPath: "/",
@@ -30,7 +32,6 @@ let contract: `0x${string}` = "0x";
 let obj = {
   name: "",
   price: "",
-  nft: "",
   image: "",
   farcasterId: "",
   contract: "",
@@ -45,17 +46,37 @@ app.frame(
     maxAge: 600,
     credentials: true,
   }),
-  (c) => {
+  async (c) => {
+    console.log(c.req.query());
     console.log(c);
     const { farcasterId } = c.req.param();
-
-    //using farcasterId to search data
-
-    const { name, price, nft, image } = c.req.query();
-
-    contract = nft as `0x${string}`;
-
-    obj = { name, price, nft, image, farcasterId, contract };
+    if (Number(farcasterId) === 0) {
+      const { name, price, nft, image } = c.req.query();
+      contract = nft as `0x${string}`;
+      obj = { name, price, image, farcasterId, contract: nft };
+    } else {
+      console.log("farcasterId", farcasterId);
+      const flow = await getFlowById(farcasterId);
+      console.log(c);
+      if (flow.length > 0) {
+        const { parentId } = c.req.query();
+        const { frameData } = c;
+        if (frameData)
+          await createTrace(
+            Number(farcasterId),
+            castIdPipe(frameData?.castId),
+            parentId,
+            frameData?.fid
+          );
+      }
+      obj = {
+        name: flow[0].name,
+        price: flow[0].input.price,
+        image: flow[0].cover,
+        farcasterId,
+        contract: flow[0].input.nft,
+      };
+    }
 
     return c.res({
       action: "/finish/0",
@@ -75,17 +96,17 @@ app.frame(
           }}
         >
           <div tw={`text-[30px] text-white `} style={text_css}>
-            Name:&nbsp;&nbsp;{name}
+            Name:&nbsp;&nbsp;{obj.name}
           </div>
           <div tw={`text-[30px] text-white `} style={text_css}>
-            Price:&nbsp;&nbsp;{price} ETH
+            Price:&nbsp;&nbsp;{obj.price} ETH
           </div>
           <div tw={`text-[30px] text-white `} style={text_css}>
-            NFT:&nbsp;&nbsp;{nft}
+            NFT:&nbsp;&nbsp;{obj.contract}
           </div>
-          {image && (
+          {obj.image && (
             <img
-              src={image}
+              src={obj.image}
               style={{ width: "200px", height: "200px" }}
               tw={`mx-auto`}
             />
@@ -93,15 +114,8 @@ app.frame(
         </div>
       ),
       intents: [
-        //   <TextInput placeholder="Value (ETH)" />,
-        <Button.Transaction target="/mint/erc20">
-          Mint ERC20
-        </Button.Transaction>,
-        <Button>finish</Button>,
-        // <Button.Transaction target="/mint/erc721">
-        //   Mint ERC721
-        // </Button.Transaction>,
-        // <Button.Transaction target="/buy/0.0005">Test</Button.Transaction>,
+        <Button.Transaction target="/mint/erc20">Mint</Button.Transaction>,
+        <Button>Share to earn</Button>,
       ],
     });
   }
@@ -134,36 +148,95 @@ app.transaction("/buy/:price", async (c) => {
   });
 });
 
-app.frame("/finish/:farcasterId", (c) => {
-  const { transactionId } = c;
+app.frame("/finish/:farcasterId", async (c) => {
+  const { transactionId, buttonIndex, castId } = c;
   const farcasterId = c.req.param("farcasterId");
-  return c.res({
-    action: `/0?name=${obj.name}&price=${obj.price}&nft=${obj.nft}&image=${obj.image}`,
-    image: (
-      <div
-        style={{
-          alignItems: "flex-start",
-          background: "black",
-          backgroundSize: "100% 100%",
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div tw={`text-[30px] text-white `} style={text_css}>
-          Congratulation! Mint successfully!
+  console.log({ transactionId, buttonIndex, castId });
+  if (buttonIndex === 2) {
+    console.log("share", c);
+    //castId: { fid: 365538, hash: '0xee3e987d8d4dc94975a39a3dec171e02832a6315' }
+    await shareCastById(farcasterId, castId);
+    return c.res({
+      action: `/${farcasterId}`,
+      image: (
+        <div
+          style={{
+            alignItems: "flex-start",
+            background: "black",
+            backgroundSize: "100% 100%",
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "nowrap",
+            height: "100%",
+            justifyContent: "center",
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
+          <div tw={`text-[30px] text-white `} style={text_css}>
+            Share successfully!
+          </div>
         </div>
-        <div tw={`text-[30px] text-white `} style={text_css}>
-          Transaction ID: {addressPipe(transactionId, 60)}
-        </div>
-      </div>
-    ),
-    intents: [<Button>Return</Button>],
-  });
+      ),
+      intents: [<Button>Return</Button>],
+    });
+  } else {
+    if (transactionId) {
+      await upateTxById(farcasterId, transactionId);
+      return c.res({
+        action: `/${farcasterId}`,
+        image: (
+          <div
+            style={{
+              alignItems: "flex-start",
+              background: "black",
+              backgroundSize: "100% 100%",
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "nowrap",
+              height: "100%",
+              justifyContent: "center",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
+            <div tw={`text-[30px] text-white `} style={text_css}>
+              Congratulation! Mint successfully!
+            </div>
+            <div tw={`text-[30px] text-white `} style={text_css}>
+              Transaction ID: {addressPipe(transactionId, 60)}
+            </div>
+          </div>
+        ),
+        intents: [<Button>Return</Button>],
+      });
+    } else {
+      return c.res({
+        action: `/${farcasterId}`,
+        image: (
+          <div
+            style={{
+              alignItems: "flex-start",
+              background: "black",
+              backgroundSize: "100% 100%",
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "nowrap",
+              height: "100%",
+              justifyContent: "center",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
+            <div tw={`text-[30px] text-white `} style={text_css}>
+              Invalidate transaction hash!
+            </div>
+          </div>
+        ),
+        intents: [<Button>Return</Button>],
+      });
+    }
+  }
 });
 
 devtools(app, { serveStatic });
