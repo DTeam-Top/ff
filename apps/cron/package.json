@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "better-sqlite3": "^10.0.0",
-    "domain": "workspace:*",
+    "dbdomain": "workspace:*",
     "drizzle-orm": "^0.30.10",
     "ethers": "^6.12.1",
     "node-schedule": "^2.1.1"
