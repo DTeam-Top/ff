@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5f80f5a1-027a-48cf-bd1f-69995520c2eb",
+  "id": "14cf85f1-483f-4b65-9165-9c92752b0702",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "commissions": {
@@ -16,6 +16,13 @@
         },
         "flow_id": {
           "name": "flow_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "payment_id": {
+          "name": "payment_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -71,6 +78,13 @@
             "fid"
           ],
           "isUnique": false
+        },
+        "idx_commissions_payment": {
+          "name": "idx_commissions_payment",
+          "columns": [
+            "payment_id"
+          ],
+          "isUnique": false
         }
       },
       "foreignKeys": {},
@@ -105,7 +119,7 @@
           "name": "input",
           "type": "blob",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "creator": {
@@ -157,18 +171,32 @@
           "name": "trace",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         },
         "payment_tx": {
           "name": "payment_tx",
           "type": "text",
           "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "payment_ts": {
+          "name": "payment_ts",
+          "type": "integer",
+          "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "commission_paid": {
+          "name": "commission_paid",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -202,7 +230,7 @@
           "name": "cast",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "flow_id": {
@@ -214,7 +242,7 @@
         },
         "parent_cast": {
           "name": "parent_cast",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
