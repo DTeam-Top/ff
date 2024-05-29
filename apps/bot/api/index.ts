@@ -7,8 +7,8 @@ export const config = {
 
 const app = new Hono().basePath("/api");
 
-app.all("/", (c) => {
-  console.log(JSON.stringify(c.req));
+app.all("/", async (c) => {
+  console.log(JSON.stringify(await c.req.json()));
   return c.json({ message: "Hello Hono!" });
 });
 
