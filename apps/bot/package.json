@@ -1,12 +1,17 @@
 {
   "scripts": {
-    "start": "vercel dev",
-    "deploy": "vercel"
+    "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
-    "hono": "^4.3.9"
+    "@hono/node-server": "^1.11.1",
+    "better-sqlite3": "^10.0.0",
+    "dbdomain": "workspace:*",
+    "drizzle-orm": "^0.30.10",
+    "hono": "^4.4.0"
   },
   "devDependencies": {
-    "vercel": "^32.4.1"
+    "@types/node": "^20.11.17",
+    "@types/better-sqlite3": "^7.6.10",
+    "tsx": "^4.7.1"
   }
 }
