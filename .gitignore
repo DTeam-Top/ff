@@ -12,5 +12,3 @@ vite.config.ts.timestamp-*
 dist
 
 .vercel
-
-bot
