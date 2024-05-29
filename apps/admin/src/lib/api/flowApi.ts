@@ -1,44 +1,10 @@
-import { getFlowList, upsertFlow, deleteFlow, getFlowById, shareFlow } from '$lib/db/flowService';
-import { createTracePayment } from '$lib/db/traceService';
+import { getFlowList, upsertFlow, deleteFlow, getFlowById } from '$lib/db/flowService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
-export const FlowRequest = z.object({
-	name: z.string(),
-	cover: z.string(),
-	creator: z.number(),
-	input: z.object({
-		price: z.string(),
-		nft: z.string()
-	}),
-	id: z.number().optional()
-});
-
-export const getRequest = z.object({
-	creator: z.number()
-});
-
-export const DeleteRequest = z.object({
-	id: z.string()
-});
-
-export const ParamRequest = z.object({
-	name: z.string()
-});
-
-export const ShareRequest = z.object({
-	parentCast: z.string(),
-	fid: z.number()
-});
-
-export const UpdateTxRequest = z.object({
-	cast: z.string(),
-	paymentTx: z.string(),
-	amount: z.string()
-});
+import { flowRequest, idRequest } from './requests';
 
 export const router = new Hono()
-	.post('/', zValidator('json', FlowRequest), async (c) => {
+	.post('/', zValidator('json', flowRequest), async (c) => {
 		try {
 			const { name, cover, creator, input, id } = c.req.valid('json');
 			if (!name || !creator || !input) {
@@ -64,7 +30,7 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	})
-	.post('/delete/:id', zValidator('param', DeleteRequest), async (c) => {
+	.post('/delete/:id', zValidator('param', idRequest), async (c) => {
 		try {
 			const { id } = c.req.param();
 			await deleteFlow(Number(id));
@@ -75,7 +41,7 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	})
-	.get('/get/:id', zValidator('param', DeleteRequest), async (c) => {
+	.get('/get/:id', zValidator('param', idRequest), async (c) => {
 		try {
 			const { id } = c.req.param();
 			const result = await getFlowById(Number(id));
@@ -85,49 +51,7 @@ export const router = new Hono()
 		} catch (e: any) {
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
-	})
-	.post(
-		'/share/:id',
-		zValidator('param', DeleteRequest),
-		zValidator('json', ShareRequest),
-		async (c) => {
-			try {
-				const { id } = c.req.param(); //flow id
-				const { parentCast, fid } = c.req.valid('json');
-
-				console.log(parentCast, fid);
-
-				//create flow, publish cast
-
-				await shareFlow(Number(id));
-
-				return c.json({ message: 'Success' });
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			} catch (e: any) {
-				return c.json({ message: e.code + ': ' + e.message }, 500);
-			}
-		}
-	)
-	.post(
-		'/update-tx/:id',
-		zValidator('param', DeleteRequest),
-		zValidator('json', UpdateTxRequest),
-		async (c) => {
-			try {
-				const { id } = c.req.param(); //flow id
-				const { cast, paymentTx, amount } = c.req.valid('json');
-				console.log(id, cast, paymentTx, amount);
-				//create payment
-
-				await createTracePayment(id, cast, paymentTx, amount);
-
-				return c.json({ message: 'Success' });
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			} catch (e: any) {
-				return c.json({ message: e.code + ': ' + e.message }, 500);
-			}
-		}
-	);
+	});
 
 export const flowApi = new Hono().route('/api/flow', router);
 

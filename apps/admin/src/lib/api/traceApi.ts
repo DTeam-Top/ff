@@ -1,46 +1,71 @@
-import { existTraceByFlow, insertTrace } from '$lib/db/traceService';
+import { createTracePayment, existTraceByFlow, insertTrace } from '$lib/db/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
-export const TraceRequest = z.object({
-	cast: z.string(),
-	flow: z.number(),
-	parentCast: z.string().optional(),
-	caster: z.number()
-});
+import { idRequest, shareRequest, traceRequest, updateTxRequest } from './requests';
 
-export const getRequest = z.object({
-	creator: z.number()
-});
+export const router = new Hono()
+	.post('/', zValidator('json', traceRequest), async (c) => {
+		try {
+			const { cast, flow, parentCast, caster } = c.req.valid('json');
+			if (!cast || !flow || !caster) {
+				throw c.json({ message: 'Need cast, flow, caster' }, 400);
+			}
 
-export const deleteRequest = z.object({
-	id: z.string()
-});
+			const isExist = await existTraceByFlow(flow);
+			if (isExist) {
+				return c.json({ message: 'existed' });
+			}
 
-export const ParamRequest = z.object({
-	name: z.string()
-});
+			await insertTrace({ cast, flow, parentCast, caster });
 
-export const router = new Hono().post('/', zValidator('json', TraceRequest), async (c) => {
-	try {
-		const { cast, flow, parentCast, caster } = c.req.valid('json');
-		if (!cast || !flow || !caster) {
-			throw c.json({ message: 'Need cast, flow, caster' }, 400);
+			return c.json({ message: 'Insert success' });
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (e: any) {
+			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
+	})
+	.post(
+		'/share/:id',
+		zValidator('param', idRequest),
+		zValidator('json', shareRequest),
+		async (c) => {
+			try {
+				const { id } = c.req.param(); //flow id
+				const { parentCast, fid } = c.req.valid('json');
 
-		const isExist = await existTraceByFlow(flow);
-		if (isExist) {
-			return c.json({ message: 'existed' });
+				console.log(parentCast, fid, id);
+
+				//create flow, publish cast
+
+				//await share(Number(id));
+
+				return c.json({ message: 'Success' });
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			} catch (e: any) {
+				return c.json({ message: e.code + ': ' + e.message }, 500);
+			}
 		}
+	)
+	.post(
+		'/update-tx/:id',
+		zValidator('param', idRequest),
+		zValidator('json', updateTxRequest),
+		async (c) => {
+			try {
+				const { id } = c.req.param(); //flow id
+				const { cast, paymentTx, amount } = c.req.valid('json');
+				console.log(id, cast, paymentTx, amount);
+				//create payment
 
-		await insertTrace({ cast, flow, parentCast, caster });
+				await createTracePayment(id, cast, paymentTx, amount);
 
-		return c.json({ message: 'Insert success' });
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} catch (e: any) {
-		return c.json({ message: e.code + ': ' + e.message }, 500);
-	}
-});
+				return c.json({ message: 'Success' });
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			} catch (e: any) {
+				return c.json({ message: e.code + ': ' + e.message }, 500);
+			}
+		}
+	);
 
 // .get('/list', async (c) => {
 // 	try {

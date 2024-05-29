@@ -1,22 +1,9 @@
 import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
+import { insertTrace } from '$lib/db/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { z } from 'zod';
-
-const verfiyUserRequest = z.object({
-	fid: z.string(),
-	signerUuid: z.string()
-});
-const paramRequest = z.object({
-	fid: z.string()
-});
-
-const castRequest = z.object({
-	fid: z.string(),
-	signerUuid: z.string(),
-	frameUrl: z.string(),
-	content: z.string()
-});
+import { castRequest, fidRequest, verfiyUserRequest } from './requests';
 
 export const router = new Hono()
 	.post('/verify-user', zValidator('json', verfiyUserRequest), async (c) => {
@@ -44,7 +31,7 @@ export const router = new Hono()
 			throw c.json({ message: 'Error occured' }, 500);
 		}
 	})
-	.get('/user/:fid', zValidator('param', paramRequest), async (c) => {
+	.get('/user/:fid', zValidator('param', fidRequest), async (c) => {
 		const { fid } = c.req.valid('param');
 		if (!fid) {
 			throw c.json({ message: 'Need fid' }, 400);
@@ -63,13 +50,21 @@ export const router = new Hono()
 		}
 	})
 	.post('/publish', zValidator('json', castRequest), async (c) => {
-		const { fid, signerUuid, frameUrl, content } = c.req.valid('json');
+		const { fid, signerUuid, frameUrl, content, flowId } = c.req.valid('json');
 		console.log('publis---', { fid, signerUuid, frameUrl, content });
 		if (!fid || !signerUuid || !frameUrl) {
 			throw c.json({ message: 'Need fid, signerUuid, frameUrl' }, 400);
 		}
 		try {
 			const cast = await createCast(signerUuid, content, frameUrl);
+			console.log(cast);
+			// todo delete it
+			await insertTrace({
+				cast: `${cast.cast.author.fid}_${cast.cast.hash}`,
+				flow: flowId,
+				parentCast: undefined,
+				caster: Number(fid)
+			});
 
 			return c.json(cast);
 		} catch (e) {

@@ -10,7 +10,13 @@ export type Flow = {
 	id: number | undefined;
 };
 
-export type Cast = { fid: string; signerUuid: string; frameUrl: string; content: string };
+export type Cast = {
+	fid: string;
+	signerUuid: string;
+	frameUrl: string;
+	content: string;
+	flowId: number;
+};
 
 const logger = LOGGER.child({ from: 'flowService' });
 

@@ -101,7 +101,8 @@
 				fid: $user.fid.toString(),
 				signerUuid: $user.signerUuid,
 				frameUrl,
-				content: 'test'
+				content: name,
+				flowId: $farcaster.id
 			});
 			console.log('result', result);
 		} else {

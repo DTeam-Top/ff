@@ -32,6 +32,6 @@ export const createCast = async (uuid: string, text: string, frameUrl: string) =
 			headers: HEADERS
 		}
 	);
-	console.log(cast);
+	console.log(cast.data);
 	return cast.data;
 };
