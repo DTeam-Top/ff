@@ -27,7 +27,8 @@ import { neynar } from "frog/hubs";
 const app = new Frog({
   assetsPath: "/",
   basePath: "/api",
-  // hub: neynar({ apiKey: `${process.env.PUBLIC_NEYNAR_KEY}` }),
+  hub: neynar({ apiKey: `${process.env.PUBLIC_NEYNAR_KEY}` }),
+  verify: "silent",
 });
 
 let contract: `0x${string}` = "0x";
@@ -52,7 +53,7 @@ app.frame(
   async (c) => {
     const { flowId } = c.req.param();
     if (Number(flowId) === 0) {
-      const { name, price, nft, image } = c.req.query();
+      const { name, price, nft, image, parentId } = c.req.query();
       contract = nft as `0x${string}`;
       obj = { name, price, image, flowId, contract: nft };
     } else {
@@ -60,23 +61,14 @@ app.frame(
       const flow = await getFlowById(flowId);
       console.log(c);
       if (flow.length > 0) {
-        const { parentId } = c.req.query();
-        const { frameData } = c;
-        if (frameData)
-          await createTrace(
-            Number(flowId),
-            castIdPipe(frameData?.castId),
-            parentId,
-            frameData?.fid
-          );
+        obj = {
+          name: flow[0].name,
+          price: flow[0].input.price,
+          image: flow[0].cover,
+          flowId,
+          contract: flow[0].input.nft,
+        };
       }
-      obj = {
-        name: flow[0].name,
-        price: flow[0].input.price,
-        image: flow[0].cover,
-        flowId,
-        contract: flow[0].input.nft,
-      };
     }
 
     return c.res({
@@ -103,20 +95,20 @@ app.frame(
             Price:&nbsp;&nbsp;{obj.price} ETH
           </div>
           <div tw={`text-[30px] text-white `} style={text_css}>
-            NFT:&nbsp;&nbsp;{obj.contract}
+            ERC20:&nbsp;&nbsp;{obj.contract}
           </div>
           {obj.image && (
             <img
               src={obj.image}
               style={{ width: "200px", height: "200px" }}
-              tw={`mx-auto`}
+              tw={`mx-auto mt-4`}
             />
           )}
         </div>
       ),
       intents: [
         <Button.Transaction target="/mint/erc20">Mint</Button.Transaction>,
-        <Button>Share to earn</Button>,
+        <Button>Share To Earn</Button>,
       ],
     });
   }
@@ -152,7 +144,9 @@ app.transaction("/buy/:price", async (c) => {
 app.frame("/finish/:flowId", async (c) => {
   console.log("finish", c);
   console.log(obj);
-  const { transactionId, buttonIndex, frameData } = c;
+  const { transactionId, buttonIndex, frameData, verified } = c;
+  if (!verified) console.log("Frame verification failed");
+
   const flowId = c.req.param("flowId");
   if (frameData) {
     const castId = castIdPipe(frameData?.castId);

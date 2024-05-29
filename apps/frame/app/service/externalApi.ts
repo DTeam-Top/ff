@@ -16,11 +16,11 @@ export const upateTxById = async (
   console.log({ paymentTx: tx, amount: amount, cast });
   try {
     const result = await axios.post(
-      `${process.env.PUBLIC_BASE_URL}api/flow/update-tx/${id}`,
+      `${process.env.PUBLIC_BASE_URL}api/trace/update-tx/${id}`,
       { paymentTx: tx, amount: amount, cast }
     );
     return result.data;
-  } catch (e) {
+  } catch (e: any) {
     console.log("sdfsdf---", JSON.stringify(e.response.data));
   }
 };
@@ -31,7 +31,7 @@ export const shareCastById = async (
   fid: number
 ) => {
   const result = await axios.post(
-    `${process.env.PUBLIC_BASE_URL}api/flow/share/${id}`,
+    `${process.env.PUBLIC_BASE_URL}api/trace/share/${id}`,
     {
       parentCast,
       fid,
