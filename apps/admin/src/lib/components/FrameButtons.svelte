@@ -1,6 +1,6 @@
 <div class="grid gap-2.5 grid-cols-2 mt-4">
 	<button
-		class="bg-gray-100 border-gray-200 flex items-center justify-center flex-row text-sm rounded-lg border cursor-pointer gap-1.5 h-10 py-2 px-4 w-full"
+		class="bg-gray-300 border-gray-200 flex items-center justify-center flex-row text-sm rounded-lg border cursor-pointer gap-1.5 h-10 py-2 px-4 w-full"
 		type="button"
 		><span class="whitespace-nowrap overflow-hidden text-ellipsis text-gray-1000 font-medium"
 			>Mint</span
@@ -21,10 +21,10 @@
 		></button
 	>
 	<button
-		class="bg-gray-100 border-gray-200 flex items-center justify-center flex-row text-sm rounded-lg border cursor-pointer gap-1.5 h-10 py-2 px-4 w-full"
+		class="bg-gray-300 border-gray-200 flex items-center justify-center flex-row text-sm rounded-lg border cursor-pointer gap-1.5 h-10 py-2 px-4 w-full"
 		type="button"
 		><span class="whitespace-nowrap overflow-hidden text-ellipsis text-gray-1000 font-medium"
-			>Share to earn</span
+			>Share To Earn</span
 		></button
 	>
 

@@ -18,7 +18,7 @@
 </script>
 
 {#if loading}
-	Loading
+	Loading ...
 {:else}
 	<Layout>
 		<slot />

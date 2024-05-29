@@ -2,43 +2,99 @@
 	import { WARP_BASE, commissionList, frameList, statistics } from '$lib/services/constants';
 	import { user } from '$lib/services/store';
 	import dayjs from 'dayjs';
-	import Chart from 'chart.js/auto';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
+	import * as echarts from 'echarts';
 	export let title;
-	onMount(() => {
-		const data = [
-			{ year: 2010, count: 10 },
-			{ year: 2011, count: 20 },
-			{ year: 2012, count: 15 },
-			{ year: 2013, count: 25 },
-			{ year: 2014, count: 22 },
-			{ year: 2015, count: 30 },
-			{ year: 2016, count: 28 }
-		];
 
-		new Chart(document.getElementById('acquisitions'), {
-			type: 'bar',
-			color: '#fff',
-			data: {
-				labels: data.map((row) => row.year),
-				datasets: [
-					{
-						label: 'Fid ranking',
-						data: data.map((row) => row.count)
-						// backgroundColor: [
-						// 	'rgba(255, 99, 132, 0.2)',
-						// 	'rgba(255, 159, 64, 0.2)',
-						// 	'rgba(255, 205, 86, 0.2)',
-						// 	'rgba(75, 192, 192, 0.2)',
-						// 	'rgba(54, 162, 235, 0.2)',
-						// 	'rgba(153, 102, 255, 0.2)',
-						// 	'rgba(201, 203, 207, 0.2)'
-						// ],
-					}
-				]
-			}
+	let myChart;
+	let options;
+	onMount(() => {
+		var dom = document.getElementById('barChart');
+		myChart = echarts.init(dom, null, {
+			renderer: 'canvas',
+			useDirtyRect: false
 		});
+		var dataAxis = ['hwh', 'li', 'Xa', 'liu', 'Ge', 'Ni'];
+		var data = [220, 182, 191, 234, 290, 330, 310, 234];
+		var yMax = 500;
+		var dataShadow = [];
+
+		for (var i = 0; i < data.length; i++) {
+			dataShadow.push(yMax);
+		}
+
+		options = {
+			xAxis: {
+				data: dataAxis,
+				axisLabel: {
+					inside: true,
+					textStyle: {
+						color: '#fff'
+					}
+				},
+				axisTick: {
+					show: false
+				},
+				axisLine: {
+					show: false
+				},
+				z: 10
+			},
+			yAxis: {
+				axisLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				},
+				axisLabel: {
+					textStyle: {
+						color: '#999'
+					}
+				}
+			},
+			dataZoom: [
+				{
+					type: 'inside'
+				}
+			],
+			series: [
+				{
+					// For shadow
+					type: 'bar',
+					itemStyle: {
+						color: 'rgba(0,0,0,0.05)'
+					},
+					barGap: '-100%',
+					barCategoryGap: '40%',
+					data: dataShadow,
+					animation: false
+				},
+				{
+					type: 'bar',
+					itemStyle: {
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+							{ offset: 0, color: '#83bff6' },
+							{ offset: 0.5, color: '#188df0' },
+							{ offset: 1, color: '#188df0' }
+						])
+					},
+					emphasis: {
+						itemStyle: {
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+								{ offset: 0, color: '#2378f7' },
+								{ offset: 0.7, color: '#2378f7' },
+								{ offset: 1, color: '#83bff6' }
+							])
+						}
+					},
+					data: data
+				}
+			]
+		};
+
+		myChart.setOption(options, true);
 	});
 </script>
 
@@ -86,7 +142,7 @@
 				<div class="w-full md:w-6/12">
 					<div class="p-2">
 						<div class="p-4 rounded-3xl" style={`background-color: ${item.color}`}>
-							<div class="text-center mb-4 mt-5">
+							<div class="text-center">
 								<p class="text-4xl font-bold opacity-70">{item.count}</p>
 								<p class="text-sm opacity-70 mt-2">{item.name}</p>
 							</div>
@@ -94,7 +150,7 @@
 					</div>
 				</div>
 			{/each}
-			<div class="w-[800px] mx-auto mt-4"><canvas id="acquisitions"></canvas></div>
+			<div class="w-full h-[400px] mx-auto mt-4" id="barChart" />
 		</div>
 	</div>
 	<div class="w-full mt-8 lg:mt-0 lg:w-4/12 lg:pl-4">

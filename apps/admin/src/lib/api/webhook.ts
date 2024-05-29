@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-export const router = new Hono().post('/', async (c) => {
+export const router = new Hono().all('/', async (c) => {
 	try {
 		console.log('webhook', c);
 		console.log('webhook body', await c.req.json());

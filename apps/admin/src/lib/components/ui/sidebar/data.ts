@@ -15,12 +15,13 @@ export const data = [
 		title: 'List',
 		icon: ArchivesIcon,
 		link: '/list'
-	},
-	{
-		title: 'Royalty',
-		icon: StatusIcon,
-		link: '/admin/status'
-	},
+	}
+	// ,
+	// {
+	// 	title: 'Royalty',
+	// 	icon: StatusIcon,
+	// 	link: '/admin/status'
+	// },
 	//,
 	// {
 	// 	title: 'Archives',
@@ -32,14 +33,14 @@ export const data = [
 	// 	icon: CreditsIcon,
 	// 	link: '/admin/credits'
 	// },
-	{
-		title: 'Settings',
-		icon: SettingsIcon,
-		link: '/admin/settings'
-	},
-	{
-		title: 'Docs',
-		icon: DocumentationIcon,
-		link: '/admin/documentation'
-	}
+	// {
+	// 	title: 'Settings',
+	// 	icon: SettingsIcon,
+	// 	link: '/admin/settings'
+	// },
+	// {
+	// 	title: 'Docs',
+	// 	icon: DocumentationIcon,
+	// 	link: '/admin/documentation'
+	// }
 ];

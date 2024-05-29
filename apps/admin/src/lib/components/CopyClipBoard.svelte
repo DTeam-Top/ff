@@ -4,7 +4,7 @@
 	/**
 	 * @type {any}
 	 */
-	export let name;
+	export let text;
 
 	/**
 	 * @type {HTMLTextAreaElement}
@@ -17,4 +17,4 @@
 	});
 </script>
 
-<textarea bind:value={name} bind:this={textarea}></textarea>
+<textarea bind:value={text} bind:this={textarea}></textarea>

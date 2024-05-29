@@ -8,6 +8,7 @@
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 	import CopyClipBoard from '$lib/components/CopyClipBoard.svelte';
+	import toast, { Toaster } from 'svelte-french-toast';
 
 	export let farcasterId = 0;
 	let frameUrl = '';
@@ -25,7 +26,6 @@
 	let prviewImage = '';
 	let previewUrl = '';
 	let loading = false;
-	let error = '';
 
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
@@ -38,7 +38,7 @@
 				price = flow[0].input.price;
 				cover = flow[0].cover;
 			} else {
-				error = 'Wrong id';
+				toast.error('Wrong id');
 			}
 		} else {
 			name = 'test';
@@ -47,11 +47,11 @@
 				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
 			price = 0.005;
 		}
+		previewHandler();
 	});
 
 	const previewHandler = async () => {
 		if (!name || !nft) {
-			error = 'Please input name or nft';
 			return;
 		}
 		loading = true;
@@ -71,10 +71,9 @@
 	};
 
 	const saveHandler = async () => {
-		resetError();
 		try {
 			if (!name || !nft) {
-				error = 'Please input name or nft';
+				toast.error('Please input name or nft');
 				return;
 			}
 			await insertFlow({
@@ -84,109 +83,134 @@
 				creator: $user.fid,
 				id: $farcaster.id
 			});
-			error = 'Save success!';
+			toast.success('Save success!');
+
 			//frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}`;
 		} catch (e) {
 			//alert(e);
 			console.log(e.response.data.message);
-			error = errorPipe(e.response.data.message);
+			toast.error(errorPipe(e.response.data.message));
 		}
 	};
 
 	const publishHandler = async () => {
-		resetError();
 		if ($farcaster.id) {
 			frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}`;
-			const result = await publishFlow({
-				fid: $user.fid.toString(),
-				signerUuid: $user.signerUuid,
-				frameUrl,
-				content: name,
-				flowId: $farcaster.id
-			});
-			console.log('result', result);
+			// const result = await publishFlow({
+			// 	fid: $user.fid.toString(),
+			// 	signerUuid: $user.signerUuid,
+			// 	frameUrl,
+			// 	content: name,
+			// 	flowId: $farcaster.id
+			// });
 		} else {
-			error = 'Please save it';
+			toast.error('Please save first');
 		}
 	};
 
-	const copy = () => {
+	const copyHandler = () => {
 		const app = new CopyClipBoard({
 			target: document.getElementById('clipboard'),
-			props: { name }
+			props: { text: frameUrl }
 		});
 		app.$destroy();
-	};
-
-	const resetError = () => {
-		error = '';
+		toast.success('Copied!');
 	};
 </script>
 
-<section class="w-full grid grid-cols-2 gap-8">
-	<div class="w-full lg:w-2/5 bg-gray-300 py-6 px-6 rounded-3xl h-[500px]">
-		<div class="flex items-center mb-2">
-			<div class="w-[50px]">Name:</div>
-			<input class="border px-4 py-2 ml-4" bind:value={name} />
-		</div>
-		<div class="flex items-center mb-2">
-			<div class="w-[50px]">NFT:</div>
-			<input class="border px-4 py-2 ml-4" bind:value={nft} />
-		</div>
-		<div class="flex items-center mb-2">
-			<div class="w-[50px]">Price:</div>
-			<input class="border px-4 py-2 ml-4" bind:value={price} type="number" />
-		</div>
-		<div class="flex items-center mb-2">
-			<div class="w-[50px]">Image:</div>
-			<input class="border px-4 py-2 ml-4 w-full" bind:value={cover} />
-		</div>
-	</div>
-	<div class="w-full lg:w-2/5 bg-gray-300 py-6 px-6 rounded-3xl h-[500px]">
-		<div class="mb-4">Preview</div>
-		{#if loading}
-			Loading ...
-		{:else if prviewImage}
-			<div class="relative rounded-md relative w-full">
-				<div class="relative">
-					<img
-						class="bg-background-200 border border-slate-200 min-h-img object-cover rounded-t-lg text-background-200 w-full"
-						src={prviewImage}
-						alt="Preview Frame"
-						style="aspect-ratio: 1.91 / 1; max-height: 532.5px;"
+<div class="bg-gray-800 py-6 px-6 rounded-3xl h-full">
+	<section class="w-full grid grid-cols-2 gap-8">
+		<div class="w-full bg-gray-100 rounded-3xl h-[500px]">
+			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Design</div>
+			<div class="px-6">
+				<div class="flex items-center mb-2">
+					<div class="w-[50px] font-bold">Name:</div>
+					<input
+						class="border px-4 py-2 ml-4"
+						bind:value={name}
+						on:keyup={() => previewHandler()}
 					/>
 				</div>
-				<FrameButtons />
+				<div class="flex items-center mb-2">
+					<div class="w-[50px] font-bold">ERC20:</div>
+					<input
+						class="border px-4 py-2 ml-4 w-full"
+						bind:value={nft}
+						on:keyup={() => previewHandler()}
+					/>
+				</div>
+				<div class="flex items-center mb-2">
+					<div class="w-[50px] font-bold">Price:</div>
+					<div class="flex items-center">
+						<input
+							class="border px-4 py-2 ml-4 w-[100px]"
+							bind:value={price}
+							type="number"
+							on:keyup={() => previewHandler()}
+						/>
+						<div class="bg-gray-300 px-4 py-2 font-bold">ETH</div>
+					</div>
+				</div>
+				<div class="flex items-center mb-2">
+					<div class="w-[50px] font-bold">Cover:</div>
+					<textarea
+						class="border px-4 py-2 ml-4 w-full"
+						bind:value={cover}
+						rows="5"
+						on:keyup={() => previewHandler()}
+					></textarea>
+				</div>
 			</div>
-		{/if}
-	</div>
-</section>
-<div class="flex mt-4 justify-center text-white">
-	<button class="border rounded-lg mx-8 px-4 py-2 bg-gray-100 text-black" on:click={cancelHandler}
-		>Cancel</button
-	>
-	<button class="rounded-lg mx-8 px-4 py-2 bg-blue-400 text-white" on:click={previewHandler}
-		>Preview</button
-	>
-	<button class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white" on:click={saveHandler}
-		>Save</button
-	>
-	<button class="rounded-lg mx-8 px-4 py-2 bg-blue-600 text-white" on:click={publishHandler}
-		>Publish
-	</button>
-	<!-- {$farcaster.id} -->
-</div>
-{#if error}
-	<div class="w-1/2 mx-auto text-white mt-4">
-		{error}
-	</div>
-{/if}
+		</div>
+		<div class="w-full bg-gray-100 rounded-3xl h-[500px]">
+			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Preview</div>
+			<div class="px-6">
+				{#if loading}
+					Loading ...
+				{:else if prviewImage}
+					<div class="relative rounded-md relative w-full">
+						<div class="relative">
+							<img
+								class="bg-background-200 border border-slate-200 min-h-img object-cover rounded-t-lg text-background-200 w-full"
+								src={prviewImage}
+								alt="Preview Frame"
+								style="aspect-ratio: 1.91 / 1; max-height: 532.5px;"
+							/>
+						</div>
+						<FrameButtons />
+					</div>
+				{/if}
+			</div>
+		</div>
+	</section>
+	<div class="flex mt-8 justify-center text-white">
+		<button class="border rounded-lg mx-8 px-4 py-2 bg-gray-100 text-black" on:click={cancelHandler}
+			>Reset</button
+		>
 
-{#if frameUrl}
-	<div class="flex mt-4 justify-center text-white w-1/2 mx-auto">
-		Please copy this url (<a href={frameUrl} class="break-all">{frameUrl}</a>) to your cast.
+		<button class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white" on:click={saveHandler}
+			>Save</button
+		>
+		<button class="rounded-lg mx-8 px-4 py-2 bg-blue-600 text-white" on:click={publishHandler}
+			>Publish
+		</button>
+		<!-- {$farcaster.id} -->
 	</div>
-{/if}
+
+	{#if frameUrl}
+		<div
+			class="mt-4 justify-center w-1/2 mx-auto bg-purple-200 rounded-lg p-6 items-center cursor-pointer"
+			on:click={copyHandler}
+		>
+			<span class="font-bold mr-2">Tips:</span>
+			Click to copy this url
+			<span class="font-bold mx-2">{frameUrl}</span>
+			, and publish it into your farcaster.
+		</div>
+	{/if}
+</div>
+<div id="clipboard"></div>
+<Toaster />
 
 <style>
 	section {
@@ -195,5 +219,12 @@
 		justify-content: center;
 		align-items: center;
 		/* flex: 0.6; */
+	}
+	textarea {
+		resize: none;
+	}
+	textarea:focus,
+	input:focus {
+		outline: none;
 	}
 </style>

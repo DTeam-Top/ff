@@ -61,13 +61,13 @@
 				</div>
 			{/if}
 			<div class="flex items-center justify-end ml-5 p-1 relative w-full sm:mr-0 sm:right-auto">
-				<span class="block pr-5 cursor-pointer">FAQ</span>
+				<!-- <span class="block pr-5 cursor-pointer">FAQ</span>
 				<span class="block pr-5 cursor-pointer">Docs</span>
 				<span class="block pr-5 cursor-pointer">
 					<a target="_blank" href="https://github.com/DTeam-Top/ff/tree/main"
 						><img src="/images/github.svg" alt="github" /></a
 					>
-				</span>
+				</span> -->
 				{#if $signed && $user && $user.pft}
 					<span class="block pr-5">
 						<img
