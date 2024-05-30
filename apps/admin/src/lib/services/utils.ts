@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { writable } from 'svelte/store';
 
 export const signed = writable();
@@ -28,3 +29,24 @@ export function errorPipe(message: string) {
 		return message;
 	}
 }
+
+export const getPreviewUrl = async (
+	baseUrl: string,
+	name: string,
+	cover: string,
+	price: number,
+	nft: string
+) => {
+	let previewUrl = `${baseUrl}/api/0?name=${name}&price=${price}&nft=${nft}`;
+	if (cover) {
+		previewUrl += `&image=${cover}`;
+	}
+	const res = await axios.get(previewUrl);
+
+	const parser = new DOMParser();
+	const document = parser.parseFromString(res.data, 'text/html');
+
+	const prviewImage = document?.querySelector('meta[property="fc:frame:image"]').content;
+
+	return prviewImage;
+};

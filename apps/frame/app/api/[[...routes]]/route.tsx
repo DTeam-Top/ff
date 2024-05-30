@@ -65,6 +65,7 @@ app.frame(
         contract = flow[0].input.nft as `0x${string}`;
       }
     }
+    const shareLink = `${process.env.PUBLIC_BASE_URL}share/${flowId}`;
 
     return c.res({
       action: `/finish/${flowId}`,
@@ -103,7 +104,7 @@ app.frame(
       ),
       intents: [
         <Button.Transaction target="/mint/erc20">Mint</Button.Transaction>,
-        <Button>Share To Earn</Button>,
+        <Button.Link href={shareLink}>Share To Earn</Button.Link>,
       ],
     });
   }

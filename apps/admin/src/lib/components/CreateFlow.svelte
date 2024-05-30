@@ -1,14 +1,12 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { PUBLIC_FRAME_BASE_URL } from '$env/static/public';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlow, insertFlow, publishFlow } from '$lib/services/flowService';
-	import { errorPipe, signed } from '$lib/services/utils';
+	import { getFlow, insertFlow } from '$lib/services/flowService';
+	import { errorPipe, getPreviewUrl } from '$lib/services/utils';
 	import { user, farcaster, setFarcaster } from '$lib/services/store';
-	import axios from 'axios';
 	import { onMount } from 'svelte';
-	import CopyClipBoard from '$lib/components/CopyClipBoard.svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
+	import Tips from './Tips.svelte';
 
 	export let farcasterId = 0;
 	let frameUrl = '';
@@ -24,7 +22,6 @@
 		prviewImage = '';
 	};
 	let prviewImage = '';
-	let previewUrl = '';
 	let loading = false;
 
 	onMount(async () => {
@@ -56,16 +53,7 @@
 		loading = true;
 
 		frameUrl = '';
-		previewUrl = `${PUBLIC_FRAME_BASE_URL}/api/0?name=${name}&price=${price}&nft=${nft}`;
-		if (cover) {
-			previewUrl += `&image=${cover}`;
-		}
-		const res = await axios.get(previewUrl);
-
-		const parser = new DOMParser();
-		const document = parser.parseFromString(res.data, 'text/html');
-
-		prviewImage = document?.querySelector('meta[property="fc:frame:image"]').content;
+		prviewImage = await getPreviewUrl(PUBLIC_FRAME_BASE_URL, name, cover, price, nft);
 		loading = false;
 	};
 
@@ -105,15 +93,6 @@
 		} else {
 			toast.error('Please save first');
 		}
-	};
-
-	const copyHandler = () => {
-		const app = new CopyClipBoard({
-			target: document.getElementById('clipboard'),
-			props: { text: frameUrl }
-		});
-		app.$destroy();
-		toast.success('Copied!');
 	};
 </script>
 
@@ -197,15 +176,7 @@
 	</div>
 
 	{#if frameUrl}
-		<div
-			class="mt-4 justify-center w-1/2 mx-auto bg-purple-200 rounded-lg p-6 items-center cursor-pointer"
-			on:click={copyHandler}
-		>
-			<span class="font-bold mr-2">Tips:</span>
-			Click to copy this url
-			<span class="font-bold mx-2">{frameUrl}</span>
-			, and publish it into your farcaster.
-		</div>
+		<Tips {frameUrl} />
 	{/if}
 </div>
 <div id="clipboard"></div>
