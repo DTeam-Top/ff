@@ -1,22 +1,23 @@
-import { commissionChecker } from "./tasks/commissionChecker";
-import { txChecker } from "./tasks/txChecker";
-import { createJobs } from "./utils";
+import { commissionChecker } from "./tasks/commissionChecker.js";
+import { txChecker } from "./tasks/txChecker.js";
+//import { txChecker } from "./tasks/txChecker";
+import { createJobs } from "./utils.js";
 
 const cronJobs = [
   {
-    rule: "*/1 * * * *",
+    rule: "*/5 * * * * *",
     job: () => {
       txChecker("trace_payments", "payment_tx", "payment_ts");
     },
   },
   {
-    rule: "*/1 * * * *",
+    rule: "*/5 * * * * *",
     job: () => {
       txChecker("commission", "withdrawn_tx", "withdrawn_at");
     },
   },
   {
-    rule: "*/1 * * * *",
+    rule: "*/5 * * * * *",
     job: commissionChecker,
   },
 ];

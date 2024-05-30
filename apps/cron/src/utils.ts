@@ -10,8 +10,8 @@ export const createJobs = (jobs: Jobs) => {
     scheduleJob(rule, job);
   });
 };
-
-const dbConfig: DbConfig = { db: "../../flow.db" };
+console.log(process.env.PUBLIC_DB_URL, process.env.INFURA_PROJECT_ID);
+const dbConfig: DbConfig = { db: `${process.env.PUBLIC_DB_URL}` };
 export function db() {
   const sqlite = new Database(dbConfig.db);
   return drizzle(sqlite);
