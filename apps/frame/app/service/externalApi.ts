@@ -24,33 +24,3 @@ export const upateTxById = async (
     console.log("sdfsdf---", JSON.stringify(e.response.data));
   }
 };
-
-export const shareCastById = async (
-  id: string,
-  parentCast: string,
-  fid: number
-) => {
-  const result = await axios.post(
-    `${process.env.PUBLIC_BASE_URL}api/traces/share/${id}`,
-    {
-      parentCast,
-      fid,
-    }
-  );
-  return result.data;
-};
-
-export const createTrace = async (
-  flowId: number,
-  castId: string,
-  parentCast: string,
-  fid: number
-) => {
-  const result = await axios.post(`${process.env.PUBLIC_BASE_URL}api/traces`, {
-    cast: castId,
-    flow: flowId,
-    parentCast: parentCast,
-    caster: fid,
-  });
-  return result.data;
-};
