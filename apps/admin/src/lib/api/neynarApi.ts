@@ -2,7 +2,6 @@ import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
 import { insertTrace } from '$lib/db/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
 import { castRequest, fidRequest, verfiyUserRequest } from './requests';
 
 export const router = new Hono()
@@ -51,13 +50,11 @@ export const router = new Hono()
 	})
 	.post('/publish', zValidator('json', castRequest), async (c) => {
 		const { fid, signerUuid, frameUrl, content, flowId } = c.req.valid('json');
-		console.log('publis---', { fid, signerUuid, frameUrl, content });
 		if (!fid || !signerUuid || !frameUrl) {
 			throw c.json({ message: 'Need fid, signerUuid, frameUrl' }, 400);
 		}
 		try {
 			const cast = await createCast(signerUuid, content, frameUrl);
-			console.log(cast);
 			// todo delete it
 			await insertTrace({
 				cast: `${cast.cast.author.fid}_${cast.cast.hash}`,

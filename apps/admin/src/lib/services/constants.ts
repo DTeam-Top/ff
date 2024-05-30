@@ -30,23 +30,4 @@ export const commissionList = [
 	}
 ];
 
-export const statistics = [
-	{ title: 'Published', count: `${Math.floor(Math.random() * 100)}M+` },
-	{ title: 'Running', count: `${Math.floor(Math.random() * 100)}M+` },
-	{ title: 'Dealed', count: `${Math.floor(Math.random() * 100)}K+` }
-];
-
 export const WARP_BASE = 'https://warpcast.com/';
-
-export const frameList = [
-	{
-		name: 'Trade volume',
-		count: '23,444',
-		color: '#fee4cb'
-	},
-	{
-		name: 'Unique fids',
-		count: '171,729',
-		color: '#d1d5db'
-	}
-];

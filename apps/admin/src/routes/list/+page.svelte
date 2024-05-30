@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getFlows, deleteFlow } from '$lib/services/flowService';
+	import { getFlows, deleteFlowById } from '$lib/services/flowService';
 	import { addressPipe, signed } from '$lib/services/utils';
 	import { setFarcaster, user } from '$lib/services/store';
 	import { onMount } from 'svelte';
@@ -11,7 +11,6 @@
 	});
 
 	$: if (!$signed) {
-		console.log($signed);
 		goto('/');
 	}
 
@@ -26,7 +25,7 @@
 		goto(`edit/${id}`);
 	};
 	const delHandler = async (id: number) => {
-		await deleteFlow(id);
+		await deleteFlowById(id);
 		getFlowList();
 	};
 	const traceHandler = (id: number) => {};
@@ -38,7 +37,7 @@
 </svelte:head>
 
 <section class="w-full bg-gray-800 h-full py-6 px-6 rounded-3xl">
-	<div class="">
+	<div class="w-full">
 		<div class="flex flex-row-reverse text-right"><CreateButton /></div>
 		{#if list.length > 0}
 			<table class="table-fixed w-full text-sm bg-blue-200 rounded-lg mt-4">
@@ -157,7 +156,9 @@
 				{/each}
 			</div> -->
 		{:else}
-			<div class="text-center text-2xl my-8">There is no flow, please create it.</div>
+			<div class="w-full text-center text-2xl my-8 text-white">
+				There is no flow, please create it.
+			</div>
 		{/if}
 	</div>
 </section>

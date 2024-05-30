@@ -1,12 +1,17 @@
-<script>
-	import { WARP_BASE, commissionList, frameList, statistics } from '$lib/services/constants';
+<script lang="ts">
+	import { WARP_BASE } from '$lib/services/constants';
 	import { user } from '$lib/services/store';
 	import dayjs from 'dayjs';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
 	import * as echarts from 'echarts';
+	import { getCommissionList } from '$lib/services/commissionService';
+	import { getStaticsCount } from '$lib/services/flowService';
 	export let title;
 
+	let commissionList: any[] = [];
+	let statistics: any[] = [];
+	let frameList: any[] = [];
 	let myChart;
 	let options;
 	onMount(() => {
@@ -96,6 +101,16 @@
 
 		myChart.setOption(options, true);
 	});
+
+	$: if ($user) {
+		getCommissionList($user.fid).then((list) => {
+			commissionList = list;
+		});
+		getStaticsCount().then((count) => {
+			statistics = count.banner;
+			frameList = count.card;
+		});
+	}
 </script>
 
 <div class="flex flex-wrap">
@@ -144,7 +159,7 @@
 						<div class="p-4 rounded-3xl" style={`background-color: ${item.color}`}>
 							<div class="text-center">
 								<p class="text-4xl font-bold opacity-70">{item.count}</p>
-								<p class="text-sm opacity-70 mt-2">{item.name}</p>
+								<p class="text-sm opacity-70 mt-2">{item.title}</p>
 							</div>
 						</div>
 					</div>
@@ -196,9 +211,7 @@
 							<div class="flex items-center justify-between w-full">
 								<div class="text-white font-medium">{item.name}</div>
 								<div class="flex justify-center items-center cursor-pointer h-7 w-7">
-									<a
-										target="_blank"
-										href="https://basescan.org/tx/0x1bde2bc276c9c748e75d62fba3b034607c41f8a3eb335d4d8c774ad038ecd791"
+									<a target="_blank" href={`https://basescan.org/tx/${item.tx}`}
 										><img src="/images/etherscan.png" alt="etherscan" /></a
 									>
 								</div>
@@ -207,7 +220,7 @@
 								{item.commission}
 							</p>
 							<p class="text-right text-gray-400 text-sm">
-								{dayjs(item.ts * 1000).format('YYYY, MMMM, DD')}
+								{dayjs(item.createdAt).format('YYYY, MMMM, DD')}
 							</p>
 						</div>
 					</div>

@@ -1,12 +1,12 @@
 import { LOGGER } from '$lib/db/constant';
-import { flows } from 'dbdomain';
+import { flows, tracePayments, traces } from 'dbdomain';
 import { db } from './dbService';
-import { eq } from 'drizzle-orm';
+import { count, countDistinct, eq } from 'drizzle-orm';
 export type Flow = {
 	id: number | undefined;
 	name: string;
 	cover: string | undefined;
-	input: { price: string };
+	input: { price: string; nft: string };
 	creator: number;
 };
 
@@ -14,9 +14,10 @@ const logger = LOGGER.child({ from: 'db' });
 
 export const upsertFlow = async (flow: Flow) => {
 	logger.info(flow);
+	let result;
 	try {
 		if (flow.id) {
-			await db
+			result = await db()
 				.update(flows)
 				.set({
 					name: flow.name,
@@ -24,18 +25,24 @@ export const upsertFlow = async (flow: Flow) => {
 					input: flow.input,
 					creator: flow.creator
 				})
-				.where(eq(flows.id, flow.id));
+				.where(eq(flows.id, flow.id))
+				.returning();
 		} else {
-			await db.insert(flows).values({
-				name: flow.name,
-				cover: flow.cover,
-				input: flow.input,
-				creator: flow.creator,
-				createdAt: new Date()
-			});
+			result = await db()
+				.insert(flows)
+				.values({
+					name: flow.name,
+					cover: flow.cover,
+					input: flow.input,
+					creator: Number(flow.creator),
+					createdAt: new Date()
+				})
+				.returning();
 		}
-		const result = await db.select().from(flows).where(eq(flows.name, flow.name));
+		console.log(result);
+
 		return result.length > 0 ? result[0] : null;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (e: any) {
 		logger.error(e);
 		throw e;
@@ -44,16 +51,37 @@ export const upsertFlow = async (flow: Flow) => {
 };
 
 export const getFlowList = async (creator: number) => {
-	const result = await db.select().from(flows).where(eq(flows.creator, creator));
+	const result = await db().select().from(flows).where(eq(flows.creator, creator));
 	return result;
 };
 
 export const deleteFlow = async (id: number) => {
-	const result = await db.delete(flows).where(eq(flows.id, id));
+	const result = await db().delete(flows).where(eq(flows.id, id));
 	return result;
 };
 
 export const getFlowById = async (id: number) => {
-	const result = await db.select().from(flows).where(eq(flows.id, id));
-	return result;
+	const result = await db().select().from(flows).where(eq(flows.id, id));
+	return result.length > 0 ? result[0] : null;
+};
+
+export const getStatics = async () => {
+	const runData = await db().select({ value: count() }).from(flows);
+	const publishData = await db().select({ value: count() }).from(traces);
+	const dealedData = await db().select({ value: count() }).from(tracePayments);
+	const fidCount = await db()
+		.select({ value: countDistinct(traces.caster) })
+		.from(traces);
+
+	return {
+		banner: [
+			{ title: 'Published', count: runData[0].value },
+			{ title: 'Running', count: publishData[0].value },
+			{ title: 'Dealed', count: dealedData[0].value }
+		],
+		card: [
+			{ title: 'Unique fids', count: fidCount[0].value, color: '#fee4cb' },
+			{ title: 'Trade volume', count: dealedData[0].value, color: '#d1d5db' }
+		]
+	};
 };

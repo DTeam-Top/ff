@@ -1,4 +1,4 @@
-import { getFlowList, upsertFlow, deleteFlow, getFlowById } from '$lib/db/flowService';
+import { getFlowList, upsertFlow, deleteFlow, getFlowById, getStatics } from '$lib/db/flowService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { flowRequest, idRequest } from './requests';
@@ -51,8 +51,18 @@ export const router = new Hono()
 		} catch (e: any) {
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
+	})
+	.get('/statics', async (c) => {
+		try {
+			const result = await getStatics();
+
+			return c.json(result);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (e: any) {
+			return c.json({ message: e.code + ': ' + e.message }, 500);
+		}
 	});
 
-export const flowApi = new Hono().route('/api/flow', router);
+export const flowApi = new Hono().route('/api/flows', router);
 
 export type Router = typeof router;

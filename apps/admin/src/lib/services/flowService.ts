@@ -21,33 +21,31 @@ export type Cast = {
 const logger = LOGGER.child({ from: 'flowService' });
 
 export const insertFlow = async (flow: Flow) => {
-	logger.info(flow);
-	const result = await axios.post(`${PUBLIC_BASE_URL}api/flow`, flow);
-
-	console.log(result);
+	const result = await axios.post(`${PUBLIC_BASE_URL}api/flows`, flow);
 	setFarcaster({ id: result.data.id });
 };
 
 export const getFlows = async (creator: number) => {
-	logger.info(creator);
-	const result = await axios.get(`${PUBLIC_BASE_URL}api/flow/list?creator=${creator}`);
+	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/list?creator=${creator}`);
 	return result.data;
 };
 
-export const deleteFlow = async (id: number) => {
-	logger.info(id);
-	const result = await axios.post(`${PUBLIC_BASE_URL}api/flow/delete/${id}`);
+export const deleteFlowById = async (id: number) => {
+	const result = await axios.post(`${PUBLIC_BASE_URL}api/flows/delete/${id}`);
 	return result.data;
 };
 
-export const getFlowById = async (id: number) => {
-	logger.info(id);
-	const result = await axios.get(`${PUBLIC_BASE_URL}api/flow/get/${id}`);
+export const getFlow = async (id: number) => {
+	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/get/${id}`);
 	return result.data;
 };
 
 export const publishFlow = async (cast: Cast) => {
-	console.log(cast);
 	const result = await axios.post(`${PUBLIC_BASE_URL}api/publish`, cast);
+	return result.data;
+};
+
+export const getStaticsCount = async () => {
+	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/statics`);
 	return result.data;
 };

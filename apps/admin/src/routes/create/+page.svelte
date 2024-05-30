@@ -4,7 +4,6 @@
 	import CreateFlow from '$lib/components/CreateFlow.svelte';
 
 	$: if (!$signed) {
-		console.log($signed);
 		goto('/');
 	}
 </script>

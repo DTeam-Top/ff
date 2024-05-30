@@ -1,5 +1,12 @@
-<script>
-	import { statistics } from '$lib/services/constants';
+<script lang="ts">
+	import { getStaticsCount } from '$lib/services/flowService';
+
+	let statistics: any[] = [];
+	$: {
+		getStaticsCount().then((count) => {
+			statistics = count.banner;
+		});
+	}
 </script>
 
 <div class="flex flex-wrap">

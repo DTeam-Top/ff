@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { PUBLIC_FRAME_BASE_URL } from '$env/static/public';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlowById, insertFlow, publishFlow } from '$lib/services/flowService';
+	import { getFlow, insertFlow, publishFlow } from '$lib/services/flowService';
 	import { errorPipe, signed } from '$lib/services/utils';
 	import { user, farcaster, setFarcaster } from '$lib/services/store';
 	import axios from 'axios';
@@ -29,14 +29,13 @@
 
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
-		console.log(farcasterId, farcasterId > 0);
 		if (farcasterId > 0) {
-			const flow = await getFlowById(farcasterId);
-			if (flow.length > 0) {
-				name = flow[0].name;
-				nft = flow[0].input.nft;
-				price = flow[0].input.price;
-				cover = flow[0].cover;
+			const flow = await getFlow(farcasterId);
+			if (flow) {
+				name = flow.name;
+				nft = flow.input?.nft;
+				price = flow.input?.price;
+				cover = flow.cover;
 			} else {
 				toast.error('Wrong id');
 			}
@@ -86,10 +85,10 @@
 			toast.success('Save success!');
 
 			//frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}`;
-		} catch (e) {
+		} catch (e: any) {
 			//alert(e);
-			console.log(e.response.data.message);
-			toast.error(errorPipe(e.response.data.message));
+			console.log(e.response);
+			toast.error(errorPipe(e.response?.data?.message));
 		}
 	};
 
