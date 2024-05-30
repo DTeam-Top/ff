@@ -2,12 +2,35 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { createTrace } from "./services/traceService";
 import { TYPE_CREATED } from "./services/constants";
+import { createHmac } from "crypto";
 
 const app = new Hono().basePath("/api");
 
 app.post("/", async (c) => {
-  console.log(JSON.stringify(await c.req.json()));
-  const reqData = await c.req.json();
+  const body = await c.req.text();
+  const sig = await c.req.header()["x-neynar-signature"];
+  if (!sig) {
+    throw new Error("Neynar signature missing from request headers");
+  }
+
+  const webhookSecret = process.env.NEYNAR_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    throw new Error(
+      "Make sure you set NEYNAR_WEBHOOK_SECRET in your .env file"
+    );
+  }
+
+  const hmac = createHmac("sha512", webhookSecret);
+  hmac.update(body);
+
+  const generatedSignature = hmac.digest("hex");
+
+  const isValid = generatedSignature === sig;
+  if (!isValid) {
+    throw new Error("Invalid webhook signature");
+  }
+
+  const reqData = JSON.parse(body);
 
   switch (reqData.type) {
     case TYPE_CREATED: {
@@ -28,7 +51,7 @@ app.post("/", async (c) => {
   return c.json({ message: "Success!" });
 });
 
-const port = 3000;
+const port = 3001;
 console.log(`Server is running on port ${port}`);
 
 serve({
