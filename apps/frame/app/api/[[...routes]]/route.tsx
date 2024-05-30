@@ -1,6 +1,6 @@
 /** @jsxImportSource frog/jsx */
 import { parseEther } from "ethers";
-import { Button, Frog } from "frog";
+import { Button, Frog, TextInput } from "frog";
 import { devtools } from "frog/dev";
 // import { neynar } from 'frog/hubs'
 import { handle } from "frog/next";
@@ -15,12 +15,7 @@ import {
   text_css,
 } from "./constants";
 import { addressPipe } from "./utils";
-import {
-  createTrace,
-  getFlowById,
-  shareCastById,
-  upateTxById,
-} from "@/app/service/externalApi";
+import { getFlowById, upateTxById } from "@/app/service/externalApi";
 import { castIdPipe } from "@/app/service/utile";
 import { neynar } from "frog/hubs";
 
@@ -57,7 +52,6 @@ app.frame(
       contract = nft as `0x${string}`;
       obj = { name, price, image, flowId, contract: nft };
     } else {
-      console.log("flowId", flowId);
       const flow = await getFlowById(flowId);
       console.log(c);
       if (flow.length > 0) {
@@ -68,6 +62,7 @@ app.frame(
           flowId,
           contract: flow[0].input.nft,
         };
+        contract = flow[0].input.nft as `0x${string}`;
       }
     }
 
@@ -150,8 +145,9 @@ app.frame("/finish/:flowId", async (c) => {
   const flowId = c.req.param("flowId");
   if (frameData) {
     const castId = castIdPipe(frameData?.castId);
+
     if (buttonIndex === 2) {
-      await shareCastById(flowId, castId, frameData.fid);
+      console.log(`${process.env.PUBLIC_FRAME_URL}/${flowId}`);
       return c.res({
         action: `/${flowId}`,
         image: (
@@ -174,6 +170,7 @@ app.frame("/finish/:flowId", async (c) => {
             </div>
           </div>
         ),
+
         intents: [<Button>Return</Button>],
       });
     } else {

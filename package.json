@@ -7,7 +7,8 @@
     "format": "prettier --write .",
     "dbdomain": "pnpm --filter dbdomain",
     "admin": "pnpm --filter admin",
-    "frame": "pnpm --filter frame"
+    "frame": "pnpm --filter frame",
+    "cron": "pnpm --filter cron"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.10",
