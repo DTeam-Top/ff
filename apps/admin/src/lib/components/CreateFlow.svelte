@@ -38,7 +38,7 @@
 			}
 		} else {
 			name = 'test';
-			nft = '0x1B633271826B30E86851adf5aa50871CDF9036C6';
+			nft = '0x2F6F12b68165aBb483484927919D0d3fE450462E';
 			cover =
 				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
 			price = 0.005;

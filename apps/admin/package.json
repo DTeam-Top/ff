@@ -43,6 +43,7 @@
 		"dbdomain": "workspace:*",
 		"drizzle-orm": "^0.30.10",
 		"echarts": "^5.5.0",
+		"ethers": "^6.12.1",
 		"hono": "^4.3.6",
 		"localtunnel": "^2.0.2",
 		"pino": "^9.1.0",

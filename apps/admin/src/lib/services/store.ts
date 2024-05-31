@@ -22,7 +22,7 @@ type User = {
 	followerCount: number;
 	profile: { bio: { text: string } };
 	verifications: [];
-	verifiedAddresses: { ethAddresses: []; solAddresses: [] };
+	verifiedAddresses: { eth_addresses: []; sol_addresses: [] };
 	signerUuid: string;
 };
 const user = writable({
@@ -35,7 +35,7 @@ const user = writable({
 	followerCount: 0,
 	profile: { bio: { text: '' } },
 	verifications: [],
-	verifiedAddresses: { ethAddresses: [], solAddresses: [] },
+	verifiedAddresses: { eth_addresses: [], sol_addresses: [] },
 	signerUuid: ''
 });
 

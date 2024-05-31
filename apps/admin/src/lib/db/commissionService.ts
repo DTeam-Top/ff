@@ -1,6 +1,8 @@
-import { eq } from 'drizzle-orm';
+import { count, eq, inArray, isNull, sum, and } from 'drizzle-orm';
 import { db } from './dbService';
 import { commissions, flows, tracePayments } from 'dbdomain';
+import { parseEther } from 'ethers';
+import { withdrawContract } from '$lib/services/constants';
 
 export const getCommissionList = async (fid: string) => {
 	const result = await db()
@@ -14,7 +16,52 @@ export const getCommissionList = async (fid: string) => {
 		.from(commissions)
 		.leftJoin(flows, eq(commissions.flow, flows.id))
 		.leftJoin(tracePayments, eq(commissions.payment, tracePayments.id))
-		.where(eq(commissions.fid, Number(fid)));
+		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
+
+	const balance = await db()
+		.select({ value: sum(commissions.commission) })
+		.from(commissions)
+		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
+
+	const total = await db()
+		.select({ value: count() })
+		.from(commissions)
+		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
+
+	return {
+		commissionList: result,
+		total: total[0].value,
+		balance: balance[0].value ? balance[0].value : 0
+	};
+};
+
+export const withdraw = async (address: string, fid: number) => {
+	const commissionList = await db()
+		.select()
+		.from(commissions)
+		.where(and(eq(commissions.fid, fid), isNull(commissions.withdrawnTx)));
+
+	const idList = [];
+	let amount = 0;
+
+	for (const commission of commissionList) {
+		idList.push(commission.id);
+		amount += commission.commission;
+	}
+	const mintData = {
+		to: address,
+		amount: parseEther(amount.toString())
+	};
+	console.log(mintData, idList);
+	const tx = await withdrawContract().transferEarnings(mintData.to, mintData.amount, {
+		gasLimit: 600000
+	});
+
+	console.log('result', tx.hash);
+	const result = await db()
+		.update(commissions)
+		.set({ withdrawnTx: tx.hash })
+		.where(inArray(commissions.id, idList));
 
 	return result;
 };

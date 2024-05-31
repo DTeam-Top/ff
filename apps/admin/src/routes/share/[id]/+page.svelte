@@ -42,5 +42,9 @@
 
 			<Tips {frameUrl} text={'share'} width={'w-full'} />
 		</div>
+	{:else}
+		<div class="my-20 text-white text-4xl font-bold mx-auto w-1/2 text-center">
+			No data, please check the share link.
+		</div>
 	{/if}
 </div>

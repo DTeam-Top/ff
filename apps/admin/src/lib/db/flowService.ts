@@ -65,10 +65,21 @@ export const getFlowById = async (id: number) => {
 	return result.length > 0 ? result[0] : null;
 };
 
-export const getStatics = async () => {
-	const runData = await db().select({ value: count() }).from(flows);
-	const publishData = await db().select({ value: count() }).from(traces);
-	const dealedData = await db().select({ value: count() }).from(tracePayments);
+export const getStatics = async (fid: number | undefined) => {
+	const runData = await db()
+		.select({ value: count() })
+		.from(flows)
+		.where(fid ? eq(flows.creator, fid) : undefined);
+	const publishData = await db()
+		.select({ value: count() })
+		.from(traces)
+		.where(fid ? eq(traces.caster, fid) : undefined);
+	const dealedData = await db()
+		.select({ value: count() })
+		.from(tracePayments)
+		.leftJoin(traces, eq(traces.id, tracePayments.trace))
+		.where(fid ? eq(traces.caster, fid) : undefined);
+
 	const fidCount = await db()
 		.select({ value: countDistinct(traces.caster) })
 		.from(traces);

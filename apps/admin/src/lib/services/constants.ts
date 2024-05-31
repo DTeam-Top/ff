@@ -1,4 +1,18 @@
+import {
+	PUBLIC_INFURA_PROJECT_ID,
+	PUBLIC_NODE_ENV,
+	PUBLIC_OWNER_WALLET_PK
+} from '$env/static/public';
+import { ERC20_ABI } from './abi';
+import { ethers } from 'ethers';
+
 export const USER_STORE_KEY = 'user';
+
+const network = 'base-sepolia';
+
+const projectId = PUBLIC_INFURA_PROJECT_ID;
+const provider = new ethers.InfuraProvider(network, projectId);
+export const owner = new ethers.Wallet(PUBLIC_OWNER_WALLET_PK, provider);
 
 export const commissionList = [
 	{
@@ -31,3 +45,40 @@ export const commissionList = [
 ];
 
 export const WARP_BASE = 'https://warpcast.com/';
+
+export function envConfig() {
+	return {
+		dev: {
+			'base-sepolia': {
+				withdraw: '0x2F6F12b68165aBb483484927919D0d3fE450462E',
+				scanURL: 'https://sepolia.basescan.org'
+			}
+		},
+		prod: {
+			base: {
+				withdraw: '', //todo
+				scanURL: 'https://basescan.org'
+			}
+		},
+		test: {
+			'base-sepolia': {
+				withdraw: '0x2F6F12b68165aBb483484927919D0d3fE450462E',
+				scanURL: 'https://sepolia.basescan.org'
+			}
+		}
+	};
+}
+
+function contracts() {
+	return envConfig()[PUBLIC_NODE_ENV][network];
+}
+
+export function getBaseScanURL() {
+	return envConfig()[PUBLIC_NODE_ENV][network].scanURL;
+}
+export function withdrawContract() {
+	console.log(contracts().withdraw);
+	return new ethers.Contract(contracts().withdraw, ERC20_ABI, owner);
+}
+
+export const WARPCAST_SETTING_URL = 'https://warpcast.com/~/settings/verified-addresses';

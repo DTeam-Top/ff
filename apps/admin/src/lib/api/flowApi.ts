@@ -52,9 +52,10 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	})
-	.get('/statics', async (c) => {
+	.get('/statics/:fid', async (c) => {
 		try {
-			const result = await getStatics();
+			const { fid } = c.req.param();
+			const result = await getStatics(Number(fid));
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

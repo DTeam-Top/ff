@@ -8,7 +8,6 @@
 
 <button
 	class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2 rounded-lg"
-	title="Grid View"
 	on:click={gotoCreate}
 >
 	<svg
@@ -27,5 +26,5 @@
 		<rect x="14" y="14" width="7" height="7" />
 		<rect x="3" y="14" width="7" height="7" />
 	</svg>
-	Create
+	Create Flow
 </button>

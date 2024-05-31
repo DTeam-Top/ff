@@ -59,7 +59,7 @@
           /> -->
 					</div>
 				</div>
-			{/if}
+			{:else}<img src="/images/logo.svg" width="60" height="60" alt="SLN" />{/if}
 			<div class="flex items-center justify-end ml-5 p-1 relative w-full sm:mr-0 sm:right-auto">
 				<!-- <span class="block pr-5 cursor-pointer">FAQ</span>
 				<span class="block pr-5 cursor-pointer">Docs</span>

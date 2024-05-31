@@ -19,6 +19,11 @@ export const idRequest = z.object({
 	id: z.string()
 });
 
+export const withdrawRequest = z.object({
+	address: z.string(),
+	fid: z.number()
+});
+
 export const paramRequest = z.object({
 	name: z.string()
 });

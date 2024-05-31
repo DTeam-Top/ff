@@ -45,7 +45,7 @@ export const publishFlow = async (cast: Cast) => {
 	return result.data;
 };
 
-export const getStaticsCount = async () => {
-	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/statics`);
+export const getStaticsCount = async (fid: number) => {
+	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/statics/${fid}`);
 	return result.data;
 };
