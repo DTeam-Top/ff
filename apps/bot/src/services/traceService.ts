@@ -6,6 +6,7 @@ export const createTrace = async (data: any) => {
     data.embeds.length > 0 &&
     data.embeds[0].url.indexOf("ff-frame.vercel.app") > -1
   ) {
+    console.log(data);
     const url = new URL(data.embeds[0].url);
 
     const params = url.pathname.split("/api/");
@@ -24,13 +25,15 @@ export const createTrace = async (data: any) => {
 
       console.log(trace);
 
-      await db().insert(traces).values({
-        cast: trace.cast,
-        flow: trace.flow,
-        parentCast: trace.parentCast,
-        caster: trace.caster,
-        createdAt: new Date(),
-      });
+      await db()
+        .insert(traces)
+        .values({
+          cast: trace.cast,
+          flow: Number(trace.flow),
+          parentCast: trace.parentCast,
+          caster: trace.caster,
+          createdAt: new Date(),
+        });
     }
     return;
   }
