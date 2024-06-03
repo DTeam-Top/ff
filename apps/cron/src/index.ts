@@ -1,6 +1,5 @@
 import { commissionChecker } from "./tasks/commissionChecker.js";
 import { txChecker } from "./tasks/txChecker.js";
-//import { txChecker } from "./tasks/txChecker";
 import { createJobs } from "./utils.js";
 
 const cronJobs = [

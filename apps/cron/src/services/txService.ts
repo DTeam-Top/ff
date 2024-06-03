@@ -34,17 +34,30 @@ export const updateComission = async () => {
     .where(
       and(isNotNull(commissions.withdrawnTx), isNull(commissions.withdrawnAt))
     );
+
+  console.log(commissionList);
   for (const commission of commissionList) {
     if (commission.withdrawnTx) {
-      const result = await provider.getTransactionReceipt(
-        commission.withdrawnTx
-      );
-      if (result?.status) {
-        console.log("update commissions");
-        await db()
-          .update(commissions)
-          .set({ withdrawnAt: new Date() })
-          .where(eq(commissions.id, commission.id));
+      try {
+        const result = await provider.getTransactionReceipt(
+          commission.withdrawnTx
+        );
+        console.log(result);
+        if (result?.status === 1) {
+          console.log("update commissions");
+          await db()
+            .update(commissions)
+            .set({ withdrawnAt: new Date() })
+            .where(eq(commissions.id, commission.id));
+        } else if (result?.status === 0) {
+          console.log("transaction failed");
+          await db()
+            .update(commissions)
+            .set({ withdrawnTx: null })
+            .where(eq(commissions.id, commission.id));
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
   }

@@ -12,7 +12,7 @@ export async function txChecker(table: string, txCol: string, tsCol: string) {
     return;
   }
   running = true;
-  console.log(new Date(), table, txCol, tsCol);
+  console.log(new Date(), "txChecker -- ", table, txCol, tsCol);
 
   switch (table) {
     case "trace_payments":

@@ -1,6 +1,7 @@
 import { sql, eq, isNull, isNotNull, and } from "drizzle-orm";
 import { db } from "../utils.js";
 import { commissions, traces, flows, tracePayments } from "dbdomain";
+import { ROYALTY_RATIO } from "./constants.js";
 
 // select id, amount from trace_payments where commission_paid < 0
 // for each payment:
@@ -37,6 +38,7 @@ export async function updateCommission(batchSize = 100) {
       );
 
     if (traceRecords.length > 0) {
+      const amount = (payment.amount * ROYALTY_RATIO) / 2;
       await db().transaction(async (tx) => {
         const commission1 = await tx
           .insert(commissions)
@@ -44,7 +46,7 @@ export async function updateCommission(batchSize = 100) {
             flow: Number(traceRecords[0].flow),
             payment: payment.id,
             fid: Number(traceRecords[0].caster),
-            commission: payment.amount / 2,
+            commission: amount,
             createdAt: new Date(),
           })
           .returning({ id: commissions.id });
@@ -57,7 +59,7 @@ export async function updateCommission(batchSize = 100) {
             flow: Number(traceRecords[0].flow),
             payment: payment.id,
             fid: Number(traceRecords[0].flowCreator),
-            commission: payment.amount / 2,
+            commission: amount,
             createdAt: new Date(),
           })
           .returning({ id: commissions.id });
