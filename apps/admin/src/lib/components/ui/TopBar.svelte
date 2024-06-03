@@ -1,5 +1,5 @@
 <script>
-	import { openSidebar, user } from '$lib/services/store';
+	import { sidebarOpen, openSidebar, user } from '$lib/services/store';
 	import { removeItem, signed } from '$lib/services/utils';
 	import SWIN from '$lib/components/SWIN.svelte';
 
@@ -43,7 +43,9 @@
 								<path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
 						</div>
-						<div class="text-2xl">Farcaster Flow</div>
+						{#if !$sidebarOpen}
+							<div class="text-2xl">Farcaster Flow</div>
+						{/if}
 					</div>
 				</div>
 			{:else}

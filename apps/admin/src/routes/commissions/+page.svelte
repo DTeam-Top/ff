@@ -6,6 +6,8 @@
 	import HistoryList from '$lib/components/HistoryList.svelte';
 	import AvaliableList from '$lib/components/AvaliableList.svelte';
 	import { goto } from '$app/navigation';
+	import { postWithdraw } from '$lib/services/commissionService';
+	import { user } from '$lib/services/store';
 
 	let loading = false;
 	let needRefresh = false;
@@ -26,7 +28,7 @@
 		if (confirm) {
 			try {
 				loading = true;
-				//await postWithdraw($user.verifiedAddresses.eth_addresses[0], $user.fid);
+				await postWithdraw($user.verifiedAddresses.eth_addresses[0], $user.fid);
 				needRefresh = true;
 			} catch (e: any) {
 				console.log(e.message);
