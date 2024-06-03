@@ -31,6 +31,7 @@ app.post("/", async (c) => {
   }
 
   const reqData = JSON.parse(body);
+  console.log(reqData);
 
   switch (reqData.type) {
     case TYPE_CREATED: {
