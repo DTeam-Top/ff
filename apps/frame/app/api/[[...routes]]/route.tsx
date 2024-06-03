@@ -65,7 +65,7 @@ app.frame(
         contract = flow.input.nft as `0x${string}`;
       }
     }
-    const shareLink = `${process.env.PUBLIC_BASE_URL}share/${flowId}`;
+    const shareLink = `${process.env.PUBLIC_BASE_URL}share/${flowId}?v=${new Date().getTime()}`;
 
     return c.res({
       action: `/finish/${flowId}`,
@@ -148,7 +148,6 @@ app.frame("/finish/:flowId", async (c) => {
     const castId = castIdPipe(frameData?.castId);
 
     if (buttonIndex === 2) {
-      console.log(`${process.env.PUBLIC_FRAME_URL}/${flowId}`);
       return c.res({
         action: `/${flowId}`,
         image: (
