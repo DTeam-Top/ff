@@ -59,10 +59,11 @@
 
 	const saveHandler = async () => {
 		try {
-			if (!name || !nft) {
-				toast.error('Please input name or nft');
+			if (!name || !nft || !cover) {
+				toast.error('Please input name , ERC20 , cover');
 				return;
 			}
+
 			await insertFlow({
 				name: name,
 				cover: cover,
@@ -106,6 +107,7 @@
 					<div class="w-[50px] font-bold">Name:</div>
 					<input
 						class="border px-4 py-2 ml-4"
+						placeholder="Flow name"
 						bind:value={name}
 						on:keyup={() => previewHandler()}
 					/>
@@ -115,6 +117,7 @@
 					<input
 						class="border px-4 py-2 ml-4 w-full"
 						bind:value={nft}
+						placeholder="ERC20 address"
 						on:keyup={() => previewHandler()}
 					/>
 				</div>
@@ -135,6 +138,7 @@
 					<textarea
 						class="border px-4 py-2 ml-4 w-full"
 						bind:value={cover}
+						placeholder="Image's url"
 						rows="5"
 						on:keyup={() => previewHandler()}
 					></textarea>

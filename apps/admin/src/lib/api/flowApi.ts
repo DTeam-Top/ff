@@ -7,8 +7,8 @@ export const router = new Hono()
 	.post('/', zValidator('json', flowRequest), async (c) => {
 		try {
 			const { name, cover, creator, input, id } = c.req.valid('json');
-			if (!name || !creator || !input) {
-				throw c.json({ message: 'Need name, creator, input' }, 400);
+			if (!name || !creator || !input || !cover) {
+				throw c.json({ message: 'Need name, creator, input , cover' }, 400);
 			}
 
 			const result = await upsertFlow({ name, cover, creator, input, id });
