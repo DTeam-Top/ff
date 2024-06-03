@@ -12,12 +12,12 @@ export const data = [
 		link: '/'
 	},
 	{
-		title: 'List',
+		title: 'Flows',
 		icon: ArchivesIcon,
 		link: '/flows'
 	},
 	{
-		title: 'Royalty',
+		title: 'Commissions',
 		icon: StatusIcon,
 		link: '/commissions'
 	}
