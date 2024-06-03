@@ -34,7 +34,7 @@
 	<meta name="description" content="Create frame" />
 </svelte:head>
 
-<section class="w-full bg-gray-800 h-full py-6 px-6 rounded-3xl">
+<section class="w-full bg-gray-800 min-h-full py-6 px-6 rounded-3xl">
 	<div class="w-full">
 		<div class="flex justify-between text-white">
 			<div class="text-2xl font-bold">My Traces</div>

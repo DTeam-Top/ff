@@ -11,6 +11,7 @@
 
 	let loading = false;
 	let needRefresh = false;
+	let canWithdraw = false;
 
 	let currentTab = 0;
 	$: if (!$signed) {
@@ -43,8 +44,9 @@
 	};
 
 	const changeRefresh = (el: any) => {
-		console.log(el.detail.result);
+		console.log(el.detail);
 		needRefresh = el.detail.result;
+		canWithdraw = el.detail.total > 0;
 	};
 </script>
 
@@ -53,13 +55,15 @@
 	<meta name="description" content="Create frame" />
 </svelte:head>
 
-<section class="w-full bg-gray-800 h-full py-6 px-6 rounded-3xl">
+<section class="w-full bg-gray-800 min-h-full py-6 px-6 rounded-3xl">
 	<div class="w-full">
 		<div class="flex justify-between text-white">
 			<div class="text-2xl font-bold">My Commissions</div>
-			<div class="flex flex-row-reverse text-right">
-				<WithdrawButton on:withdraw={withdrawHandler} {loading} />
-			</div>
+			{#if canWithdraw}
+				<div class="flex flex-row-reverse text-right">
+					<WithdrawButton on:withdraw={withdrawHandler} {loading} />
+				</div>
+			{/if}
 		</div>
 
 		<div class="tabs w-full text-white mt-4 border-b">

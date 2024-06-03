@@ -37,7 +37,7 @@
 			page = Math.ceil(result.total / COMMISSIOM_MAX);
 			loading = false;
 			console.log('4444');
-			dispatch('refresh', { result: false });
+			dispatch('refresh', { result: false, total: total });
 		});
 	};
 
