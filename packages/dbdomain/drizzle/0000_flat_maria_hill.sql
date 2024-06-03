@@ -20,7 +20,7 @@ CREATE TABLE `flows` (
 --> statement-breakpoint
 CREATE TABLE `trace_payments` (
 	`id` integer PRIMARY KEY NOT NULL,
-	`trace` text NOT NULL,
+	`trace` integer NOT NULL,
 	`amount` integer NOT NULL,
 	`payment_tx` text NOT NULL,
 	`payment_ts` integer,

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "14cf85f1-483f-4b65-9165-9c92752b0702",
+  "id": "727536a4-4cad-4e7f-8f0d-76e1a933c74f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "commissions": {
@@ -169,7 +169,7 @@
         },
         "trace": {
           "name": "trace",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

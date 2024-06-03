@@ -4,7 +4,7 @@ export const tracePayments = sqliteTable(
   "trace_payments",
   {
     id: integer("id").primaryKey(),
-    trace: text("trace").notNull(), // trace id
+    trace: integer("trace").notNull(), // trace id
     amount: integer("amount").notNull(), // payment amount, eth
     paymentTx: text("payment_tx").notNull(), // payment tx hash
     paymentTs: integer("payment_ts", { mode: "timestamp" }), // payment timestamp
