@@ -31,13 +31,17 @@ app.post("/", async (c) => {
   }
 
   const reqData = JSON.parse(body);
-  console.log(reqData);
+  console.log(JSON.stringify(reqData));
 
   switch (reqData.type) {
     case TYPE_CREATED: {
+      console.log(reqData.data.embeds.length);
+      console.log(reqData.data.embeds[0]);
+      console.log(process.env.VERIFY_DOMAIN);
+
       if (
         !reqData.data.embeds.length ||
-        reqData.data.embeds[0].url.indexOf("ff-frame.vercel.app") === -1
+        reqData.data.embeds[0].url.indexOf(process.env.VERIFY_DOMAIN) === -1
       ) {
         return;
       }

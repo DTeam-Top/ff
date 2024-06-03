@@ -33,7 +33,7 @@ export const createTrace = async (data: any) => {
           parentCast: trace.parentCast,
           caster: trace.caster,
           createdAt: new Date(),
-        });
+        }).onConflictDoNothing;
     }
     return;
   }
