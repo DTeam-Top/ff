@@ -20,7 +20,7 @@ export const createTrace = async (data: any) => {
 
     console.log(trace);
 
-    await db()
+    const result = await db()
       .insert(traces)
       .values({
         cast: trace.cast,
@@ -28,6 +28,9 @@ export const createTrace = async (data: any) => {
         parentCast: trace.parentCast,
         caster: trace.caster,
         createdAt: new Date(),
-      }).onConflictDoNothing;
+      })
+      .returning({ id: traces.id });
+    console.log("returning", result);
   }
+  return;
 };
