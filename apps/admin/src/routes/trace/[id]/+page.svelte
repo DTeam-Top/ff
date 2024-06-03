@@ -25,7 +25,7 @@
 		list = result;
 	};
 	const goBack = () => {
-		goto('/list');
+		goto('/flows');
 	};
 </script>
 

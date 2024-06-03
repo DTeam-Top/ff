@@ -43,23 +43,16 @@
 								<path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
 							</svg>
 						</div>
-						<!-- <svg
-            class="absolute fill-current h-4 hidden left-0 ml-4 pointer-events-none text-gray-500 w-4 group-hover:text-gray-400 sm:block"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path
-              d="M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"
-            />
-          </svg>
-          <input
-            type="text"
-            class="bg-gray-800 block leading-normal pl-10 py-1.5 pr-4 ring-opacity-90 rounded-2xl text-gray-400 w-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Search"
-          /> -->
+						<div class="text-2xl">Farcaster Flow</div>
 					</div>
 				</div>
-			{:else}<img src="/images/logo.svg" width="60" height="60" alt="SLN" />{/if}
+			{:else}
+				<div class="container flex left-0 relative w-3/4 items-center">
+					<img src="/images/logo.svg" width="60" height="60" alt="SLN" />
+					<div class="text-2xl ml-4 mt-2">Farcaster Flow</div>
+				</div>
+			{/if}
+
 			<div class="flex items-center justify-end ml-5 p-1 relative w-full sm:mr-0 sm:right-auto">
 				<!-- <span class="block pr-5 cursor-pointer">FAQ</span>
 				<span class="block pr-5 cursor-pointer">Docs</span>

@@ -92,4 +92,6 @@ export const BG_COLORLIST = [
 	'bg-orange-200'
 ];
 
-export const COMMISSIOM_MAX = 2;
+export const COMMISSIOM_MAX = 12;
+
+export const TABS = ['Avaliable', 'History'];

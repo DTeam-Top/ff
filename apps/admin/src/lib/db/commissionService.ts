@@ -1,4 +1,4 @@
-import { count, eq, inArray, isNull, sum, and } from 'drizzle-orm';
+import { count, eq, inArray, isNull, sum, and, isNotNull } from 'drizzle-orm';
 import { db } from './dbService';
 import { commissions, flows, tracePayments } from 'dbdomain';
 import { parseEther } from 'ethers';
@@ -30,6 +30,42 @@ export const getCommissionList = async (fid: string, offset: number, max: number
 		.select({ value: count() })
 		.from(commissions)
 		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
+
+	return {
+		commissionList: result,
+		total: total[0].value,
+		balance: balance[0].value ? balance[0].value : 0
+	};
+};
+
+export const getHistoryList = async (fid: string, offset: number, max: number) => {
+	const result = await db()
+		.select({
+			cover: flows.cover,
+			name: flows.name,
+			commission: commissions.commission,
+			createdAt: commissions.createdAt,
+			tx: tracePayments.paymentTx,
+			id: commissions.id,
+			withdrawnTx: commissions.withdrawnTx,
+			withdrawnAt: commissions.withdrawnAt
+		})
+		.from(commissions)
+		.leftJoin(flows, eq(commissions.flow, flows.id))
+		.leftJoin(tracePayments, eq(commissions.payment, tracePayments.id))
+		.where(and(eq(commissions.fid, Number(fid)), isNotNull(commissions.withdrawnTx)))
+		.limit(max)
+		.offset(offset);
+
+	const balance = await db()
+		.select({ value: sum(commissions.commission) })
+		.from(commissions)
+		.where(and(eq(commissions.fid, Number(fid)), isNotNull(commissions.withdrawnTx)));
+
+	const total = await db()
+		.select({ value: count() })
+		.from(commissions)
+		.where(and(eq(commissions.fid, Number(fid)), isNotNull(commissions.withdrawnTx)));
 
 	return {
 		commissionList: result,

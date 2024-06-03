@@ -4,6 +4,7 @@
 	import { getItem } from '$lib/services/utils';
 	import Layout from '$lib/components/ui/Layout.svelte';
 	import { getCaster } from '$lib/services/casterService';
+	import './style.css';
 	let loading = true;
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);

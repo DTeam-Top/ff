@@ -82,7 +82,7 @@
 
 	const publishHandler = async () => {
 		if ($farcaster.id) {
-			frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}`;
+			frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}?v=${new Date().getTime()}`;
 			// const result = await publishFlow({
 			// 	fid: $user.fid.toString(),
 			// 	signerUuid: $user.signerUuid,

@@ -14,14 +14,13 @@ export const data = [
 	{
 		title: 'List',
 		icon: ArchivesIcon,
-		link: '/list'
+		link: '/flows'
+	},
+	{
+		title: 'Royalty',
+		icon: StatusIcon,
+		link: '/commissions'
 	}
-	// ,
-	// {
-	// 	title: 'Royalty',
-	// 	icon: StatusIcon,
-	// 	link: '/admin/status'
-	// },
 	//,
 	// {
 	// 	title: 'Archives',
