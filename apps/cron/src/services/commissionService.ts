@@ -39,9 +39,9 @@ export async function updateCommission(batchSize = 100) {
 
     if (traceRecords.length > 0) {
       const amount = (payment.amount * ROYALTY_RATIO) / 2;
-      if (traceRecords[0].caster === traceRecords[0].flowCreator) {
-        return;
-      }
+      //   if (traceRecords[0].caster === traceRecords[0].flowCreator) {
+      //     return;
+      //   }
 
       await db().transaction(async (tx) => {
         const commission1 = await tx
