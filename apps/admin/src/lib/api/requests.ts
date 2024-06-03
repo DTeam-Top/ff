@@ -54,8 +54,12 @@ export const fidRequest = z.object({
 	fid: z.string()
 });
 
+export const userRequest = z.object({
+	fid: z.string()
+});
+
 export const castRequest = z.object({
-	fid: z.string(),
+	fid: z.number(),
 	signerUuid: z.string(),
 	frameUrl: z.string(),
 	content: z.string(),

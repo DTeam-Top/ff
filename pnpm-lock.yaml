@@ -71,6 +71,9 @@ importers:
       pino:
         specifier: ^9.1.0
         version: 9.1.0
+      svelte-dialogs:
+        specifier: ^1.2.2
+        version: 1.2.2(svelte@4.2.17)
       svelte-french-toast:
         specifier: ^1.2.0
         version: 1.2.0(svelte@4.2.17)
@@ -3028,6 +3031,11 @@ packages:
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
+
+  svelte-dialogs@1.2.2:
+    resolution: {integrity: sha512-Pf25Xua2nDIIR4v45PNbn+yFrFLNc0ns9+sO8Ms77Hm/CdxFuXm01XO8Qkw8Ej66BvboX+kIJ3TCm8uwP/XmyQ==}
+    peerDependencies:
+      svelte: ^3.5.0
 
   svelte-eslint-parser@0.36.0:
     resolution: {integrity: sha512-/6YmUSr0FAVxW8dXNdIMydBnddPMHzaHirAZ7RrT21XYdgGGZMh0LQG6CZsvAFS4r2Y4ItUuCQc8TQ3urB30mQ==}
@@ -6129,6 +6137,10 @@ snapshots:
       - sass
       - stylus
       - sugarss
+
+  svelte-dialogs@1.2.2(svelte@4.2.17):
+    dependencies:
+      svelte: 4.2.17
 
   svelte-eslint-parser@0.36.0(svelte@4.2.17):
     dependencies:

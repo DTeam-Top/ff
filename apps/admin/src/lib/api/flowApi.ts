@@ -21,8 +21,8 @@ export const router = new Hono()
 	})
 	.get('/list', async (c) => {
 		try {
-			const { creator } = c.req.query();
-			const result = await getFlowList(Number(creator));
+			const { creator, hasTraced } = c.req.query();
+			const result = await getFlowList(Number(creator), hasTraced === 'true');
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

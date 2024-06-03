@@ -5,6 +5,7 @@
 	import { setFarcaster, user } from '$lib/services/store';
 	import { onMount } from 'svelte';
 	import CreateButton from '$lib/components/CreateButton.svelte';
+	import { dialogs } from 'svelte-dialogs';
 	let list: any[] = [];
 	onMount(() => {
 		setFarcaster({ id: 0 });
@@ -25,20 +26,33 @@
 		goto(`edit/${id}`);
 	};
 	const delHandler = async (id: number) => {
-		await deleteFlowById(id);
-		getFlowList();
+		const confirm = await dialogs.confirm({
+			title: 'Are you sure to delete?',
+			closeButton: true,
+			confirmButtonText: 'Sure',
+			declineButtonText: 'Cancel'
+		});
+		if (confirm) {
+			await deleteFlowById(id);
+			getFlowList();
+		}
 	};
-	const traceHandler = (id: number) => {};
+	const traceHandler = (id: number) => {
+		goto(`/trace/${id}`);
+	};
 </script>
 
 <svelte:head>
-	<title>Create</title>
+	<title>My Flows</title>
 	<meta name="description" content="Create frame" />
 </svelte:head>
 
 <section class="w-full bg-gray-800 h-full py-6 px-6 rounded-3xl">
 	<div class="w-full">
-		<div class="flex flex-row-reverse text-right"><CreateButton /></div>
+		<div class="flex justify-between text-white">
+			<div class="text-2xl font-bold">My Flows</div>
+			<div class="flex flex-row-reverse text-right"><CreateButton /></div>
+		</div>
 		{#if list.length > 0}
 			<table class="table-fixed w-full text-sm bg-blue-200 rounded-lg mt-4">
 				<thead>
@@ -53,6 +67,9 @@
 						<th
 							class="border-b dark:border-slate-600 font-bold p-4 dark:text-slate-200 text-center w-[200px]"
 							>Contract</th
+						><th
+							class="border-b dark:border-slate-600 font-bold p-4 dark:text-slate-200 text-center w-[200px]"
+							>Trace Count</th
 						>
 						<th class="border-b dark:border-slate-600 font-bold p-4 dark:text-slate-200 text-center"
 							>Action</th
@@ -71,19 +88,27 @@
 							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
 								>{addressPipe(item.input.nft)}</td
 							>
+							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
+								>{item.traceCount}</td
+							>
+
 							<td class="border-b border-slate-300 dark:border-slate-700 p-4 dark:"
 								><button
 									class="border rounded-lg mx-8 px-4 py-2 bg-gray-100 text-black"
 									on:click={() => editHandler(item.id)}>Edit</button
 								>
-								<button
-									class="rounded-lg mx-8 px-4 py-2 bg-blue-400 text-white"
-									on:click={() => delHandler(item.id)}>Delete</button
-								>
-								<button
-									class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white"
-									on:click={() => traceHandler(item.id)}>Trace</button
-								></td
+								{#if item.traceCount === 0}
+									<button
+										class="rounded-lg mx-8 px-4 py-2 bg-blue-400 text-white"
+										on:click={() => delHandler(item.id)}>Delete</button
+									>
+								{/if}
+								{#if item.traceCount > 0}
+									<button
+										class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white"
+										on:click={() => traceHandler(item.id)}>Trace</button
+									>
+								{/if}</td
 							>
 						</tr>
 					{/each}

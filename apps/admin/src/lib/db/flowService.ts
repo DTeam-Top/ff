@@ -1,7 +1,7 @@
 import { LOGGER } from '$lib/db/constant';
 import { flows, tracePayments, traces } from 'dbdomain';
 import { db } from './dbService';
-import { count, countDistinct, eq } from 'drizzle-orm';
+import { count, countDistinct, eq, sql } from 'drizzle-orm';
 export type Flow = {
 	id: number | undefined;
 	name: string;
@@ -50,9 +50,42 @@ export const upsertFlow = async (flow: Flow) => {
 	}
 };
 
-export const getFlowList = async (creator: number) => {
-	const result = await db().select().from(flows).where(eq(flows.creator, creator));
-	return result;
+export const getFlowList = async (creator: number, hasTraced: boolean) => {
+	console.log(hasTraced);
+	if (hasTraced) {
+		return await db()
+			.select({
+				id: flows.id,
+				name: flows.name,
+				cover: flows.cover,
+				createdAt: flows.createdAt,
+				input: flows.input,
+				traceCount: count(traces.id),
+				paymentCount: count(tracePayments.id)
+			})
+			.from(flows)
+			.leftJoin(traces, eq(traces.flow, flows.id))
+			.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
+			.where(eq(flows.creator, creator))
+			.groupBy(flows.id)
+			.having(sql`${count(traces.id)} > 0`);
+	} else {
+		return await db()
+			.select({
+				id: flows.id,
+				name: flows.name,
+				cover: flows.cover,
+				createdAt: flows.createdAt,
+				input: flows.input,
+				traceCount: count(traces.id),
+				paymentCount: count(tracePayments.id)
+			})
+			.from(flows)
+			.leftJoin(traces, eq(traces.flow, flows.id))
+			.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
+			.where(eq(flows.creator, creator))
+			.groupBy(flows.id);
+	}
 };
 
 export const deleteFlow = async (id: number) => {

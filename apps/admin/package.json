@@ -47,6 +47,7 @@
 		"hono": "^4.3.6",
 		"localtunnel": "^2.0.2",
 		"pino": "^9.1.0",
+		"svelte-dialogs": "^1.2.2",
 		"svelte-french-toast": "^1.2.0",
 		"zod": "^3.23.8"
 	}

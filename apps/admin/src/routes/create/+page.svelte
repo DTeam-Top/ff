@@ -13,4 +13,4 @@
 	<meta name="description" content="Create frame" />
 </svelte:head>
 
-<CreateFlow farcasterId={0} />
+<CreateFlow farcasterId={0} title="Create" />

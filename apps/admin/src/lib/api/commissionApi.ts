@@ -8,7 +8,8 @@ export const router = new Hono()
 		try {
 			const { fid } = c.req.param(); //
 
-			const result = await getCommissionList(fid);
+			const { offset, max } = c.req.query();
+			const result = await getCommissionList(fid, Number(offset), Number(max));
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

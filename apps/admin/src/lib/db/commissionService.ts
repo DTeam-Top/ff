@@ -4,19 +4,22 @@ import { commissions, flows, tracePayments } from 'dbdomain';
 import { parseEther } from 'ethers';
 import { withdrawContract } from '$lib/services/constants';
 
-export const getCommissionList = async (fid: string) => {
+export const getCommissionList = async (fid: string, offset: number, max: number) => {
 	const result = await db()
 		.select({
 			cover: flows.cover,
 			name: flows.name,
 			commission: commissions.commission,
 			createdAt: commissions.createdAt,
-			tx: tracePayments.paymentTx
+			tx: tracePayments.paymentTx,
+			id: commissions.id
 		})
 		.from(commissions)
 		.leftJoin(flows, eq(commissions.flow, flows.id))
 		.leftJoin(tracePayments, eq(commissions.payment, tracePayments.id))
-		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
+		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)))
+		.limit(max)
+		.offset(offset);
 
 	const balance = await db()
 		.select({ value: sum(commissions.commission) })

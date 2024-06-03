@@ -1,5 +1,5 @@
 import { LOGGER } from '$lib/db/constant';
-import { tracePayments, traces } from '../../../../../packages/dbdomain/dist/dbdomain';
+import { flows, tracePayments, traces } from '../../../../../packages/dbdomain/dist/dbdomain';
 import { db } from './dbService';
 import { and, eq } from 'drizzle-orm';
 export type Trace = {
@@ -34,7 +34,7 @@ export const existTraceByFlow = async (flow: number) => {
 };
 
 export const createTracePayment = async (
-	flow: string,
+	flow: number,
 	cast: string,
 	paymentTx: string,
 	amount: string
@@ -43,14 +43,16 @@ export const createTracePayment = async (
 		const result = await db()
 			.select()
 			.from(traces)
-			.where(and(eq(traces.flow, Number(flow)), eq(traces.cast, cast)));
+			.where(and(eq(traces.flow, flow), eq(traces.cast, cast)));
 		if (result.length > 0) {
 			const trace = result[0];
-			await db().insert(tracePayments).values({
-				trace: trace.id.toString(),
-				amount: amount,
-				paymentTx: paymentTx
-			});
+			await db()
+				.insert(tracePayments)
+				.values({
+					trace: trace.id,
+					amount: Number(amount),
+					paymentTx: paymentTx
+				});
 		}
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (e: any) {
@@ -59,4 +61,22 @@ export const createTracePayment = async (
 	}
 
 	return;
+};
+
+export const getTraces = async (flow: number, caster: string) => {
+	console.log(flow, caster);
+	const result = await db()
+		.select({
+			name: flows.name,
+			cover: flows.cover,
+			input: flows.input,
+			creator: flows.creator,
+			id: flows.id,
+			cast: traces.cast,
+			traceTime: traces.createdAt
+		})
+		.from(traces)
+		.leftJoin(flows, eq(traces.flow, flows.id))
+		.where(and(eq(traces.flow, Number(flow)), eq(traces.caster, Number(caster))));
+	return result;
 };

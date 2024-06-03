@@ -14,5 +14,5 @@
 	<meta name="description" content="Create frame" />
 </svelte:head>
 {#if $page.params.id}
-	<CreateFlow farcasterId={Number($page.params.id)} />
+	<CreateFlow farcasterId={Number($page.params.id)} title="Edit" />
 {/if}

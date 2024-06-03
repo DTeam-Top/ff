@@ -15,7 +15,7 @@
 </script>
 
 <div
-	class={`mt-4 justify-center ${width} mx-auto bg-purple-200 rounded-lg p-6 items-center cursor-pointer text-black`}
+	class={`my-4 justify-center ${width} mx-auto bg-purple-200 rounded-lg p-6 items-center cursor-pointer text-black`}
 	on:click={copyHandler}
 >
 	<span class="font-bold mr-2">Tips:</span>

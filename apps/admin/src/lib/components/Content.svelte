@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { WARP_BASE, getBaseScanURL } from '$lib/services/constants';
+	import { BG_COLORLIST, WARP_BASE, getBaseScanURL } from '$lib/services/constants';
 	import { user } from '$lib/services/store';
 	import dayjs from 'dayjs';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
 	import * as echarts from 'echarts';
-	import { getStaticsCount } from '$lib/services/flowService';
+	import { getFlows, getStaticsCount } from '$lib/services/flowService';
 	import Commission from './Commission.svelte';
 
 	export let title;
 
 	let statistics: any[] = [];
 	let frameList: any[] = [];
+	let flowList: any[] = [];
 	let myChart;
 	let options;
 	onMount(() => {});
@@ -19,7 +20,11 @@
 	$: if ($user) {
 		getStaticsCount($user.fid).then((count) => {
 			statistics = count.banner;
-			frameList = count.card;
+			//frameList = count.card;
+		});
+		getFlows($user.fid, true).then((flows) => {
+			console.log(flows);
+			flowList = flows;
 		});
 	}
 </script>
@@ -43,25 +48,45 @@
 				<CreateButton />
 			</div>
 		</div>
-		<!-- <div class="flex flex-wrap">
-			{#each frameList as item, i}
-				<div class="w-full md:w-6/12">
+		<div class="grid grid-cols-3 gap-4">
+			{#each flowList as item, i}
+				<div class="w-full">
 					<div class="p-2">
-						<div class="p-4 rounded-3xl" style={`background-color: ${item.color}`}>
-							<div class="text-center">
-								<p class="text-4xl font-bold opacity-70">{item.count}</p>
-								<p class="text-sm opacity-70 mt-2">{item.title}</p>
+						<div class={`p-4 rounded-3xl ${BG_COLORLIST[Math.floor(i % 6)]}`}>
+							<div class="flex items-center justify-b">
+								<span class="text-sm">{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</span>
+							</div>
+							<div class="text-center mb-4 mt-5">
+								<p class="text-base font-bold opacity-70">{item.name}</p>
+							</div>
+							<div>
+								<img src={item.cover} alt="cover" class="mx-auto w-20" />
+							</div>
+							<div class="flex justify-between pt-4 relative">
+								<div>Traced: {item.traceCount}</div>
+								<div>Paid: {item.paymentCount}</div>
+								<!-- <div class="flex items-center">
+									<img
+										class="w-5 h-5 rounded-full overflow-hidden object-cover"
+										src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+										alt="participant"
+									/>
+									<img
+										class="w-5 h-5 rounded-full overflow-hidden object-cover"
+										src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTB8fG1hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+										alt="participant"
+									/>
+								</div> -->
 							</div>
 						</div>
 					</div>
 				</div>
 			{/each}
-			<div class="w-full h-[400px] mx-auto mt-4" id="barChart" />
-		</div> -->
+		</div>
 	</div>
 	<div class="w-full mt-8 lg:mt-0 lg:w-4/12 lg:pl-4">
 		<div class="bg-gray-800 rounded-3xl px-6 pt-6">
-			<div class="flex text-white text-2xl pb-6 font-bold">
+			<div class="flex text-white text-2xl pb-4 font-bold">
 				<p>Profile</p>
 			</div>
 			<div>
@@ -82,7 +107,7 @@
 							{$user.profile.bio.text}
 						</p>
 						<p class="text-right text-gray-400 text-sm">
-							{$user.followingCount}, {$user.followerCount}
+							Following: {$user.followingCount}, Follower: {$user.followerCount}
 						</p>
 					</div>
 				</div>

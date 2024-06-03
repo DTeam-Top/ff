@@ -25,8 +25,10 @@ export const insertFlow = async (flow: Flow) => {
 	setFarcaster({ id: result.data.id });
 };
 
-export const getFlows = async (creator: number) => {
-	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/list?creator=${creator}`);
+export const getFlows = async (creator: number, hasTraced: boolean = false) => {
+	const result = await axios.get(
+		`${PUBLIC_BASE_URL}api/flows/list?creator=${creator}&hasTraced=${hasTraced}`
+	);
 	return result.data;
 };
 
@@ -45,7 +47,11 @@ export const publishFlow = async (cast: Cast) => {
 	return result.data;
 };
 
-export const getStaticsCount = async (fid: number) => {
+export const getStaticsCount = async (fid: number | undefined) => {
 	const result = await axios.get(`${PUBLIC_BASE_URL}api/flows/statics/${fid}`);
+	return result.data;
+};
+export const getTracesByFlowId = async (flowId: number, fid: number) => {
+	const result = await axios.get(`${PUBLIC_BASE_URL}api/traces/list/${flowId}?caster=${fid}`);
 	return result.data;
 };

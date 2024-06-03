@@ -2,7 +2,7 @@ import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
 import { insertTrace } from '$lib/db/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { castRequest, fidRequest, verfiyUserRequest } from './requests';
+import { castRequest, userRequest, verfiyUserRequest } from './requests';
 
 export const router = new Hono()
 	.post('/verify-user', zValidator('json', verfiyUserRequest), async (c) => {
@@ -30,7 +30,7 @@ export const router = new Hono()
 			throw c.json({ message: 'Error occured' }, 500);
 		}
 	})
-	.get('/user/:fid', zValidator('param', fidRequest), async (c) => {
+	.get('/user/:fid', zValidator('param', userRequest), async (c) => {
 		const { fid } = c.req.valid('param');
 		if (!fid) {
 			throw c.json({ message: 'Need fid' }, 400);

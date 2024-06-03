@@ -9,6 +9,7 @@
 	import Tips from './Tips.svelte';
 
 	export let farcasterId = 0;
+	export let title = 'Create';
 	let frameUrl = '';
 	let name: string = '';
 	let nft: string = '';
@@ -37,11 +38,10 @@
 				toast.error('Wrong id');
 			}
 		} else {
-			name = 'test';
-			nft = '0x2F6F12b68165aBb483484927919D0d3fE450462E';
-			cover =
-				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
-			price = 0.005;
+			name = ''; //'test';
+			nft = ''; //'0x2F6F12b68165aBb483484927919D0d3fE450462E';
+			cover = ''; //'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
+			price = 0; //0.005;
 		}
 		previewHandler();
 	});
@@ -97,6 +97,7 @@
 </script>
 
 <div class="bg-gray-800 py-6 px-6 rounded-3xl h-full">
+	<div class="text-white font-bold text-2xl mb-4">{title} Flow</div>
 	<section class="w-full grid grid-cols-2 gap-8">
 		<div class="w-full bg-gray-100 rounded-3xl h-[500px]">
 			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Design</div>

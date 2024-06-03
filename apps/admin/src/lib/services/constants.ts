@@ -82,3 +82,14 @@ export function withdrawContract() {
 }
 
 export const WARPCAST_SETTING_URL = 'https://warpcast.com/~/settings/verified-addresses';
+
+export const BG_COLORLIST = [
+	'bg-green-200',
+	'bg-blue-200',
+	'bg-red-200',
+	'bg-yellow-200',
+	'bg-gray-200',
+	'bg-orange-200'
+];
+
+export const COMMISSIOM_MAX = 2;
