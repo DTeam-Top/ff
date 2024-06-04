@@ -24,10 +24,10 @@ export const createTrace = async (data: any) => {
       .insert(traces)
       .values({
         cast: trace.cast,
-        flow: Number(trace.flow),
+        flow: trace.flow,
         parentCast: trace.parentCast,
         caster: trace.caster,
-        createdAt: new Date(),
+        createdAt: Date.now(),
       })
       .onConflictDoNothing()
       .returning({ id: traces.id });

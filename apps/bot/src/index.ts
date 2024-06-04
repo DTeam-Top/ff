@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { createTrace } from "./services/traceService";
 import { TYPE_CREATED } from "./services/constants";
 import { createHmac } from "crypto";
+import { env } from "./env";
 
 const app = new Hono().basePath("/api");
 
@@ -13,7 +14,10 @@ app.post("/", async (c) => {
     throw new Error("Neynar signature missing from request headers");
   }
 
-  const webhookSecret = process.env.NEYNAR_WEBHOOK_SECRET;
+  const webhookSecret = env.NEYNAR_WEBHOOK_SECRET;
+  console.log(webhookSecret);
+
+  console.log(env.VERIFY_DOMAIN);
   if (!webhookSecret) {
     throw new Error(
       "Make sure you set NEYNAR_WEBHOOK_SECRET in your .env file"
@@ -37,11 +41,11 @@ app.post("/", async (c) => {
     case TYPE_CREATED: {
       console.log(reqData.data.embeds.length);
       console.log(reqData.data.embeds[0]);
-      console.log(process.env.VERIFY_DOMAIN);
+      console.log(env.VERIFY_DOMAIN);
 
       if (
         !reqData.data.embeds.length ||
-        reqData.data.embeds[0].url.indexOf(process.env.VERIFY_DOMAIN) === -1
+        reqData.data.embeds[0].url.indexOf(env.VERIFY_DOMAIN) === -1
       ) {
         return;
       }

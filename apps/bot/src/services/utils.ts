@@ -1,9 +1,15 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/node-postgres";
+import pkg from "pg";
+import { env } from "../env";
+const { Pool } = pkg;
+const pool = new Pool({
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  user: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
+});
 
-export type DbConfig = { db: string };
-const dbConfig: DbConfig = { db: process.env.PUBLIC_DB_URL || "./flows.db" };
 export function db() {
-  const sqlite = new Database(dbConfig.db);
-  return drizzle(sqlite);
+  return drizzle(pool);
 }
