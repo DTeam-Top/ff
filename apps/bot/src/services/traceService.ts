@@ -29,6 +29,7 @@ export const createTrace = async (data: any) => {
         caster: trace.caster,
         createdAt: new Date(),
       })
+      .onConflictDoNothing()
       .returning({ id: traces.id });
     console.log("returning", result);
   }
