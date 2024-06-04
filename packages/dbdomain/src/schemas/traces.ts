@@ -1,4 +1,10 @@
-import { sqliteTable, integer, index, text } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  integer,
+  index,
+  text,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
 
 export const traces = sqliteTable(
   "traces",
@@ -12,6 +18,6 @@ export const traces = sqliteTable(
   },
   (traces) => ({
     idxFlow: index("idx_traces_flow").on(traces.flow),
-    idxCast: index("idx_traces_cast").on(traces.cast),
+    idxCast: uniqueIndex("idx_traces_cast").on(traces.cast),
   })
 );

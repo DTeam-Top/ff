@@ -43,4 +43,4 @@ CREATE UNIQUE INDEX `idx_flow_name` ON `flows` (`name`);--> statement-breakpoint
 CREATE INDEX `idx_flow_creator` ON `flows` (`creator`);--> statement-breakpoint
 CREATE INDEX `idx_tp_trace` ON `trace_payments` (`trace`);--> statement-breakpoint
 CREATE INDEX `idx_traces_flow` ON `traces` (`flow_id`);--> statement-breakpoint
-CREATE INDEX `idx_traces_cast` ON `traces` (`cast`);
+CREATE UNIQUE INDEX `idx_traces_cast` ON `traces` (`cast`);
