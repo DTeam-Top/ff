@@ -48,9 +48,9 @@ app.frame(
   async (c) => {
     const { flowId } = c.req.param();
     if (Number(flowId) === 0) {
-      const { name, price, nft, image } = c.req.query();
-      contract = nft as `0x${string}`;
-      obj = { name, price, image, flowId, contract: nft };
+      const { name, price, address, image } = c.req.query();
+      contract = address as `0x${string}`;
+      obj = { name, price, image, flowId, contract: address };
     } else {
       const flow = await getFlowById(flowId);
       console.log(flow);
@@ -60,12 +60,12 @@ app.frame(
           price: flow.input.price,
           image: flow.cover,
           flowId,
-          contract: flow.input.nft,
+          contract: flow.input.address,
         };
-        contract = flow.input.nft as `0x${string}`;
+        contract = flow.input.address as `0x${string}`;
       }
     }
-    const shareLink = `${process.env.PUBLIC_BASE_URL}share/${flowId}?v=${new Date().getTime()}`;
+    const shareLink = `${process.env.PUBLIC_BASE_URL}share/${flowId}}`;
 
     return c.res({
       action: `/finish/${flowId}`,
