@@ -46,10 +46,10 @@ const setUser = (value: User) => {
 export { user, setUser };
 
 type Farcaster = {
-	id: number;
+	id: string;
 };
 const farcaster = writable({
-	id: 0
+	id: '0'
 });
 
 const setFarcaster = (value: Farcaster) => {

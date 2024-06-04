@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { signed } from '$lib/services/utils';
+	import { signed } from '$lib/client/utils';
 	import { page } from '$app/stores';
 	import CreateFlow from '$lib/components/CreateFlow.svelte';
 	$: if (!$signed) {
@@ -14,5 +14,5 @@
 	<meta name="description" content="Create frame" />
 </svelte:head>
 {#if $page.params.id}
-	<CreateFlow farcasterId={Number($page.params.id)} title="Edit" />
+	<CreateFlow farcasterId={$page.params.id} title="Edit" />
 {/if}

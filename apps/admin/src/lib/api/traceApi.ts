@@ -1,4 +1,4 @@
-import { createTracePayment, getTraces } from '$lib/db/traceService';
+import { createTracePayment, getTraces } from '$lib/server/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { idRequest, updateTxRequest } from './requests';
@@ -16,7 +16,7 @@ export const router = new Hono()
 
 				console.log(id, cast, paymentTx, amount);
 
-				await createTracePayment(Number(id), cast, paymentTx, amount);
+				await createTracePayment(id, cast, paymentTx, amount);
 
 				return c.json({ message: 'Success' });
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +29,7 @@ export const router = new Hono()
 		try {
 			const { id } = c.req.param(); //flow id
 			const { caster } = c.req.query();
-			const result = await getTraces(Number(id), caster);
+			const result = await getTraces(id, caster);
 			console.log(caster);
 
 			return c.json(result);

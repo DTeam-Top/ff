@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { PUBLIC_FRAME_BASE_URL } from '$env/static/public';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlow, insertFlow } from '$lib/services/flowService';
-	import { errorPipe, getPreviewUrl } from '$lib/services/utils';
-	import { user, farcaster, setFarcaster } from '$lib/services/store';
+	import { getFlow, insertFlow } from '$lib/client/flowService';
+	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
+	import { user, farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import Tips from './Tips.svelte';
+	import { FRAME_BASE_URL } from '$lib/client/clientConsts';
 
-	export let farcasterId = 0;
+	export let farcasterId = 'uuid';
 	export let title = 'Create';
 	let frameUrl = '';
 	let name: string = '';
-	let nft: string = '';
+	let address: string = '';
 	let cover: string = '';
 	let price: number = 0;
 	const cancelHandler = () => {
 		name = '';
-		nft = '';
+		address = '';
 		cover = '';
 		price = 0;
 		prviewImage = '';
@@ -27,39 +27,41 @@
 
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
-		if (farcasterId > 0) {
+		console.log(farcasterId, farcasterId !== 'uuid');
+		if (farcasterId.toString() !== 'uuid') {
 			const flow = await getFlow(farcasterId);
 			if (flow) {
 				name = flow.name;
-				nft = flow.input?.nft;
+				address = flow.input?.address;
 				price = flow.input?.price;
 				cover = flow.cover;
 			} else {
 				toast.error('Wrong id');
 			}
 		} else {
-			name = ''; //'test';
-			nft = '0x2F6F12b68165aBb483484927919D0d3fE450462E'; //'0x2F6F12b68165aBb483484927919D0d3fE450462E';
-			cover = ''; //'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
-			price = 0; //0.005;
+			name = 'test'; //'test';
+			address = '0x2F6F12b68165aBb483484927919D0d3fE450462E'; //'0x2F6F12b68165aBb483484927919D0d3fE450462E';
+			cover =
+				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png'; //'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
+			price = 0.005; //0.005;
 		}
 		previewHandler();
 	});
 
 	const previewHandler = async () => {
-		if (!name || !nft) {
+		if (!name || !address) {
 			return;
 		}
 		loading = true;
 
 		frameUrl = '';
-		prviewImage = await getPreviewUrl(PUBLIC_FRAME_BASE_URL, name, cover, price, nft);
+		prviewImage = await getPreviewUrl(FRAME_BASE_URL, name, cover, price, address);
 		loading = false;
 	};
 
 	const saveHandler = async () => {
 		try {
-			if (!name || !nft || !cover) {
+			if (!name || !address || !cover) {
 				toast.error('Please input name , ERC20 , cover');
 				return;
 			}
@@ -67,13 +69,13 @@
 			await insertFlow({
 				name: name,
 				cover: cover,
-				input: { price: price.toString(), nft: nft },
+				input: { price: price.toString(), address: address },
 				creator: $user.fid,
 				id: $farcaster.id
 			});
 			toast.success('Save success!');
 
-			//frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}`;
+			//frameUrl = `${PRIVATE_FRAME_BASE_URL}/api/${$farcaster.id}`;
 		} catch (e: any) {
 			//alert(e);
 			console.log(e.response);
@@ -83,7 +85,7 @@
 
 	const publishHandler = async () => {
 		if ($farcaster.id) {
-			frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${$farcaster.id}?v=${new Date().getTime()}`;
+			frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
 			// const result = await publishFlow({
 			// 	fid: $user.fid.toString(),
 			// 	signerUuid: $user.signerUuid,
@@ -116,7 +118,7 @@
 					<div class="w-[50px] font-bold">ERC20:</div>
 					<input
 						class="border px-4 py-2 ml-4 w-full"
-						bind:value={nft}
+						bind:value={address}
 						placeholder="ERC20 address"
 						on:keyup={() => previewHandler()}
 					/>

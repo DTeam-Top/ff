@@ -1,22 +1,24 @@
-import { LOGGER } from '$lib/db/constant';
+import { db } from '$lib/server/dbService';
+import { LOGGER } from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
-import { db } from './dbService';
+// import { db } from './dbService.ts1';
 import { count, countDistinct, eq, sql } from 'drizzle-orm';
 export type Flow = {
-	id: number | undefined;
+	id: string | undefined;
 	name: string;
 	cover: string | undefined;
-	input: { price: string; nft: string };
+	input: { price: string; address: string };
 	creator: number;
 };
 
-const logger = LOGGER.child({ from: 'db' });
+const logger = LOGGER.child({ from: 'db flowService' });
 
 export const upsertFlow = async (flow: Flow) => {
 	logger.info(flow);
+	console.log(flow);
 	let result;
 	try {
-		if (flow.id) {
+		if (flow.id !== 'uuid') {
 			result = await db()
 				.update(flows)
 				.set({
@@ -35,7 +37,7 @@ export const upsertFlow = async (flow: Flow) => {
 					cover: flow.cover,
 					input: flow.input,
 					creator: Number(flow.creator),
-					createdAt: new Date()
+					createdAt: Date.now()
 				})
 				.returning();
 		}
@@ -88,12 +90,12 @@ export const getFlowList = async (creator: number, hasTraced: boolean) => {
 	}
 };
 
-export const deleteFlow = async (id: number) => {
+export const deleteFlow = async (id: string) => {
 	const result = await db().delete(flows).where(eq(flows.id, id));
 	return result;
 };
 
-export const getFlowById = async (id: number) => {
+export const getFlowById = async (id: string) => {
 	const result = await db().select().from(flows).where(eq(flows.id, id));
 	return result.length > 0 ? result[0] : null;
 };

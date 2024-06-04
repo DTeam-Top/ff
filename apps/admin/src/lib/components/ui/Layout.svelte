@@ -2,12 +2,12 @@
 	import 'tailwindcss/tailwind.css';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
-	import { signed } from '$lib/services/utils';
+	import { signed } from '$lib/client/utils';
 
 	import TopBar from './TopBar.svelte';
 	import Overlay from './Overlay.svelte';
 	import Sidebar from './sidebar/Sidebar.svelte';
-	import { closeSidebar, sidebarOpen } from '$lib/services/store';
+	import { closeSidebar, sidebarOpen } from '$lib/client/store';
 
 	const style = {
 		container: `bg-gray-900 h-screen overflow-hidden relative`

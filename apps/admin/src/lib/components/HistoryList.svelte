@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { getHistoryList } from '$lib/services/commissionService';
-	import { COMMISSIOM_MAX, getBaseScanURL } from '$lib/services/constants';
-	import { user } from '$lib/services/store';
+	import { COMMISSIOM_MAX, getBaseScanURL } from '$lib/client/clientConsts';
+	import { getHistoryList } from '$lib/client/commissionService';
+	import { user } from '$lib/client/store';
 	import dayjs from 'dayjs';
+	import { formatEther } from 'ethers';
 	import { createEventDispatcher } from 'svelte';
 
 	export let needRefresh = false;
@@ -44,7 +45,7 @@
 </script>
 
 <div class="text-white my-4 text-xl text-right">
-	Total: {total} <span class="ml-8">Balance: {balance} ETH</span>
+	Total: {total} <span class="ml-8">Balance: {formatEther(balance)} ETH</span>
 </div>
 
 {#if commissionList.length > 0}
@@ -64,7 +65,7 @@
 						</div>
 					</div>
 					<p class="my-2 text-sm text-gray-400">
-						{item.commission} ETH
+						{formatEther(item.commission)} ETH
 					</p>
 					<p class="text-right text-gray-400 text-sm">
 						{dayjs(item.withdrawnAt).format('YYYY, MMMM, DD')}

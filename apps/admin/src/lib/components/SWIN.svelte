@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { PUBLIC_CLIENT_ID } from '$env/static/public';
-	import { USER_STORE_KEY } from '$lib/services/constants';
-	import { getCaster } from '$lib/services/casterService';
-	import { setItem } from '$lib/services/utils';
-	import { Hono } from 'hono';
+	import { getCaster } from '$lib/client/casterService';
+	import { CLIENT_ID, USER_STORE_KEY } from '$lib/client/clientConsts';
+	import { setItem } from '$lib/client/utils';
 	import { onDestroy, onMount } from 'svelte';
+
 	onDestroy(() => {
 		if (browser) {
 			delete window.onSignInSuccess;
@@ -27,7 +26,7 @@
 
 		document.body.appendChild(script);
 
-		window.onSignInSuccess = async (data) => {
+		window.onSignInSuccess = async (data: any) => {
 			const callbackData = {
 				signerUuid: data.signer_uuid,
 				fid: data.fid
@@ -44,7 +43,7 @@
 
 		neynarDiv = document.createElement('div');
 		neynarDiv.classList = ['neynar_signin'];
-		neynarDiv.setAttribute('data-client_id', PUBLIC_CLIENT_ID);
+		neynarDiv.setAttribute('data-client_id', CLIENT_ID);
 		neynarDiv.setAttribute('data-success-callback', 'onSignInSuccess');
 		//neynarDiv.setAttribute("data-theme", "light");
 		neynarDiv.setAttribute('data-variant', 'farcaster');

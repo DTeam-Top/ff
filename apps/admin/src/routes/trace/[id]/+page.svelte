@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getTracesByFlowId } from '$lib/services/flowService';
-	import { addressPipe, signed } from '$lib/services/utils';
-	import { setFarcaster, user } from '$lib/services/store';
+	import { getTracesByFlowId } from '$lib/client/flowService';
+	import { signed } from '$lib/client/utils';
+	import { setFarcaster, user } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import dayjs from 'dayjs';
 	let list: any[] = [];
 	onMount(() => {
-		setFarcaster({ id: 0 });
+		setFarcaster({ id: '0' });
 	});
 
 	$: if (!$signed) {
@@ -19,8 +19,8 @@
 		getTraceList();
 	}
 	const getTraceList = async () => {
-		console.log(Number($page.params.id), $user.fid);
-		const result = await getTracesByFlowId(Number($page.params.id), $user.fid);
+		console.log($page, $user.fid, 222);
+		const result = await getTracesByFlowId($page.params.id, $user.fid);
 		console.log(result);
 		list = result;
 	};
@@ -80,7 +80,7 @@
 					{#each list as item, i}
 						<tr>
 							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
-								><a>{item.cast}</a></td
+								><a href="">{item.cast}</a></td
 							>
 							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
 								>{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</td

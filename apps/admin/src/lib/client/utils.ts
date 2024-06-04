@@ -35,9 +35,9 @@ export const getPreviewUrl = async (
 	name: string,
 	cover: string,
 	price: number,
-	nft: string
+	address: string
 ) => {
-	let previewUrl = `${baseUrl}/api/0?name=${name}&price=${price}&nft=${nft}`;
+	let previewUrl = `${baseUrl}/api/0?name=${name}&price=${price}&address=${address}`;
 	if (cover) {
 		previewUrl += `&image=${cover}`;
 	}

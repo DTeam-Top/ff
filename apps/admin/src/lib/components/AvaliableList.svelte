@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { getCommissionList } from '$lib/services/commissionService';
-	import { COMMISSIOM_MAX, WARPCAST_SETTING_URL, getBaseScanURL } from '$lib/services/constants';
-	import { user } from '$lib/services/store';
-	import { addressPipe } from '$lib/services/utils';
+	import { COMMISSIOM_MAX, WARPCAST_SETTING_URL, getBaseScanURL } from '$lib/client/clientConsts';
+	import { getCommissionList } from '$lib/client/commissionService';
+	import { addressPipe } from '$lib/client/utils';
+	import { user } from '$lib/client/store';
 	import dayjs from 'dayjs';
+	import { formatEther } from 'ethers';
 	import { createEventDispatcher, onMount } from 'svelte';
 	export let needRefresh = false;
 	let commissionList: any[] = [];
@@ -67,7 +68,7 @@
 		</div>
 	{/if}
 	<div class="text-white text-xl text-right">
-		Total: {total} <span class="ml-8">Balance: {balance} ETH</span>
+		Total: {total} <span class="ml-8">Balance: {formatEther(balance)} ETH</span>
 	</div>
 </div>
 
@@ -88,7 +89,7 @@
 						</div>
 					</div>
 					<p class="my-2 text-sm text-gray-400">
-						{item.commission} ETH
+						{formatEther(item.commission)} ETH
 					</p>
 					<p class="text-right text-gray-400 text-sm">
 						{dayjs(item.createdAt).format('YYYY, MMMM, DD')}

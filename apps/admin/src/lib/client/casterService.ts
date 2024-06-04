@@ -1,11 +1,11 @@
-import { PUBLIC_BASE_URL } from '$env/static/public';
 import axios from 'axios';
 import { setUser } from './store';
+import { BASE_URL } from './clientConsts';
 
 export const getCaster = async (item: { fid: string; signerUuid: string }) => {
-	const verify = await axios.post(`${PUBLIC_BASE_URL}api/verify-user`, item);
+	const verify = await axios.post(`${BASE_URL}api/verify-user`, item);
 	if (verify.data && verify.data.isVerifiedUser) {
-		const res = await axios.get(`${PUBLIC_BASE_URL}api/user/${item.fid}`, item);
+		const res = await axios.get(`${BASE_URL}api/user/${item.fid}`, item);
 		const user = res.data;
 
 		setUser({

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { signed } from '$lib/services/utils';
+	import { signed } from '$lib/client/utils';
 	import CreateFlow from '$lib/components/CreateFlow.svelte';
 
 	$: if (!$signed) {
@@ -13,4 +13,4 @@
 	<meta name="description" content="Create frame" />
 </svelte:head>
 
-<CreateFlow farcasterId={0} title="Create" />
+<CreateFlow farcasterId={'uuid'} title="Create" />

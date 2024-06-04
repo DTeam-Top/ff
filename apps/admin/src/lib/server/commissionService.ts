@@ -1,8 +1,8 @@
 import { count, eq, inArray, isNull, sum, and, isNotNull } from 'drizzle-orm';
-import { db } from './dbService';
+
 import { commissions, flows, tracePayments } from 'dbdomain';
-import { parseEther } from 'ethers';
-import { withdrawContract } from '$lib/services/constants';
+import { db } from '$lib/server/dbService';
+import { withdrawContract } from '$lib/server/serverConsts';
 
 export const getCommissionList = async (fid: string, offset: number, max: number) => {
 	const result = await db()
@@ -87,9 +87,10 @@ export const withdraw = async (address: string, fid: number) => {
 		idList.push(commission.id);
 		amount += commission.commission;
 	}
+	console.log(amount);
 	const mintData = {
 		to: address,
-		amount: parseEther(amount.toString())
+		amount: amount.toString()
 	};
 	console.log(mintData, idList);
 	const tx = await withdrawContract().transferEarnings(mintData.to, mintData.amount, {

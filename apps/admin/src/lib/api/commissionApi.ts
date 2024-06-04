@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { fidRequest, withdrawRequest } from './requests';
-import { getCommissionList, getHistoryList, withdraw } from '$lib/db/commissionService';
+import { getCommissionList, getHistoryList, withdraw } from '$lib/server/commissionService';
 
 export const router = new Hono()
 	.get('/:fid', zValidator('param', fidRequest), async (c) => {

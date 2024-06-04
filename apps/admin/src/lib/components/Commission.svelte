@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getCommissionList } from '$lib/services/commissionService';
-	import { COMMISSIOM_MAX, WARPCAST_SETTING_URL, getBaseScanURL } from '$lib/services/constants';
-	import { user } from '$lib/services/store';
-	import { addressPipe } from '$lib/services/utils';
+	import { getCommissionList } from '$lib/client/commissionService';
+	import { user } from '$lib/client/store';
 	import { goto } from '$app/navigation';
+	import { formatEther } from 'ethers';
+	import { COMMISSIOM_MAX } from '$lib/client/clientConsts';
 	let total = 0;
 	let balance = 0;
 	let offset: number = 0;
@@ -55,7 +55,7 @@
 		<div class="border-t solid border-gray-700 p-4 w-full hover:bg-gray-700 text-white">
 			<div class="py-2 text-2xl">
 				<div class="font-normal mr-4">Total: {total}</div>
-				<div class="font-normal">Balance: {balance} ETH</div>
+				<div class="font-normal">Balance: {formatEther(balance)} ETH</div>
 			</div>
 		</div>
 	</div>

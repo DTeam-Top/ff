@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getFlows, deleteFlowById } from '$lib/services/flowService';
-	import { addressPipe, signed } from '$lib/services/utils';
-	import { setFarcaster, user } from '$lib/services/store';
+	import { getFlows, deleteFlowById } from '$lib/client/flowService';
+	import { addressPipe, signed } from '$lib/client/utils';
+	import { setFarcaster, user } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { dialogs } from 'svelte-dialogs';
@@ -86,7 +86,7 @@
 								>{item.input.price} ETH</td
 							>
 							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
-								>{addressPipe(item.input.nft)}</td
+								>{addressPipe(item.input.address)}</td
 							>
 							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
 								>{item.traceCount}</td
@@ -124,7 +124,7 @@
 								</div>
 								<div>
 									<p class="m-0 text-sm font-bold">{item.input.price} ETH</p>
-									<p class="m-0 text-sm font-bold">{addressPipe(item.input.nft)}</p>
+									<p class="m-0 text-sm font-bold">{addressPipe(item.input.address)}</p>
 								</div>
 								<div>
 									<img class="h-48 w-48 overflow-hidden object-cover mx-auto" src={item.cover} />

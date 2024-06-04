@@ -1,7 +1,8 @@
 <script>
-	import { sidebarOpen, openSidebar, user } from '$lib/services/store';
-	import { removeItem, signed } from '$lib/services/utils';
+	import { sidebarOpen, openSidebar, user } from '$lib/client/store';
+	import { removeItem, signed } from '$lib/client/utils';
 	import SWIN from '$lib/components/SWIN.svelte';
+	import SiteName from '$lib/components/ui/SiteName.svelte';
 
 	const onSingout = () => {
 		removeItem('user', window);
@@ -44,14 +45,14 @@
 							</svg>
 						</div>
 						{#if !$sidebarOpen}
-							<div class="text-2xl">Farcaster Flow</div>
+							<SiteName />
 						{/if}
 					</div>
 				</div>
 			{:else}
 				<div class="container flex left-0 relative w-3/4 items-center">
 					<img src="/images/logo.svg" width="60" height="60" alt="SLN" />
-					<div class="text-2xl ml-4 mt-2">Farcaster Flow</div>
+					<SiteName cssClass={' ml-4 mt-2'} />
 				</div>
 			{/if}
 

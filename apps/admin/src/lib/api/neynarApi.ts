@@ -1,8 +1,9 @@
-import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
-import { insertTrace } from '$lib/db/traceService';
+// import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
+import { insertTrace } from '$lib/server/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { castRequest, userRequest, verfiyUserRequest } from './requests';
+import { createCast, lookupSigner, lookupUserByFid } from '$lib/server/neynarClient';
 
 export const router = new Hono()
 	.post('/verify-user', zValidator('json', verfiyUserRequest), async (c) => {

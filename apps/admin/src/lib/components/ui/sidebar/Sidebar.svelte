@@ -1,5 +1,5 @@
 <script>
-	import { sidebarOpen } from '$lib/services/store';
+	import { sidebarOpen } from '$lib/client/store';
 	import SidebarItems from './SidebarItems.svelte';
 	import SidebarHeader from './SidebarHeader.svelte';
 

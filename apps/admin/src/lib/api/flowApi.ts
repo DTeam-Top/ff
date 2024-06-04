@@ -1,4 +1,10 @@
-import { getFlowList, upsertFlow, deleteFlow, getFlowById, getStatics } from '$lib/db/flowService';
+import {
+	getFlowList,
+	upsertFlow,
+	deleteFlow,
+	getFlowById,
+	getStatics
+} from '$lib/server/flowService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { flowRequest, idRequest } from './requests';
@@ -33,7 +39,7 @@ export const router = new Hono()
 	.post('/delete/:id', zValidator('param', idRequest), async (c) => {
 		try {
 			const { id } = c.req.param();
-			await deleteFlow(Number(id));
+			await deleteFlow(id);
 
 			return c.json({ message: 'Success' });
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +50,7 @@ export const router = new Hono()
 	.get('/get/:id', zValidator('param', idRequest), async (c) => {
 		try {
 			const { id } = c.req.param();
-			const result = await getFlowById(Number(id));
+			const result = await getFlowById(id);
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

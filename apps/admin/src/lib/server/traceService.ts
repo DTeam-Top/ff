@@ -1,10 +1,12 @@
-import { LOGGER } from '$lib/db/constant';
-import { flows, tracePayments, traces } from '../../../../../packages/dbdomain/dist/dbdomain';
-import { db } from './dbService';
+import { parseEther } from 'ethers';
+import { flows, tracePayments, traces } from 'dbdomain';
+
 import { and, eq } from 'drizzle-orm';
+import { db } from '$lib/server/dbService';
+import { LOGGER } from '$lib/server/serverConsts';
 export type Trace = {
 	cast: string;
-	flow: number;
+	flow: string;
 	parentCast: string | undefined;
 	caster: number;
 };
@@ -19,7 +21,7 @@ export const insertTrace = async (trace: Trace) => {
 			flow: trace.flow,
 			parentCast: trace.parentCast,
 			caster: trace.caster,
-			createdAt: new Date()
+			createdAt: Date.now()
 		});
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (e: any) {
@@ -28,13 +30,13 @@ export const insertTrace = async (trace: Trace) => {
 	}
 };
 
-export const existTraceByFlow = async (flow: number) => {
+export const existTraceByFlow = async (flow: string) => {
 	const result = await db().select().from(traces).where(eq(traces.flow, flow));
 	return result.length > 0;
 };
 
 export const createTracePayment = async (
-	flow: number,
+	flow: string,
 	cast: string,
 	paymentTx: string,
 	amount: string
@@ -50,7 +52,7 @@ export const createTracePayment = async (
 				.insert(tracePayments)
 				.values({
 					trace: trace.id,
-					amount: Number(amount),
+					amount: parseEther(`${amount}`),
 					paymentTx: paymentTx
 				});
 		}
@@ -63,7 +65,7 @@ export const createTracePayment = async (
 	return;
 };
 
-export const getTraces = async (flow: number, caster: string) => {
+export const getTraces = async (flow: string, caster: string) => {
 	console.log(flow, caster);
 	const result = await db()
 		.select({
@@ -77,6 +79,6 @@ export const getTraces = async (flow: number, caster: string) => {
 		})
 		.from(traces)
 		.leftJoin(flows, eq(traces.flow, flows.id))
-		.where(and(eq(traces.flow, Number(flow)), eq(traces.caster, Number(caster))));
+		.where(and(eq(traces.flow, flow), eq(traces.caster, Number(caster))));
 	return result;
 };

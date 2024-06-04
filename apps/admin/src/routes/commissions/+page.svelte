@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { signed } from '$lib/services/utils';
+	import { signed } from '$lib/client/utils';
 	import { dialogs } from 'svelte-dialogs';
 	import WithdrawButton from '$lib/components/WithdrawButton.svelte';
-	import { TABS } from '$lib/services/constants';
 	import HistoryList from '$lib/components/HistoryList.svelte';
 	import AvaliableList from '$lib/components/AvaliableList.svelte';
 	import { goto } from '$app/navigation';
-	import { postWithdraw } from '$lib/services/commissionService';
-	import { user } from '$lib/services/store';
+	import { postWithdraw } from '$lib/client/commissionService';
+	import { user } from '$lib/client/store';
+	import { TABS } from '$lib/client/clientConsts';
 
 	let loading = false;
 	let needRefresh = false;

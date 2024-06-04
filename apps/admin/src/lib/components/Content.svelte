@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { BG_COLORLIST, WARP_BASE, getBaseScanURL } from '$lib/services/constants';
-	import { user } from '$lib/services/store';
+	import { user } from '$lib/client/store';
 	import dayjs from 'dayjs';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
 	import * as echarts from 'echarts';
-	import { getFlows, getStaticsCount } from '$lib/services/flowService';
+	import { getFlows, getStaticsCount } from '$lib/client/flowService';
 	import Commission from './Commission.svelte';
+	import { BG_COLORLIST, WARP_BASE } from '$lib/client/clientConsts';
 
 	export let title;
 

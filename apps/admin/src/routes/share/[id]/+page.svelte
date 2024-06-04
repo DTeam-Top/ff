@@ -1,23 +1,24 @@
 <script lang="ts">
-	import { getFlow } from '$lib/services/flowService';
+	import { getFlow } from '$lib/client/flowService';
 
 	import { page } from '$app/stores';
-	import { getPreviewUrl } from '$lib/services/utils';
-	import { PUBLIC_FRAME_BASE_URL } from '$env/static/public';
+	import { getPreviewUrl } from '$lib/client/utils';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import Tips from '$lib/components/Tips.svelte';
+	import { FRAME_BASE_URL } from '$lib/client/clientConsts';
+
 	let frameUrl = '';
 	let prviewImage: string;
 	$: if ($page.params.id && !frameUrl) {
-		getFlow(Number($page.params.id)).then(async (flow) => {
+		getFlow($page.params.id).then(async (flow) => {
 			console.log(flow);
-			frameUrl = `${PUBLIC_FRAME_BASE_URL}/api/${flow.id}`;
+			frameUrl = `${FRAME_BASE_URL}/api/${flow.id}`;
 			prviewImage = await getPreviewUrl(
-				PUBLIC_FRAME_BASE_URL,
+				FRAME_BASE_URL || 'http://localhost:3000',
 				flow.name,
 				flow.cover,
 				flow.input.price,
-				flow.input.nft
+				flow.input.address
 			);
 			console.log(prviewImage);
 		});

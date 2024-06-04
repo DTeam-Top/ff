@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getStaticsCount } from '$lib/services/flowService';
+	import { getStaticsCount } from '$lib/client/flowService';
 
 	let statistics: any[] = [];
 	let frameList: any[] = [];

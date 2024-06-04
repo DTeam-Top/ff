@@ -1,10 +1,10 @@
 <script>
 	import { browser } from '$app/environment';
-	import { USER_STORE_KEY } from '$lib/services/constants';
-	import { getItem } from '$lib/services/utils';
+	import { getItem } from '$lib/client/utils';
 	import Layout from '$lib/components/ui/Layout.svelte';
-	import { getCaster } from '$lib/services/casterService';
+	import { getCaster } from '$lib/client/casterService';
 	import './style.css';
+	import { USER_STORE_KEY } from '$lib/client/clientConsts';
 	let loading = true;
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);

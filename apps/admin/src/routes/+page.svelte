@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { signed } from '$lib/services/utils';
+	import { signed } from '$lib/client/utils';
 	import Content from '$lib/components/Content.svelte';
 	import Landing from '$lib/components/Landing.svelte';
 </script>

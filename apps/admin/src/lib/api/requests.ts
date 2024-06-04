@@ -6,9 +6,9 @@ export const flowRequest = z.object({
 	creator: z.number(),
 	input: z.object({
 		price: z.string(),
-		nft: z.string()
+		address: z.string()
 	}),
-	id: z.number().optional()
+	id: z.string().optional()
 });
 
 export const getRequest = z.object({
@@ -63,5 +63,5 @@ export const castRequest = z.object({
 	signerUuid: z.string(),
 	frameUrl: z.string(),
 	content: z.string(),
-	flowId: z.number()
+	flowId: z.string()
 });
