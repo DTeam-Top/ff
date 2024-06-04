@@ -1,7 +1,8 @@
 import { sql, eq, isNull, isNotNull, and } from "drizzle-orm";
 import { db } from "../utils.js";
-import { commissions, traces, flows, tracePayments } from "dbdomain";
+//import { commissions, traces, flows, tracePayments } from "dbdomain";
 import { ROYALTY_RATIO } from "./constants.js";
+import { commissions, flows, tracePayments, traces } from "dbdomain";
 
 // select id, amount from trace_payments where commission_paid < 0
 // for each payment:
@@ -44,33 +45,39 @@ export async function updateCommission(batchSize = 100) {
       //   }
 
       await db().transaction(async (tx) => {
-        const commission1 = await tx
+        const creatorCommission = await tx
           .insert(commissions)
           .values({
-            flow: Number(traceRecords[0].flow),
-            payment: payment.id,
-            fid: Number(traceRecords[0].caster),
-            commission: amount,
-            createdAt: new Date(),
-          })
-          .returning({ id: commissions.id });
-
-        console.log("insert commission---");
-
-        const commission2 = await tx
-          .insert(commissions)
-          .values({
-            flow: Number(traceRecords[0].flow),
+            flow: traceRecords[0].flow || "",
             payment: payment.id,
             fid: Number(traceRecords[0].flowCreator),
             commission: amount,
-            createdAt: new Date(),
+            createdAt: Date.now(),
           })
-          .returning({ id: commissions.id });
+          .returning();
 
+        let casterCommission = [];
+        if (traceRecords[0].flowCreator !== traceRecords[0].caster) {
+          casterCommission = await tx
+            .insert(commissions)
+            .values({
+              flow: traceRecords[0].flow || "",
+              payment: payment.id,
+              fid: Number(traceRecords[0].caster),
+              commission: amount,
+              createdAt: Date.now(),
+            })
+            .returning();
+        }
         console.log("insert commission---");
 
-        if (commission1.length > 0 && commission2.length > 0) {
+        if (
+          (traceRecords[0].flowCreator !== traceRecords[0].caster &&
+            casterCommission.length > 0 &&
+            creatorCommission.length > 0) ||
+          (traceRecords[0].flowCreator == traceRecords[0].caster &&
+            creatorCommission.length > 0)
+        ) {
           await tx
             .update(tracePayments)
             .set({ commissionPaid: 1 })

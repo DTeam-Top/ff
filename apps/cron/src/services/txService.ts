@@ -2,10 +2,11 @@ import { eq, isNotNull, isNull, and } from "drizzle-orm";
 import { db } from "../utils.js";
 import { ethers } from "ethers";
 import { commissions, tracePayments } from "dbdomain";
+import { env } from "../env.js";
 
 const network = "base-sepolia";
 
-const projectId = process.env.INFURA_PROJECT_ID;
+const projectId = env.INFURA_PROJECT_ID;
 const provider = new ethers.InfuraProvider(network, projectId);
 
 export const updateTracePayments = async () => {
@@ -21,7 +22,7 @@ export const updateTracePayments = async () => {
       console.log("update tracePayments");
       await db()
         .update(tracePayments)
-        .set({ paymentTs: new Date() })
+        .set({ paymentTs: Date.now() })
         .where(eq(tracePayments.id, payment.id));
     }
   }
@@ -47,7 +48,7 @@ export const updateComission = async () => {
           console.log("update commissions");
           await db()
             .update(commissions)
-            .set({ withdrawnAt: new Date() })
+            .set({ withdrawnAt: Date.now() })
             .where(eq(commissions.id, commission.id));
         } else if (result?.status === 0) {
           console.log("transaction failed");

@@ -1,7 +1,7 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
 import { JobCallback, Spec, scheduleJob } from "node-schedule";
-
+import { drizzle } from "drizzle-orm/node-postgres";
+import pkg from "pg";
+import { env } from "./env.js";
 export type Jobs = { rule: Spec; job: JobCallback }[];
 export type DbConfig = { db: string };
 
@@ -10,9 +10,17 @@ export const createJobs = (jobs: Jobs) => {
     scheduleJob(rule, job);
   });
 };
-console.log(process.env.PUBLIC_DB_URL, process.env.INFURA_PROJECT_ID);
-const dbConfig: DbConfig = { db: `${process.env.PUBLIC_DB_URL}` };
+
+console.log(env.DB_DATABASE);
+const { Pool } = pkg;
+const pool = new Pool({
+  host: env.DB_HOST,
+  port: Number(env.DB_PORT),
+  user: env.DB_USER,
+  password: env.DB_PASSWORD,
+  database: env.DB_DATABASE,
+});
+
 export function db() {
-  const sqlite = new Database(dbConfig.db);
-  return drizzle(sqlite);
+  return drizzle(pool);
 }

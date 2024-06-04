@@ -22,11 +22,16 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@t3-oss/env-core": "^0.10.1",
+    "@types/pg": "^8.11.6",
     "better-sqlite3": "^10.0.0",
     "dbdomain": "workspace:*",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
     "ethers": "^6.12.1",
-    "node-schedule": "^2.1.1"
+    "node-schedule": "^2.1.1",
+    "pg": "^8.11.5",
+    "zod": "^3.23.8"
   },
   "type": "module"
 }
