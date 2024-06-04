@@ -1,21 +1,23 @@
 import {
-  sqliteTable,
+  pgTable,
   text,
   integer,
   uniqueIndex,
-  blob,
+  jsonb,
+  bigint,
+  uuid,
   index,
-} from "drizzle-orm/sqlite-core";
+} from "drizzle-orm/pg-core";
 
-export const flows = sqliteTable(
+export const flows = pgTable(
   "flows",
   {
-    id: integer("id").primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey(),
     name: text("name").notNull(), // flow name
     cover: text("cover").notNull(), // cover image url
-    input: blob("input", { mode: "json" }).notNull(), // flow input json for flow frame
+    input: jsonb("input").notNull(), // flow input json for flow frame
     creator: integer("creator").notNull(), // flow creator fid
-    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
   },
   (flows) => ({
     idxName: uniqueIndex("idx_flow_name").on(flows.name),

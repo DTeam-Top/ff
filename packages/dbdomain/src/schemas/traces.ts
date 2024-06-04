@@ -1,20 +1,23 @@
 import {
-  sqliteTable,
+  pgTable,
   integer,
   index,
   text,
+  bigint,
   uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+  uuid,
+  serial,
+} from "drizzle-orm/pg-core";
 
-export const traces = sqliteTable(
+export const traces = pgTable(
   "traces",
   {
-    id: integer("id").primaryKey(),
+    id: serial("id").primaryKey(),
     cast: text("cast").notNull(), // cast id for a flow
-    flow: integer("flow_id").notNull(), // flow id
+    flow: uuid("flow_id").notNull(), // flow id
     parentCast: text("parent_cast"), // parent cast id
     caster: integer("caster").notNull(), // trace caster fid
-    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
   },
   (traces) => ({
     idxFlow: index("idx_traces_flow").on(traces.flow),

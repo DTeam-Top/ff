@@ -19,5 +19,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "resolveJsonModule": true
+    }
+  },
   "include": ["src"]
 }

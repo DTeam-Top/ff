@@ -1,6 +1,6 @@
 {
-  "id": "74887ab8-3019-4906-9a22-e01af40aed4e",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "33c54b0e-1d6d-4863-8133-4ec8127c841e",
+  "prevId": "74887ab8-3019-4906-9a22-e01af40aed4e",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -34,7 +34,7 @@
         },
         "commission": {
           "name": "commission",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
@@ -164,7 +164,7 @@
         },
         "amount": {
           "name": "amount",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },

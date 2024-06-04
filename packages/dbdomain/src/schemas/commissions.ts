@@ -1,16 +1,24 @@
-import { sqliteTable, integer, index, text } from "drizzle-orm/sqlite-core";
+import {
+  pgTable,
+  integer,
+  index,
+  text,
+  bigint,
+  uuid,
+  serial,
+} from "drizzle-orm/pg-core";
 
-export const commissions = sqliteTable(
+export const commissions = pgTable(
   "commissions",
   {
-    id: integer("id").primaryKey(),
-    flow: integer("flow_id").notNull(), // flow id,
+    id: serial("id").primaryKey(),
+    flow: uuid("flow_id").notNull(), // flow id,
     payment: integer("payment_id").notNull(), // payment id
     fid: integer("fid").notNull(), // fid of the commission receiver
-    commission: integer("commission").notNull(), // commission amount
-    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    commission: bigint("commission", { mode: "number" }).notNull(), // commission amount
+    createdAt: bigint("created_at", { mode: "number" }).notNull(),
     withdrawnTx: text("withdrawn_tx"), // withdrawn tx hash
-    withdrawnAt: integer("withdrawn_at", { mode: "timestamp" }), // withdrawn timestamp
+    withdrawnAt: bigint("withdrawn_at", { mode: "number" }), // withdrawn timestamp
   },
   (commissions) => ({
     idxFlow: index("idx_commissions_flow").on(commissions.flow),
