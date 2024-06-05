@@ -14,9 +14,8 @@ import {
   test_abi,
   text_css,
 } from "./constants";
-import { addressPipe } from "./utils";
 import { getFlowById, upateTxById } from "@/app/service/externalApi";
-import { castIdPipe } from "@/app/service/utile";
+import { addressPipe, castIdPipe } from "@/app/service/utile";
 import { neynar } from "frog/hubs";
 
 const app = new Frog({
