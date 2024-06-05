@@ -1,6 +1,5 @@
 import { sql, eq, isNull, isNotNull, and } from "drizzle-orm";
 import { db } from "../utils.js";
-//import { commissions, traces, flows, tracePayments } from "dbdomain";
 import { ROYALTY_RATIO } from "./constants.js";
 import { commissions, flows, tracePayments, traces } from "dbdomain";
 

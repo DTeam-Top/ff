@@ -17,3 +17,10 @@ The directories:
 ## Basic UI Flow
 
 ![ff ui flow](./assets/ui-flow.png)
+
+## Run
+
+```sh
+cp .env.example .env
+docker-compose up -d --build
+```

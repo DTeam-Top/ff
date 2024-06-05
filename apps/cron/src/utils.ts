@@ -11,11 +11,10 @@ export const createJobs = (jobs: Jobs) => {
   });
 };
 
-console.log(env.DB_DATABASE);
 const { Pool } = pkg;
 const pool = new Pool({
   host: env.DB_HOST,
-  port: Number(env.DB_PORT),
+  port: env.DB_PORT,
   user: env.DB_USER,
   password: env.DB_PASSWORD,
   database: env.DB_DATABASE,

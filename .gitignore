@@ -10,5 +10,7 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 *.db
 dist
+pruned/
+db-data/
 
 .vercel

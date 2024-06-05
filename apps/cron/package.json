@@ -2,36 +2,34 @@
   "name": "cron",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "dev": "tsc && node dist/index.js",
-    "build": "tsc",
+    "dev": "tsx dist/index.js",
+    "build": "tsup src/index.ts --sourcemap --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@t3-oss/env-core": "^0.10.1",
     "@tsconfig/node-lts": "^20.1.3",
-    "@types/better-sqlite3": "^7.6.10",
     "@types/node": "^20.12.12",
     "@types/node-schedule": "^2.1.7",
-    "eslint": "^9.3.0",
-    "eslint-config-prettier": "^9.1.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "@t3-oss/env-core": "^0.10.1",
     "@types/pg": "^8.11.6",
-    "better-sqlite3": "^10.0.0",
     "dbdomain": "workspace:*",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
+    "eslint": "^9.3.0",
+    "eslint-config-prettier": "^9.1.0",
     "ethers": "^6.12.1",
     "node-schedule": "^2.1.1",
     "pg": "^8.11.5",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
     "zod": "^3.23.8"
-  },
-  "type": "module"
+  }
 }

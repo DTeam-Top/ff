@@ -18,7 +18,9 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.39.0",
     "prettier": "^3.2.5",
-    "prettier-plugin-svelte": "^3.2.3"
+    "prettier-plugin-svelte": "^3.2.3",
+    "tsup": "^8.1.0",
+    "tsx": "^4.11.2"
   },
   "type": "module"
 }

@@ -1,22 +1,23 @@
 {
+  "name": "bot",
+  "version": "0.0.1",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts --sourcemap"
   },
-  "dependencies": {
+  "devDependencies": {
     "@hono/node-server": "^1.11.1",
     "@t3-oss/env-core": "^0.10.1",
-    "better-sqlite3": "^10.0.0",
+    "@types/node": "^20.11.17",
+    "@types/pg": "^8.11.6",
     "dbdomain": "workspace:*",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
     "hono": "^4.4.0",
     "pg": "^8.11.5",
     "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.10",
-    "@types/node": "^20.11.17",
-    "@types/pg": "^8.11.6",
-    "tsx": "^4.7.1"
   }
 }

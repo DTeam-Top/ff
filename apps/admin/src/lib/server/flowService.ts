@@ -1,12 +1,12 @@
 import { db } from '$lib/server/dbService';
 import { LOGGER } from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
-// import { db } from './dbService.ts1';
 import { count, countDistinct, eq, sql } from 'drizzle-orm';
+
 export type Flow = {
-	id: string | undefined;
+	id?: string;
 	name: string;
-	cover: string | undefined;
+	cover?: string;
 	input: { price: string; address: string };
 	creator: number;
 };
@@ -27,14 +27,14 @@ export const upsertFlow = async (flow: Flow) => {
 					input: flow.input,
 					creator: flow.creator
 				})
-				.where(eq(flows.id, flow.id))
+				.where(eq(flows.id, flow.id!))
 				.returning();
 		} else {
 			result = await db()
 				.insert(flows)
 				.values({
 					name: flow.name,
-					cover: flow.cover,
+					cover: flow.cover!,
 					input: flow.input,
 					creator: Number(flow.creator),
 					createdAt: Date.now()
@@ -48,7 +48,6 @@ export const upsertFlow = async (flow: Flow) => {
 	} catch (e: any) {
 		logger.error(e);
 		throw e;
-		//return null;
 	}
 };
 

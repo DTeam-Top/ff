@@ -1,11 +1,14 @@
-import type { Config } from "drizzle-kit";
+import { defineConfig } from "drizzle-kit";
 
-const DB_URL = `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_DATABASE}`;
-export default {
+export default defineConfig({
   dialect: "postgresql",
   schema: "./src/schemas/*.ts",
   out: "./drizzle",
   dbCredentials: {
-    url: DB_URL,
+    host: process.env.DB_HOST ?? "127.0.0.1",
+    port: Number(process.env.DB_PORT ?? 5432),
+    user: process.env.DB_USER ?? "ff_admin",
+    password: process.env.DB_PASSWORD ?? "admin",
+    database: process.env.DB_NAME ?? "ff",
   },
-} satisfies Config;
+});

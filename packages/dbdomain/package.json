@@ -3,24 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/dbdomain.js",
-  "types": "./dist/dbdomain.d.ts",
+  "exports": {
+    ".": "./src/dbdomain.ts"
+  },
   "scripts": {
-    "build": "tsc && vite build",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "drop": "drizzle-kit drop --config=drizzle.config.ts",
     "studio": "drizzle-kit studio"
   },
   "devDependencies": {
-    "@types/pg": "^8.11.6",
-    "drizzle-kit": "^0.21.4",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.12",
-    "vite-plugin-dts": "^3.9.1"
+    "@types/node": "^20.14.2",
+    "@types/pg": "^8.11.6"
   },
   "dependencies": {
+    "typescript": "^5.4.5",
     "drizzle-orm": "^0.30.10",
-    "pg": "^8.11.5"
+    "drizzle-kit": "^0.21.4",
+    "pg": "^8.12.0"
   }
 }

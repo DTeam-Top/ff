@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-init:
+    image: ff/dbdomain
+    build:
+      target: dbdomain
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  admin:
+    image: ff/admin
+    build:
+      target: admin
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  bot:
+    image: ff/bot
+    build:
+      target: bot
+    ports:
+      - 3001:3001
+    env_file:
+      - .env
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  frame:
+    image: ff/frame
+    build:
+      target: frame
+    ports:
+      - 3002:3002
+    env_file:
+      - .env
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+volumes:
+  db-data:
