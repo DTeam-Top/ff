@@ -1,5 +1,6 @@
 import { commissionChecker } from "./tasks/commissionChecker.js";
 import { txChecker } from "./tasks/txChecker.js";
+import { castChecker } from "./tasks/castChecker.js";
 import { createJobs } from "./utils.js";
 
 const cronJobs = [
@@ -18,6 +19,10 @@ const cronJobs = [
   {
     rule: "*/5 * * * * *",
     job: commissionChecker,
+  },
+  {
+    rule: "*/5 * * * *",
+    job: castChecker,
   },
 ];
 

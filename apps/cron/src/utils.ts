@@ -23,3 +23,15 @@ const pool = new Pool({
 export function db() {
   return drizzle(pool);
 }
+
+const replicaterPool = new Pool({
+  host: env.REPLICATER_DB_HOST,
+  port: Number(env.REPLICATER_DB_PORT),
+  user: env.REPLICATER_DB_USER,
+  password: env.REPLICATER_DB_PASSWORD,
+  database: env.REPLICATER_DB_DATABASE,
+});
+
+export function replicaterDB() {
+  return drizzle(replicaterPool);
+}
