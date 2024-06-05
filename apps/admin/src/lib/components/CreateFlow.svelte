@@ -74,8 +74,6 @@
 				id: $farcaster.id
 			});
 			toast.success('Save success!');
-
-			//frameUrl = `${PRIVATE_FRAME_BASE_URL}/api/${$farcaster.id}`;
 		} catch (e: any) {
 			//alert(e);
 			console.log(e.response);

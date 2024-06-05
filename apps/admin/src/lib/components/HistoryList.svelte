@@ -68,7 +68,7 @@
 						{formatEther(item.commission)} ETH
 					</p>
 					<p class="text-right text-gray-400 text-sm">
-						{dayjs(item.withdrawnAt).format('YYYY, MMMM, DD')}
+						{item.withdrawnAt ? dayjs(item.withdrawnAt).format('YYYY, MMMM, DD') : 'Pending'}
 					</p>
 				</div>
 			</div>

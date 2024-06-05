@@ -8,10 +8,6 @@ export const LOGGER = pino({ level: 'debug' });
 
 const network = 'base-sepolia';
 
-const projectId = env.PRIVATE_INFURA_PROJECT_ID;
-const provider = new ethers.InfuraProvider(network, projectId);
-export const owner = new ethers.Wallet(env.PRIVATE_OWNER_WALLET_PK, provider);
-
 function envConfig() {
 	return {
 		dev: {
@@ -36,9 +32,13 @@ function envConfig() {
 }
 
 function contracts() {
-	return envConfig()[env.PRIVATE_NODE_ENV][network];
+	return envConfig()[env.VITE_NODE_ENV][network];
 }
 
 export function withdrawContract() {
+	const projectId = env.PRIVATE_INFURA_PROJECT_ID;
+	const provider = new ethers.InfuraProvider(network, projectId);
+	const owner = new ethers.Wallet(env.PRIVATE_OWNER_WALLET_PK, provider);
+
 	return new ethers.Contract(contracts().withdraw, ERC20_ABI, owner);
 }
