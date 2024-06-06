@@ -99,8 +99,8 @@
 
 <div class="bg-gray-800 py-6 px-6 rounded-3xl">
 	<div class="text-white font-bold text-2xl mb-4">{title} Flow</div>
-	<section class="w-full grid grid-cols-2 gap-8">
-		<div class="w-full bg-gray-100 rounded-3xl h-[450px]">
+	<section class="w-full max-w-[2000px] mx-auto table border-spacing-x-8">
+		<div class="w-2/5 bg-gray-100 rounded-3xl table-cell p-8">
 			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Design</div>
 			<div class="px-6">
 				<div class="flex items-center mb-2">
@@ -145,19 +145,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="w-full bg-gray-100 rounded-3xl h-[450px]">
+		<div class="w-2/5 bg-gray-100 rounded-3xl table-cell">
 			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Preview</div>
 			<div class="px-6">
 				{#if loading}
 					Loading ...
 				{:else if prviewImage}
-					<div class="relative rounded-md relative w-full">
+					<div class="relative rounded-md relative w-full mb-4">
 						<div class="relative">
 							<img
-								class="bg-background-200 border border-slate-200 min-h-img object-cover rounded-t-lg text-background-200 w-full"
+								class="bg-background-200 border border-slate-200 max-h-[532px] object-cover rounded-t-lg text-background-200 w-full"
 								src={prviewImage}
 								alt="Preview Frame"
-								style="aspect-ratio: 1.91 / 1; max-height: 532.5px;"
 							/>
 						</div>
 						<FrameButtons />
@@ -189,7 +188,6 @@
 
 <style>
 	section {
-		display: flex;
 		/* flex-direction: column; */
 		justify-content: center;
 		align-items: center;
