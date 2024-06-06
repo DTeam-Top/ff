@@ -54,7 +54,17 @@ services:
     build:
       target: frame
     ports:
-      - 3002:3002
+      - 3002:3000
+    env_file:
+      - .env
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  cron:
+    image: ff/cron
+    build:
+      target: cron
     env_file:
       - .env
     depends_on:

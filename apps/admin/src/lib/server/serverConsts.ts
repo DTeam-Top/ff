@@ -39,7 +39,7 @@ function envConfig(): {
 }
 
 function contracts() {
-	return envConfig()[env.VITE_NODE_ENV!][network];
+	return envConfig()[env.NODE_ENV][network];
 }
 
 export function withdrawContract() {

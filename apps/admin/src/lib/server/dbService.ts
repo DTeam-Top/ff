@@ -4,11 +4,11 @@ import pg from 'pg';
 
 const { Pool } = pg;
 const pool = new Pool({
-	host: env.DB_HOST || '127.0.0.1',
+	host: env.DB_HOST ?? '127.0.0.1',
 	port: Number(env.DB_PORT) || 5432,
-	user: env.DB_USER || 'ff_admin',
-	password: env.DB_PASSWORD || 'admin',
-	database: env.DB_DATABASE || 'ff'
+	user: env.DB_USER ?? 'ff_admin',
+	password: env.DB_PASSWORD ?? 'admin',
+	database: env.DB_DATABASE ?? 'ff'
 });
 
 export function db() {

@@ -3,14 +3,15 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 RUN apk add --no-cache tini su-exec
-RUN adduser -s /bin/false -S -D -H app
+RUN adduser -s /bin/false -S -D app
 ENTRYPOINT ["/sbin/tini", "-g", "--"]
 
 FROM base AS build
 RUN apk add --no-cache git python3 make g++
 COPY . /usr/src/app/
 WORKDIR /usr/src/app/
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile && \
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+  pnpm install --frozen-lockfile && \
   pnpm -r run build && \
   pnpm --filter dbdomain --prod deploy pruned/dbdomain && \
   pnpm --filter admin --prod deploy pruned/admin && \

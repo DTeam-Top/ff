@@ -9,7 +9,7 @@ const app = new Hono().basePath("/api");
 
 app.post("/", async (c) => {
   const body = await c.req.text();
-  const sig = await c.req.header()["x-neynar-signature"];
+  const sig = c.req.header()["x-neynar-signature"];
   if (!sig) {
     throw new Error("Neynar signature missing from request headers");
   }
