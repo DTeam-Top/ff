@@ -1,14 +1,19 @@
 import { env } from '$env/dynamic/private';
 import axios from 'axios';
 
-console.log(env.NEYNAR_URL);
 const HEADERS = { accept: 'application/json', api_key: env.NEYNAR_KEY };
 
 export const lookupSigner = async (signerUuid: string) => {
-	const signer = await axios.get(`${env.NEYNAR_URL}signer?signer_uuid=${signerUuid}`, {
-		headers: HEADERS
-	});
-	return signer.data;
+	try {
+		const signer = await axios.get(`${env.NEYNAR_URL}signer?signer_uuid=${signerUuid}`, {
+			headers: HEADERS
+		});
+		return signer.data;
+	} catch (e) {
+		console.log(e);
+		console.log(e.message);
+		//await lookupSigner(signerUuid);
+	}
 };
 
 export const lookupUserByFid = async (fid: number) => {

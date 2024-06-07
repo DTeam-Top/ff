@@ -1,14 +1,26 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { user } from '$lib/client/store';
 
 	const gotoCreate = () => {
 		goto('/create');
 	};
+	let disabled = false;
+	$: if (
+		$user.verifiedAddresses &&
+		$user.verifiedAddresses.eth_addresses.length > 0 &&
+		$user.verifiedAddresses.eth_addresses[0]
+	) {
+		disabled = false;
+	} else {
+		disabled = true;
+	}
 </script>
 
 <button
 	class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2 rounded-lg"
 	on:click={gotoCreate}
+	{disabled}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -28,3 +40,12 @@
 	</svg>
 	Create Flow
 </button>
+
+<style>
+	button:disabled,
+	button[disabled] {
+		border: 1px solid #999999;
+		background-color: #cccccc;
+		color: #666666;
+	}
+</style>
