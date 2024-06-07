@@ -8,8 +8,8 @@ ENTRYPOINT ["/sbin/tini", "-g", "--"]
 
 FROM base AS build
 RUN apk add --no-cache git python3 make g++
-COPY . /usr/src/app/
-WORKDIR /usr/src/app/
+COPY . /usr/app/
+WORKDIR /usr/app/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   pnpm install --frozen-lockfile && \
   pnpm -r run build && \
@@ -20,29 +20,29 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   pnpm --filter frame --prod deploy pruned/frame
 
 FROM base AS dbdomain
-COPY --from=build /usr/src/app/pruned/dbdomain/ /usr/app/
+COPY --from=build /usr/app/pruned/dbdomain/ /usr/app/
 WORKDIR /usr/app/
 CMD [ "pnpm", "run", "migrate" ]
 
 FROM base AS admin
-COPY --from=build --chown=app /usr/src/app/pruned/admin/ /usr/app/
+COPY --from=build --chown=app /usr/app/pruned/admin/ /usr/app/
 WORKDIR /usr/app/
 EXPOSE 3000
 CMD ["su-exec", "app", "node", "dist/index.js"]
 
 FROM base AS bot
-COPY --from=build --chown=app /usr/src/app/pruned/bot/ /usr/app/
+COPY --from=build --chown=app /usr/app/pruned/bot/ /usr/app/
 WORKDIR /usr/app/
 EXPOSE 3001
 CMD ["su-exec", "app", "node", "dist/index.js"]
 
 FROM base AS cron
-COPY --from=build --chown=app /usr/src/app/pruned/cron/ /usr/app/
+COPY --from=build --chown=app /usr/app/pruned/cron/ /usr/app/
 WORKDIR /usr/app/
 CMD ["su-exec", "app", "node", "dist/index.js"]
 
 FROM base AS frame
-COPY --from=build --chown=app /usr/src/app/pruned/frame/ /usr/app/
+COPY --from=build --chown=app /usr/app/pruned/frame/ /usr/app/
 WORKDIR /usr/app/
 EXPOSE 3002
 CMD ["su-exec", "app", "pnpm", "start"]
