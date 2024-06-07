@@ -20,10 +20,11 @@ const cronJobs = [
     rule: "*/5 * * * * *",
     job: commissionChecker,
   },
-  {
-    rule: "*/5 * * * *",
-    job: castChecker,
-  },
+  //   ,
+  //   {
+  //     rule: "*/5 * * * *",
+  //     job: castChecker,
+  //   },
 ];
 
 createJobs(cronJobs);
