@@ -1,0 +1,1 @@
+ALTER TABLE "flows" ADD COLUMN "status" integer DEFAULT 0 NOT NULL;

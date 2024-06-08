@@ -15,6 +15,13 @@
       "when": 1717491673566,
       "tag": "0001_strange_zodiak",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1717813951370,
+      "tag": "0002_stale_martin_li",
+      "breakpoints": true
     }
   ]
 }
