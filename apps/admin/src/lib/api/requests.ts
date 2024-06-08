@@ -50,6 +50,7 @@ export const verfiyUserRequest = z.object({
 	fid: z.string(),
 	signerUuid: z.string()
 });
+
 export const fidRequest = z.object({
 	fid: z.string()
 });

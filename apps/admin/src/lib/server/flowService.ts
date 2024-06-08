@@ -1,5 +1,5 @@
 import { db } from '$lib/server/dbService';
-import { LOGGER } from '$lib/server/serverConsts';
+import { LOGGER, STATUS_PUBLISHED } from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
 import { count, countDistinct, eq, sql } from 'drizzle-orm';
 
@@ -129,4 +129,8 @@ export const getStatics = async (fid: number | undefined) => {
 			{ title: 'Trade volume', count: dealedData[0].value, color: '#d1d5db' }
 		]
 	};
+};
+
+export const publishFlow = async (flowId: string) => {
+	await db().update(flows).set({ status: STATUS_PUBLISHED }).where(eq(flows.id, flowId));
 };

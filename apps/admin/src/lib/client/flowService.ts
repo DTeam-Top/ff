@@ -39,8 +39,8 @@ export const getFlow = async (id: string) => {
 	return result.data;
 };
 
-export const publishFlow = async (cast: Cast) => {
-	const result = await axios.post(`${BASE_URL}api/publish`, cast);
+export const publishFlow = async (flowId: string) => {
+	const result = await axios.post(`${BASE_URL}api/flows/publish/${flowId}`);
 	return result.data;
 };
 

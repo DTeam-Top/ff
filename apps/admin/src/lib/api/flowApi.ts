@@ -3,11 +3,12 @@ import {
 	upsertFlow,
 	deleteFlow,
 	getFlowById,
-	getStatics
+	getStatics,
+	publishFlow
 } from '$lib/server/flowService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { flowRequest, idRequest } from './requests';
+import { fidRequest, flowRequest, idRequest } from './requests';
 
 export const router = new Hono()
 	.post('/', zValidator('json', flowRequest), async (c) => {
@@ -64,6 +65,17 @@ export const router = new Hono()
 			const result = await getStatics(Number(fid));
 
 			return c.json(result);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (e: any) {
+			return c.json({ message: e.code + ': ' + e.message }, 500);
+		}
+	})
+	.post('/publish/:id', zValidator('param', idRequest), async (c) => {
+		try {
+			const { id } = c.req.param();
+			await publishFlow(id);
+
+			return c.json({ message: 'Success' });
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (e: any) {
 			return c.json({ message: e.code + ': ' + e.message }, 500);

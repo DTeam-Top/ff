@@ -49,3 +49,5 @@ export function withdrawContract() {
 
 	return new ethers.Contract(contracts().withdraw, ERC20_ABI, owner);
 }
+
+export const STATUS_PUBLISHED = 1;

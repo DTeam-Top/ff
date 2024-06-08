@@ -1,12 +1,12 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlow, insertFlow } from '$lib/client/flowService';
+	import { getFlow, insertFlow, publishFlow } from '$lib/client/flowService';
 	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
 	import { user, farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
 	import Tips from './Tips.svelte';
-	import { FRAME_BASE_URL } from '$lib/client/clientConsts';
+	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
 
 	export let farcasterId = 'uuid';
 	export let title = 'Create';
@@ -15,6 +15,7 @@
 	let address: string = '';
 	let cover: string = '';
 	let price: number = 0;
+	let isPublished = false;
 	const cancelHandler = () => {
 		name = '';
 		address = '';
@@ -30,11 +31,16 @@
 		console.log(farcasterId, farcasterId !== 'uuid');
 		if (farcasterId.toString() !== 'uuid') {
 			const flow = await getFlow(farcasterId);
+			console.log(flow);
 			if (flow) {
 				name = flow.name;
 				address = flow.input?.address;
 				price = flow.input?.price;
 				cover = flow.cover;
+				isPublished = flow.status === STATUS_PUBLISHED;
+				if (isPublished) {
+					frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
+				}
 			} else {
 				toast.error('Wrong id');
 			}
@@ -54,7 +60,7 @@
 		}
 		loading = true;
 
-		frameUrl = '';
+		//frameUrl = '';
 		prviewImage = await getPreviewUrl(FRAME_BASE_URL, name, cover, price, address);
 		loading = false;
 	};
@@ -83,14 +89,9 @@
 
 	const publishHandler = async () => {
 		if ($farcaster.id) {
+			const result = await publishFlow($farcaster.id);
 			frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
-			// const result = await publishFlow({
-			// 	fid: $user.fid.toString(),
-			// 	signerUuid: $user.signerUuid,
-			// 	frameUrl,
-			// 	content: name,
-			// 	flowId: $farcaster.id
-			// });
+			isPublished = true;
 		} else {
 			toast.error('Please save first');
 		}
@@ -165,21 +166,24 @@
 			</div>
 		</div>
 	</section>
-	<div class="flex mt-8 justify-center text-white">
-		<button class="border rounded-lg mx-8 px-4 py-2 bg-gray-100 text-black" on:click={cancelHandler}
-			>Reset</button
-		>
+	{#if !isPublished}
+		<div class="flex mt-8 justify-center text-white">
+			<button
+				class="border rounded-lg mx-8 px-4 py-2 bg-gray-100 text-black"
+				on:click={cancelHandler}>Reset</button
+			>
 
-		<button class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white" on:click={saveHandler}
-			>Save</button
-		>
-		<button class="rounded-lg mx-8 px-4 py-2 bg-blue-600 text-white" on:click={publishHandler}
-			>Publish
-		</button>
-		<!-- {$farcaster.id} -->
-	</div>
+			<button class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white" on:click={saveHandler}
+				>Save</button
+			>
+			<button class="rounded-lg mx-8 px-4 py-2 bg-blue-600 text-white" on:click={publishHandler}
+				>Publish
+			</button>
+			<!-- {$farcaster.id} -->
+		</div>
+	{/if}
 
-	{#if frameUrl}
+	{#if frameUrl || (frameUrl && isPublished)}
 		<Tips {frameUrl} />
 	{/if}
 </div>
