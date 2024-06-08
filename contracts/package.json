@@ -1,0 +1,48 @@
+{
+  "name": "contracts",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "sg": "tsx script/schemaGen.ts",
+    "encode": "tsx script/mudEncoder.ts",
+    "build": "mud build",
+    "clean": "forge clean && rimraf src/codegen",
+    "deploy:local": "pnpm run build && mud deploy",
+    "deploy:testnet": "pnpm run build && mud deploy --profile=sepolia",
+    "dev": "pnpm mud dev-contracts",
+    "lint": "pnpm run prettier && pnpm run solhint",
+    "prettier": "prettier --write 'src/**/*.sol'",
+    "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
+    "test": "tsc --noEmit && pnpm run sg && mud test"
+  },
+  "dependencies": {
+    "@latticexyz/cli": "2.0.5",
+    "@latticexyz/store": "2.0.5",
+    "@latticexyz/world": "2.0.5",
+    "@latticexyz/world-modules": "2.0.5",
+    "@openzeppelin/contracts": "4.9.3",
+    "chai": "^4.3.10",
+    "dotenv": "^16.4.5",
+    "solidity-bytes-utils": "0.8.0"
+  },
+  "devDependencies": {
+    "@latticexyz/common": "^2.0.6",
+    "@latticexyz/config": "^2.0.6",
+    "@latticexyz/protocol-parser": "^2.0.6",
+    "@latticexyz/schema-type": "2.0.5",
+    "@types/node": "^18.15.11",
+    "camelcase": "^8.0.0",
+    "ds-test": "https://github.com/dapphub/ds-test.git#e282159d5170298eb2455a6c05280ab5a73a4ef0",
+    "ethers": "^6.12.0",
+    "forge-std": "https://github.com/foundry-rs/forge-std.git#74cfb77e308dd188d2f58864aaf44963ae6b88b1",
+    "prettier": "3.2.5",
+    "prettier-plugin-solidity": "1.3.1",
+    "solhint": "^3.3.7",
+    "solhint-config-mud": "2.0.5",
+    "solhint-plugin-mud": "2.0.5",
+    "tsx": "^4.7.2",
+    "typescript": "^5.3.3",
+    "viem": "^2.9.25"
+  }
+}
