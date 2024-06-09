@@ -20,8 +20,7 @@ contract FlowsDvp is IFlowsDvp, ICommissionController, Ownable {
   uint256 internal _feeNumerator;
   uint256 internal _commissionNumerator;
 
-  constructor(address worldContractAddress, address signer) Ownable() {
-    _worldContractAddress = worldContractAddress;
+  constructor(address signer) Ownable() {
     _signer = signer;
     _feeNumerator = 100; // fee: 1% * price
     _commissionNumerator = 1000; // commission: 10% * fee

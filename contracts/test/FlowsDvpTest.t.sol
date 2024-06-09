@@ -3,11 +3,12 @@ pragma solidity >=0.8.24;
 
 import "forge-std/Test.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { console } from "forge-std/console.sol";
+import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { MyERC20, MyERC721, MyERC1155 } from "./Mocks.sol";
 import { FlowsDvp } from "../src/dvp/FlowsDvp.sol";
 import { TransferRequestERC20, TransferRequestERC721, TransferRequestERC1155, Order } from "../src/dvp/IFlowsDvp.sol";
+import { IWorld } from "../src/codegen/world/IWorld.sol";
 
 contract FlowsDvpTest is MudTest {
   using ECDSA for bytes32;
@@ -26,7 +27,11 @@ contract FlowsDvpTest is MudTest {
     erc721 = new MyERC721();
     erc1155 = new MyERC1155();
     (signer, signerPrivKey) = makeAddrAndKey("signer");
-    dvp = new FlowsDvp(address(worldAddress), signer);
+    dvp = new FlowsDvp(signer);
+
+    console.logAddress(address(dvp));
+
+    dvp.setWorldContractAddress(worldAddress);
   }
 
   function test_deliver() public {
@@ -75,5 +80,25 @@ contract FlowsDvpTest is MudTest {
     assertEqUint(seller.balance, order.price - fee);
     assertEqUint(fee, 1000);
     assertEqUint(commission, 100);
+  }
+
+  function test_cannotAccessWorldDirectly() public {
+    vm.expectRevert();
+    IWorld(worldAddress).pay(1, 1);
+
+    vm.expectRevert();
+    IWorld(worldAddress).withdraw(1);
+
+    vm.expectRevert();
+    IWorld(worldAddress).balance(1);
+
+    vm.expectRevert();
+    IWorld(worldAddress).notInBlacklist(address(this));
+
+    vm.expectRevert();
+    IWorld(worldAddress).add(address(this));
+
+    vm.expectRevert();
+    IWorld(worldAddress).remove(address(this));
   }
 }
