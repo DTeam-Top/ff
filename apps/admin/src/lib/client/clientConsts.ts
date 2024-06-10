@@ -26,7 +26,7 @@ export const BG_COLORLIST = [
 	'bg-tertiary-300'
 ];
 
-export const COMMISSIOM_MAX = 2;
+export const COMMISSIOM_MAX = 12;
 
 export const COMISSION_TABS = ['Avaliable', 'History'];
 
@@ -39,5 +39,5 @@ export const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const STATUS_PUBLISHED = 1;
 
-export const LIMIT_MAX = 1;
+export const LIMIT_MAX = 10;
 export const LIMIT_MAX_HOME = 6;

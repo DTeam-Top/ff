@@ -1,16 +1,18 @@
 <script lang="ts">
-	import toast, { Toaster } from 'svelte-french-toast';
+	import { toast } from '$lib/client/popup';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	import CopyClipBoard from '$lib/components/CopyClipBoard.svelte';
 	export let frameUrl: string = '';
 	export let text: string = 'publish';
 	export let width: string = 'w-1/2';
+	const toastStore = getToastStore();
 	const copyHandler = () => {
 		const app = new CopyClipBoard({
 			target: document.getElementById('tipsclipboard'),
 			props: { text: frameUrl }
 		});
 		app.$destroy();
-		toast.success('Copied!');
+		toast.success(toastStore, 'Copied!');
 	};
 </script>
 
@@ -25,4 +27,3 @@
 </div>
 
 <div id="tipsclipboard"></div>
-<Toaster />

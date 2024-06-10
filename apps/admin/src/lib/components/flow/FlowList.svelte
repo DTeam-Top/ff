@@ -4,18 +4,14 @@
 	import { addressPipe, signed } from '$lib/client/utils';
 	import { user } from '$lib/client/store';
 	import Button from '$lib/components/Button.svelte';
-	import {
-		Paginator,
-		getModalStore,
-		type ModalSettings,
-		type PaginationSettings
-	} from '@skeletonlabs/skeleton';
+	import { Paginator, getModalStore, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import { LIMIT_MAX } from '$lib/client/clientConsts';
+	import { modal } from '$lib/client/popup';
+	const modalStore = getModalStore();
 	let list: any[] = [];
 	let offset = 0;
 	let currentPage = 0;
 	let total = 0;
-	const modalStore = getModalStore();
 	export let type = 'unavailable';
 	$: if (!$signed) {
 		goto('/');
@@ -43,21 +39,18 @@
 	};
 
 	const delHandler = async (id: number) => {
-		const modal: ModalSettings = {
-			type: 'confirm',
-			title: 'Delete Confirm',
-			body: 'Are you sure to delete?',
-			modalClasses: 'w-[500px]',
-			response: async (r: boolean) => {
-				console.log('response:', r);
-
+		modal.confirm(
+			modalStore,
+			'Delete Confirm',
+			'Are you sure to delete?',
+			'w-[500px]',
+			async (r: boolean) => {
 				if (r) {
 					await deleteFlowById(id);
 					getFlowList();
 				}
 			}
-		};
-		modalStore.trigger(modal);
+		);
 	};
 	const traceHandler = (id: number) => {
 		goto(`/trace/${id}`);

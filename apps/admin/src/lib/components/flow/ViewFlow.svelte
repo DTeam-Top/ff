@@ -4,9 +4,11 @@
 	import { addressPipe, getPreviewUrl } from '$lib/client/utils';
 	import { farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
 	import Tips from '../Tips.svelte';
+	import { toast } from '$lib/client/popup';
+	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
 	export let title = 'Create';
@@ -35,7 +37,7 @@
 					frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
 				}
 			} else {
-				toast.error('Wrong id');
+				toast.error(toastStore, 'Wrong id');
 			}
 		}
 		previewHandler();
@@ -105,7 +107,6 @@
 	{/if}
 </div>
 <div id="clipboard"></div>
-<Toaster />
 
 <style>
 	.table {

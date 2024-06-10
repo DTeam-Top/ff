@@ -9,6 +9,7 @@
 	import { COMISSION_TABS } from '$lib/client/clientConsts';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { TabGroup, Tab } from '@skeletonlabs/skeleton';
+	import { modal } from '$lib/client/popup';
 
 	let loading = false;
 	let needRefresh = false;
@@ -20,13 +21,12 @@
 	}
 
 	const withdrawHandler = async () => {
-		const modal: ModalSettings = {
-			type: 'confirm',
-			title: 'Delete Confirm',
-			body: 'Are you sure to delete?',
-			response: async (r: boolean) => {
-				console.log('response:', r);
-
+		modal.confirm(
+			modalStore,
+			'Withdraw Confirm',
+			'Are you sure to withdraw?',
+			'w-[500px]',
+			async (r: boolean) => {
 				if (r) {
 					try {
 						loading = true;
@@ -39,8 +39,7 @@
 					}
 				}
 			}
-		};
-		modalStore.trigger(modal);
+		);
 	};
 
 	const changeTabHandler = (i: number) => {

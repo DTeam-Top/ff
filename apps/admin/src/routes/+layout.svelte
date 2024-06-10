@@ -14,10 +14,12 @@
 		AppBar,
 		getDrawerStore,
 		type DrawerSettings,
-		Modal
+		Modal,
+		Toast
 	} from '@skeletonlabs/skeleton';
 	import SidebarItems from '$lib/components/ui/sidebar/SidebarItems.svelte';
 	import { removeItem, signed } from '$lib/client/utils';
+	import Spin from '$lib/components/Spin.svelte';
 
 	let loading = true;
 
@@ -52,8 +54,7 @@
 </script>
 
 {#if loading}
-	Loading ...
-	<div></div>
+	<Spin />
 {:else}
 	<Drawer>
 		<div class="container flex left-0 relative items-center p-4">
@@ -64,6 +65,7 @@
 		<SidebarItems />
 	</Drawer>
 	<Modal />
+	<Toast />
 	<AppShell
 		slotSidebarLeft="bg-surface-500/5 {classesSidebarLeft}"
 		scrollbarGutter="auto"
@@ -92,7 +94,7 @@
 							class=" hover:rounded-lg px-4 py-2 hover:variant-soft-primary">Sign out</button
 						>
 					{:else}
-						<button>Flows</button>
+						<!-- <button>Flows</button> -->
 						<SWIN />
 					{/if}
 				</svelte:fragment>

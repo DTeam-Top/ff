@@ -4,10 +4,12 @@
 	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
 	import { user, farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
-	import toast, { Toaster } from 'svelte-french-toast';
 	import Tips from '../Tips.svelte';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
 	import Button from '../Button.svelte';
+	import { toast } from '$lib/client/popup';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
 	export let title = 'Create';
@@ -43,7 +45,7 @@
 					frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
 				}
 			} else {
-				toast.error('Wrong id');
+				toast.error(toastStore, 'Wrong id');
 			}
 		} else {
 			name = 'test'; //'test';
@@ -69,7 +71,7 @@
 	const saveHandler = async () => {
 		try {
 			if (!name || !address || !cover) {
-				toast.error('Please input name , ERC20 , cover');
+				toast.error(toastStore, 'Please input name , ERC20 , cover');
 				return;
 			}
 
@@ -80,21 +82,22 @@
 				creator: $user.fid,
 				id: $farcaster.id
 			});
-			toast.success('Save success!');
+			//toast.success('Save success!');
+			toast.success(toastStore, 'Save success!');
 		} catch (e: any) {
 			//alert(e);
 			console.log(e.response);
-			toast.error(errorPipe(e.response?.data?.message));
+			toast.error(toastStore, errorPipe(e.response?.data?.message));
 		}
 	};
 
 	const publishHandler = async () => {
-		if ($farcaster.id) {
+		if ($farcaster.id !== 'uuid') {
 			const result = await publishFlow($farcaster.id);
 			frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
 			isPublished = true;
 		} else {
-			toast.error('Please save first');
+			toast.error(toastStore, 'Please save first!');
 		}
 	};
 </script>
@@ -189,7 +192,6 @@
 	{/if}
 </div>
 <div id="clipboard"></div>
-<Toaster />
 
 <style>
 	textarea {
