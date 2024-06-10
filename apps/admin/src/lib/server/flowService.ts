@@ -15,7 +15,6 @@ const logger = LOGGER.child({ from: 'db flowService' });
 
 export const upsertFlow = async (flow: Flow) => {
 	logger.info(flow);
-	console.log(flow);
 	let result;
 	try {
 		if (flow.id !== 'uuid') {
@@ -41,7 +40,6 @@ export const upsertFlow = async (flow: Flow) => {
 				})
 				.returning();
 		}
-		console.log(result);
 
 		return result.length > 0 ? result[0] : null;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,7 +56,6 @@ export const getFlowList = async (
 	max: number,
 	hasTraced: boolean
 ) => {
-	console.log(hasTraced);
 	let total = [];
 	let list = [];
 	if (hasTraced) {
@@ -69,7 +66,6 @@ export const getFlowList = async (
 			.from(flows)
 			.rightJoin(traces, eq(traces.flow, flows.id))
 			.where(and(eq(flows.creator, creator), eq(flows.status, status)));
-		console.log(total);
 		list = await db()
 			.select({
 				id: flows.id,
@@ -89,7 +85,6 @@ export const getFlowList = async (
 			.having(sql`${count(traces.id)} > 0`)
 			.limit(max)
 			.offset(offset);
-		console.log(max, offset);
 	} else {
 		total = await db()
 			.select({
@@ -126,7 +121,22 @@ export const deleteFlow = async (id: string) => {
 };
 
 export const getFlowById = async (id: string) => {
-	const result = await db().select().from(flows).where(eq(flows.id, id));
+	const result = await db()
+		.select({
+			id: flows.id,
+			name: flows.name,
+			cover: flows.cover,
+			createdAt: flows.createdAt,
+			input: flows.input,
+			status: flows.status,
+			traceCount: count(traces.id),
+			paymentCount: count(tracePayments.id)
+		})
+		.from(flows)
+		.leftJoin(traces, eq(traces.flow, flows.id))
+		.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
+		.where(eq(flows.id, id))
+		.groupBy(flows.id);
 	return result.length > 0 ? result[0] : null;
 };
 

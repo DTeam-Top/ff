@@ -5,7 +5,6 @@
 	import { getCaster } from '$lib/client/casterService';
 	import '../style.css';
 	import { USER_STORE_KEY } from '$lib/client/clientConsts';
-	import SWIN from '$lib/components/SWIN.svelte';
 	import SiteName from '$lib/components/ui/SiteName.svelte';
 	import {
 		AppShell,
@@ -20,6 +19,7 @@
 	import SidebarItems from '$lib/components/ui/sidebar/SidebarItems.svelte';
 	import { removeItem, signed } from '$lib/client/utils';
 	import Spin from '$lib/components/Spin.svelte';
+	import TopBar from '$lib/components/ui/TopBar.svelte';
 
 	let loading = true;
 
@@ -46,10 +46,6 @@
 	}
 	$: classesSidebarLeft = $signed ? 'w-0 lg:w-[130px]' : 'w-0';
 
-	const onSingout = () => {
-		removeItem('user', window);
-		window.location.reload();
-	};
 	$: allyPageSmoothScroll = 'scroll-smooth';
 </script>
 
@@ -88,15 +84,7 @@
 					</div>
 				</svelte:fragment>
 				<svelte:fragment slot="trail">
-					{#if $signed}
-						<button
-							on:click={onSingout}
-							class=" hover:rounded-lg px-4 py-2 hover:variant-soft-primary">Sign out</button
-						>
-					{:else}
-						<!-- <button>Flows</button> -->
-						<SWIN />
-					{/if}
+					<TopBar />
 				</svelte:fragment>
 			</AppBar>
 		</svelte:fragment>

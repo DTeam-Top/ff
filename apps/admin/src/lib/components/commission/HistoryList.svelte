@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { COMMISSIOM_MAX, getBaseScanURL } from '$lib/client/clientConsts';
+	import { COMMISSIOM_MAX } from '$lib/client/clientConsts';
 	import { getHistoryList } from '$lib/client/commissionService';
 	import { user } from '$lib/client/store';
-	import dayjs from 'dayjs';
 	import { formatEther } from 'ethers';
 	import { createEventDispatcher } from 'svelte';
 	import List from './List.svelte';
@@ -30,7 +29,6 @@
 			balance = result.balance;
 			commissionList = [...commissionList, ...result.commissionList];
 			page = Math.ceil(result.total / COMMISSIOM_MAX);
-			console.log(555);
 			dispatch('refresh', { result: false });
 		});
 	};
@@ -39,7 +37,6 @@
 		if (currentPage < page) {
 			currentPage += 1;
 			offset = (currentPage - 1) * COMMISSIOM_MAX;
-			console.log(currentPage, offset);
 			refreshCommissionList();
 		}
 	};

@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { formatEther } from 'ethers';
 	import { COMMISSIOM_MAX } from '$lib/client/clientConsts';
+	import ListIcon from '$lib/components/ui/icons/ListIcon.svelte';
 	let total = 0;
 	let balance = 0;
 	let offset: number = 0;
@@ -28,25 +29,12 @@
 	<header class="flex justify-between items-center pb-4 border-b solid border-gray-700">
 		<h3>My Commissions</h3>
 		<div>
-			<button class="text-primary-500 bg-transparent" title="List View" on:click={listHandler}>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<line x1="8" y1="6" x2="21" y2="6" />
-					<line x1="8" y1="12" x2="21" y2="12" />
-					<line x1="8" y1="18" x2="21" y2="18" />
-					<line x1="3" y1="6" x2="3.01" y2="6" />
-					<line x1="3" y1="12" x2="3.01" y2="12" />
-					<line x1="3" y1="18" x2="3.01" y2="18" />
-				</svg>
+			<button
+				class="text-primary-500 bg-transparent hover:text-primary-300"
+				title="List View"
+				on:click={listHandler}
+			>
+				<svelte:component this={ListIcon} />
 			</button>
 		</div>
 	</header>

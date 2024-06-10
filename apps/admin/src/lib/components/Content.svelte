@@ -6,6 +6,7 @@
 	import { getFlows, getStaticsCount } from '$lib/client/flowService';
 	import CommissionCard from './commission/CommissionCard.svelte';
 	import { BG_COLORLIST, LIMIT_MAX_HOME, WARP_BASE } from '$lib/client/clientConsts';
+	import { goto } from '$app/navigation';
 
 	export let title;
 
@@ -25,16 +26,13 @@
 	}
 	const getFlowList = async () => {
 		const flows = await getFlows($user.fid, 'published', offset, LIMIT_MAX_HOME, true);
-		console.log(flows);
 		page = Math.ceil(flows.total / LIMIT_MAX_HOME);
-		console.log(page);
 		flowList = [...flows.list];
 	};
 	const moreHandler = async () => {
 		if (currentPage < page) {
 			currentPage += 1;
 			offset = (currentPage - 1) * LIMIT_MAX_HOME;
-			console.log(currentPage, offset);
 			await getFlowList();
 		}
 	};
@@ -63,7 +61,10 @@
 			{#each flowList as item, i}
 				<div class="w-full">
 					<div class="p-2">
-						<div class={`p-4 rounded-xl ${BG_COLORLIST[Math.floor(i % 6)]}`}>
+						<button
+							class={`w-full p-4 rounded-xl ${BG_COLORLIST[Math.floor(i % 6)]} hover:bg-primary-100 cursor-pointer`}
+							on:click={() => goto(`/flows/view/${item.id}`)}
+						>
 							<div class="flex items-center justify-b">
 								<span class="text-sm">{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</span>
 							</div>
@@ -77,7 +78,7 @@
 								<div>Traced: {item.traceCount}</div>
 								<div>Paid: {item.paymentCount}</div>
 							</div>
-						</div>
+						</button>
 					</div>
 				</div>
 			{/each}

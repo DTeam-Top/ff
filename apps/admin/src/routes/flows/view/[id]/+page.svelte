@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 	import ViewFlow from '$lib/components/flow/ViewFlow.svelte';
 	$: if (!$signed) {
-		console.log($signed);
 		goto('/');
 	}
 </script>

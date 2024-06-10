@@ -87,17 +87,14 @@ export const withdraw = async (address: string, fid: number) => {
 		idList.push(commission.id);
 		amount += commission.commission;
 	}
-	console.log(amount);
 	const mintData = {
 		to: address,
 		amount: amount.toString()
 	};
-	console.log(mintData, idList);
 	const tx = await withdrawContract().transferEarnings(mintData.to, mintData.amount, {
 		gasLimit: 600000
 	});
 
-	console.log('result', tx.hash);
 	const result = await db()
 		.update(commissions)
 		.set({ withdrawnTx: tx.hash })

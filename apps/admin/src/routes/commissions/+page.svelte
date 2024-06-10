@@ -42,12 +42,7 @@
 		);
 	};
 
-	const changeTabHandler = (i: number) => {
-		currentTab = i;
-	};
-
 	const changeRefresh = (el: any) => {
-		console.log(el.detail);
 		needRefresh = el.detail.result;
 		canWithdraw = el.detail.total > 0;
 	};

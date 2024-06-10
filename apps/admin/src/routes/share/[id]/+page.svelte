@@ -11,7 +11,6 @@
 	let prviewImage: string;
 	$: if ($page.params.id && !frameUrl) {
 		getFlow($page.params.id).then(async (flow) => {
-			console.log(flow);
 			frameUrl = `${FRAME_BASE_URL}/api/${flow.id}`;
 			prviewImage = await getPreviewUrl(
 				FRAME_BASE_URL || 'http://localhost:3000',
@@ -20,7 +19,6 @@
 				flow.input.price,
 				flow.input.address
 			);
-			console.log(prviewImage);
 		});
 	}
 </script>

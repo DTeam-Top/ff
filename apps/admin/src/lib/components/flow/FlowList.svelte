@@ -24,7 +24,6 @@
 
 	const getFlowList = async () => {
 		const result = await getFlows($user.fid, type, offset);
-		console.log(result);
 		total = result.total;
 		paginationSettings = {
 			page: currentPage,
@@ -53,7 +52,7 @@
 		);
 	};
 	const traceHandler = (id: number) => {
-		goto(`/trace/${id}`);
+		goto(`/flows/trace/${id}`);
 	};
 
 	const onPageChange = (e: CustomEvent): void => {

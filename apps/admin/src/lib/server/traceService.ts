@@ -66,7 +66,6 @@ export const createTracePayment = async (
 };
 
 export const getTraces = async (flow: string, caster: string) => {
-	console.log(flow, caster);
 	const result = await db()
 		.select({
 			name: flows.name,

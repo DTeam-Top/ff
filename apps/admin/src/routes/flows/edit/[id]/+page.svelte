@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 	import CreateFlow from '$lib/components/flow/CreateFlow.svelte';
 	$: if (!$signed) {
-		console.log($signed);
 		goto('/');
 	}
 </script>

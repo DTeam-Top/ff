@@ -31,7 +31,6 @@ export const COMMISSIOM_MAX = 12;
 export const COMISSION_TABS = ['Avaliable', 'History'];
 
 export const FLOW_TABS = ['Draft', 'Published', 'Unavailable'];
-console.log(import.meta.env, import.meta.env.VITE_BASE_URL);
 
 export const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 export const FRAME_BASE_URL = import.meta.env.VITE_FRAME_BASE_URL;

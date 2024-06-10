@@ -52,7 +52,6 @@ export const getPreviewUrl = async (
 };
 
 export const activePipe = (pathname: string, link: string) => {
-	console.log(pathname, link);
 	if (link === '/' && pathname === link) {
 		return true;
 	} else if (link !== '/' && pathname.indexOf(link) > -1) {

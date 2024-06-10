@@ -10,9 +10,6 @@ export const lookupSigner = async (signerUuid: string) => {
 		});
 		return signer.data;
 	} catch (e: any) {
-		console.log('error---', e);
-		console.log('error---message', e.message);
-		console.log('error---response', e.response);
 		await lookupSigner(signerUuid);
 	}
 };

@@ -19,13 +19,8 @@
 		getTraceList();
 	}
 	const getTraceList = async () => {
-		console.log($page, $user.fid, 222);
 		const result = await getTracesByFlowId($page.params.id, $user.fid);
-		console.log(result);
 		list = result;
-	};
-	const goBack = () => {
-		goto('/flows');
 	};
 </script>
 
@@ -40,37 +35,14 @@
 			<li class="crumb"><a class="anchor" href="/flows">Flow list</a></li>
 			<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 			<li class="crumb">
-				<a class="anchor" href="/flows">{list.length > 0 ? list[0].name : ''}</a>
+				<a class="anchor" href={`/flows/view/${$page.params.id}`}
+					>{list.length > 0 ? list[0].name : ''}</a
+				>
 			</li>
 			<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 			<li class="text-white">Traces List</li>
 		</ol>
-		<!-- <div class="flex justify-between text-white">
-			<div class="flex flex-row-reverse text-right">
-				<button
-					class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2 rounded-lg"
-					on:click={goBack}
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="20"
-						height="20"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<rect x="3" y="3" width="7" height="7" />
-						<rect x="14" y="3" width="7" height="7" />
-						<rect x="14" y="14" width="7" height="7" />
-						<rect x="3" y="14" width="7" height="7" />
-					</svg>
-					Return
-				</button>
-			</div>
-		</div> -->
+
 		{#if list.length > 0}
 			<table class="table table-hover">
 				<thead>
@@ -95,14 +67,3 @@
 		{/if}
 	</div>
 </section>
-
-<style>
-	section {
-		display: flex;
-		/* flex-direction: column; */
-		justify-content: center;
-		align-items: center;
-		align-items: start;
-		/* flex: 0.6; */
-	}
-</style>

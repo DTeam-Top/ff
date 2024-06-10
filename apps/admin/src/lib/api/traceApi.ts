@@ -14,8 +14,6 @@ export const router = new Hono()
 				const { id } = c.req.param(); //flow id
 				const { cast, paymentTx, amount } = c.req.valid('json');
 
-				console.log(id, cast, paymentTx, amount);
-
 				await createTracePayment(id, cast, paymentTx, amount);
 
 				return c.json({ message: 'Success' });
@@ -30,7 +28,6 @@ export const router = new Hono()
 			const { id } = c.req.param(); //flow id
 			const { caster } = c.req.query();
 			const result = await getTraces(id, caster);
-			console.log(caster);
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

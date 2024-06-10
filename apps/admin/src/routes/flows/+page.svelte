@@ -17,7 +17,7 @@
 	<meta name="description" content="My flows" />
 </svelte:head>
 
-<section class="min-h-full m-4 p-6">
+<section class="min-h-full m-4">
 	<div class="w-full">
 		<div class="flex justify-between">
 			<div class="text-2xl font-bold">My Flows</div>

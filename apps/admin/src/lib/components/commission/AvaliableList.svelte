@@ -38,7 +38,6 @@
 			commissionList = [...commissionList, ...result.commissionList];
 			page = Math.ceil(result.total / COMMISSIOM_MAX);
 			loading = false;
-			console.log('4444');
 			dispatch('refresh', { result: false, total: total });
 		});
 	};
@@ -47,7 +46,6 @@
 		if (currentPage < page) {
 			currentPage += 1;
 			offset = (currentPage - 1) * COMMISSIOM_MAX;
-			console.log(currentPage, offset);
 			refreshCommissionList();
 		}
 	};

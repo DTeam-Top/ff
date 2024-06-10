@@ -31,10 +31,8 @@
 
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
-		console.log(farcasterId, farcasterId !== 'uuid');
 		if (farcasterId.toString() !== 'uuid') {
 			const flow = await getFlow(farcasterId);
-			console.log(flow);
 			if (flow) {
 				name = flow.name;
 				address = flow.input?.address;
@@ -137,7 +135,7 @@
 				<label class="flex items-center mb-2">
 					<span>Price</span>
 					<input
-						class="input rounded w-1/6"
+						class="input rounded w-1/4"
 						bind:value={price}
 						type="number"
 						on:keyup={() => previewHandler()}
