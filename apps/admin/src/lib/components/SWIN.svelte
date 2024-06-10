@@ -48,7 +48,7 @@
 		//neynarDiv.setAttribute("data-theme", "light");
 		neynarDiv.setAttribute('data-variant', 'farcaster');
 		neynarDiv.setAttribute('data-background_color', 'transparent');
-		neynarDiv.setAttribute('data-styles', `{ "borderColor": "white","borderWidth":"1px" }`);
+		neynarDiv.setAttribute('data-styles', `{ "borderColor": "#495A8C","borderWidth":"1px" }`);
 		neynarDiv.setAttribute('data-color', '#ffffff');
 		signDiv?.appendChild(neynarDiv);
 	});

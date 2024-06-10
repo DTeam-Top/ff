@@ -1,0 +1,12 @@
+body {
+	height: 100vh;
+}
+
+h3 {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.paginator-select {
+	display: none;
+}

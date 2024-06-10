@@ -12,24 +12,30 @@
 </script>
 
 <div class="flex flex-wrap h-full">
-	<div class="w-full py-6 px-6 bg-gray-800">
-		<div class="flex flex-wrap justify-between items-center pb-8 w-1/2 mx-auto">
-			<div class="grid grid-cols-3 w-full text-center text-white mt-10">
+	<div class="w-full py-6 px-6">
+		<div class="my-10">
+			<div class="flex flex-col lg:flex-row justify-center items-center gap-10 text-center">
 				{#each statistics as { title, count }, i}
-					<div>
-						<div class="text-7xl font-bold">{count}</div>
-						<div class="mt-4">{title}</div>
+					<div class="space-y-1">
+						<span class="block font-heading-token text-8xl font-bold w-[150px]">{count}</span>
+						<p class="block opacity-50">{title}</p>
 					</div>
+					{#if i + 1 < statistics.length}
+						<div
+							class="border-t lg:border-t-0 lg:border-l border-surface-500/50 w-20 lg:w-1 lg:h-20"
+						></div>
+					{/if}
 				{/each}
 			</div>
 		</div>
-		<div class="flex flex-wrap w-1/2 mx-auto">
+
+		<div class="flex flex-wrap w-1/2 mx-auto mt-10">
 			{#each frameList as item, i}
 				<div class="w-full md:w-6/12">
 					<div class="p-2">
-						<div class="p-4 rounded-3xl" style={`background-color: ${item.color}`}>
+						<div class="p-4 card">
 							<div class="text-center">
-								<p class="text-4xl font-bold opacity-70">{item.count}</p>
+								<p class="text-4xl font-bold opacity-70 text-primary-500">{item.count}</p>
 								<p class="text-sm opacity-70 mt-2">{item.title}</p>
 							</div>
 						</div>

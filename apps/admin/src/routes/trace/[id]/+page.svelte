@@ -31,13 +31,21 @@
 
 <svelte:head>
 	<title>My Traces</title>
-	<meta name="description" content="Create frame" />
+	<meta name="description" content="My traces of a flow" />
 </svelte:head>
 
-<section class="w-full bg-gray-800 min-h-full py-6 px-6 rounded-3xl">
+<section class="w-full min-h-full py-6 px-6 rounded-3xl">
 	<div class="w-full">
-		<div class="flex justify-between text-white">
-			<div class="text-2xl font-bold">My Traces</div>
+		<ol class="breadcrumb mb-8">
+			<li class="crumb"><a class="anchor" href="/flows">Flow list</a></li>
+			<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+			<li class="crumb">
+				<a class="anchor" href="/flows">{list.length > 0 ? list[0].name : ''}</a>
+			</li>
+			<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+			<li class="text-white">Traces List</li>
+		</ol>
+		<!-- <div class="flex justify-between text-white">
 			<div class="flex flex-row-reverse text-right">
 				<button
 					class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2 rounded-lg"
@@ -62,29 +70,20 @@
 					Return
 				</button>
 			</div>
-		</div>
+		</div> -->
 		{#if list.length > 0}
-			<table class="table-fixed w-full text-sm bg-blue-200 rounded-lg mt-4">
+			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th class="border-b dark:border-slate-600 font-bold p-4 dark:text-slate-200 text-center"
-							>Cast</th
-						>
-						<th
-							class="border-b dark:border-slate-600 font-bold p-4 dark:text-slate-200 text-center w-[150px]"
-							>Trace Time</th
-						>
+						<th>Cast</th>
+						<th>Trace Time</th>
 					</tr>
 				</thead>
-				<tbody class="bg-white dark:bg-slate-800">
+				<tbody>
 					{#each list as item, i}
 						<tr>
-							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
-								><a href="">{item.cast}</a></td
-							>
-							<td class="border-b border-slate-300 dark:border-slate-700 p-4 pl-8 dark: border-r"
-								>{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</td
-							>
+							<td><a href="">{item.cast}</a></td>
+							<td>{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</td>
 						</tr>
 					{/each}
 				</tbody>

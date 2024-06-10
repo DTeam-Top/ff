@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { signed } from '$lib/client/utils';
-	import CreateFlow from '$lib/components/CreateFlow.svelte';
+	import CreateFlow from '$lib/components/flow/CreateFlow.svelte';
 
 	$: if (!$signed) {
 		goto('/');
@@ -10,7 +10,7 @@
 
 <svelte:head>
 	<title>Create</title>
-	<meta name="description" content="Create frame" />
+	<meta name="description" content="Create flow" />
 </svelte:head>
 
 <CreateFlow farcasterId={'uuid'} title="Create" />

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setFarcaster } from './store';
-import { BASE_URL } from './clientConsts';
+import { BASE_URL, LIMIT_MAX } from './clientConsts';
 export type Flow = {
 	name: string;
 	cover: string | undefined;
@@ -22,10 +22,26 @@ export const insertFlow = async (flow: Flow) => {
 	setFarcaster({ id: result.data.id });
 };
 
-export const getFlows = async (creator: number, hasTraced: boolean = false) => {
-	const result = await axios.get(
-		`${BASE_URL}api/flows/list?creator=${creator}&hasTraced=${hasTraced}`
-	);
+export const getFlows = async (
+	creator: number,
+	type: string,
+	offset: number,
+	max: number = LIMIT_MAX,
+	hasTraced: boolean = false
+) => {
+	let url = `${BASE_URL}api/flows/list?creator=${creator}&hasTraced=${hasTraced}&offset=${offset}&max=${max}`;
+	switch (type) {
+		case 'draft':
+			url += '&status=0';
+			break;
+		case 'published':
+			url += '&status=1';
+			break;
+		default:
+			url += '&status=2';
+			break;
+	}
+	const result = await axios.get(url);
 	return result.data;
 };
 
@@ -35,7 +51,7 @@ export const deleteFlowById = async (id: number) => {
 };
 
 export const getFlow = async (id: string) => {
-	const result = await axios.get(`${BASE_URL}api/flows/get/${id}`);
+	const result = await axios.get(`${BASE_URL}api/flows/get/${id}?type=edit`);
 	return result.data;
 };
 

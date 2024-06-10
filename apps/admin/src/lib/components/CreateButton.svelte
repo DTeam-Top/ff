@@ -3,7 +3,7 @@
 	import { user } from '$lib/client/store';
 
 	const gotoCreate = () => {
-		goto('/create');
+		goto('/flows/create');
 	};
 	let disabled = false;
 	$: if (
@@ -18,7 +18,7 @@
 </script>
 
 <button
-	class="text-white bg-gray-700 p-2 ml-2 flex items-center gap-2 rounded-lg"
+	class="text-white bg-secondary-500 p-2 ml-2 flex items-center gap-2 rounded-lg font-bold"
 	on:click={gotoCreate}
 	{disabled}
 >

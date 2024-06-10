@@ -1,28 +1,36 @@
-<script>
+<script lang="ts">
 	import { data } from './data';
 	import { page } from '$app/stores';
-	import { sidebarOpen } from '$lib/client/store';
+	import { getDrawerStore } from '@skeletonlabs/skeleton';
+	import { activePipe } from '$lib/client/utils';
+
+	const drawerStore = getDrawerStore();
+
+	function drawerClose(): void {
+		drawerStore.close();
+	}
 
 	const style = {
-		title: `mx-4 text-sm whitespace-pre`,
-		active: `bg-gray-700 rounded-full`,
-		link: `flex items-center justify-start my-1 p-3 w-full hover:text-white whitespace-pre`,
-		close: `lg:duration-700 lg:ease-out lg:invisible lg:opacity-0 lg:transition-all`,
-		open: `lg:duration-500 lg:ease-in lg:h-auto lg:opacity-100 lg:transition-all lg:w-auto`
+		title: `text-sm whitespace-pre font-bold`,
+		active: `bg-primary-active-token`
 	};
 </script>
 
-<ul class="md:pl-3">
-	<li>
-		{#each data as item (item.title)}
-			<a class={style.link} href={item.link}>
-				<div class={`p-2 ${item.link === $page.url.pathname ? style.active : ''}`}>
-					<span><svelte:component this={item.icon} /></span>
-				</div>
-				<span class={`${style.title} ${$sidebarOpen ? style.open : style.close}`}>
-					{item.title}
-				</span>
-			</a>
+<nav class="bg-transparent border border-surface-500/30 h-full text-center">
+	<ul class="">
+		{#each data as item}
+			<li
+				class={`text-center py-4 border-b border-gray-700 hover:bg-primary-hover-token ${activePipe($page.url.pathname, item.link) ? style.active : ''}`}
+			>
+				<a class={`items-center`} href={item.link} on:click={drawerClose}>
+					<div class={`mx-auto`}>
+						<svelte:component this={item.icon} />
+					</div>
+					<span class={`${style.title}`}>
+						{item.title}
+					</span>
+				</a>
+			</li>
 		{/each}
-	</li>
-</ul>
+	</ul>
+</nav>

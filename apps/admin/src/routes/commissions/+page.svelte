@@ -1,42 +1,46 @@
 <script lang="ts">
 	import { signed } from '$lib/client/utils';
-	import { dialogs } from 'svelte-dialogs';
 	import WithdrawButton from '$lib/components/WithdrawButton.svelte';
-	import HistoryList from '$lib/components/HistoryList.svelte';
-	import AvaliableList from '$lib/components/AvaliableList.svelte';
+	import HistoryList from '$lib/components/commission/HistoryList.svelte';
+	import AvaliableList from '$lib/components/commission/AvaliableList.svelte';
 	import { goto } from '$app/navigation';
 	import { postWithdraw } from '$lib/client/commissionService';
 	import { user } from '$lib/client/store';
-	import { TABS } from '$lib/client/clientConsts';
+	import { COMISSION_TABS } from '$lib/client/clientConsts';
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { TabGroup, Tab } from '@skeletonlabs/skeleton';
 
 	let loading = false;
 	let needRefresh = false;
 	let canWithdraw = false;
-
 	let currentTab = 0;
+	const modalStore = getModalStore();
 	$: if (!$signed) {
 		goto('/');
 	}
 
 	const withdrawHandler = async () => {
-		const confirm = await dialogs.confirm({
-			title: 'Are you sure to withdraw?',
-			closeButton: true,
-			confirmButtonText: 'Sure',
-			declineButtonText: 'Cancel'
-		});
+		const modal: ModalSettings = {
+			type: 'confirm',
+			title: 'Delete Confirm',
+			body: 'Are you sure to delete?',
+			response: async (r: boolean) => {
+				console.log('response:', r);
 
-		if (confirm) {
-			try {
-				loading = true;
-				await postWithdraw($user.verifiedAddresses.eth_addresses[0], $user.fid);
-				needRefresh = true;
-			} catch (e: any) {
-				console.log(e.message);
-			} finally {
-				loading = false;
+				if (r) {
+					try {
+						loading = true;
+						await postWithdraw($user.verifiedAddresses.eth_addresses[0], $user.fid);
+						needRefresh = true;
+					} catch (e: any) {
+						console.log(e.message);
+					} finally {
+						loading = false;
+					}
+				}
 			}
-		}
+		};
+		modalStore.trigger(modal);
 	};
 
 	const changeTabHandler = (i: number) => {
@@ -48,14 +52,15 @@
 		needRefresh = el.detail.result;
 		canWithdraw = el.detail.total > 0;
 	};
+	let tabSet: number = 0;
 </script>
 
 <svelte:head>
 	<title>My Commissions</title>
-	<meta name="description" content="Create frame" />
+	<meta name="description" content="My commissions" />
 </svelte:head>
 
-<section class="w-full bg-gray-800 min-h-full py-6 px-6 rounded-3xl">
+<section class="min-h-full p-6 m-4">
 	<div class="w-full">
 		<div class="flex justify-between text-white">
 			<div class="text-2xl font-bold">My Commissions</div>
@@ -65,33 +70,18 @@
 				</div>
 			{/if}
 		</div>
-
-		<div class="tabs w-full text-white mt-4 border-b">
-			{#each TABS as tab, i}
-				<a
-					class="tab {currentTab === i ? 'tab-active' : ''} tab-lifted"
-					on:click={() => changeTabHandler(i)}>{tab}</a
-				>
+		<TabGroup>
+			{#each COMISSION_TABS as tab, i}
+				<Tab bind:group={tabSet} name="tab2" value={i}>{tab}</Tab>
 			{/each}
-		</div>
 
-		<div class="overflow-x-auto">
-			{#if currentTab === 0}
-				<AvaliableList {needRefresh} on:refresh={changeRefresh} />
-			{:else if currentTab === 1}
-				<HistoryList {needRefresh} on:refresh={changeRefresh} />
-			{/if}
-		</div>
+			<svelte:fragment slot="panel">
+				{#if tabSet === 0}
+					<AvaliableList {needRefresh} on:refresh={changeRefresh} />
+				{:else if tabSet === 1}
+					<HistoryList {needRefresh} on:refresh={changeRefresh} />
+				{/if}
+			</svelte:fragment>
+		</TabGroup>
 	</div>
 </section>
-
-<style>
-	section {
-		display: flex;
-		/* flex-direction: column; */
-		justify-content: center;
-		align-items: center;
-		align-items: start;
-		/* flex: 0.6; */
-	}
-</style>

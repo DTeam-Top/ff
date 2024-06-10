@@ -24,11 +24,11 @@
 	};
 </script>
 
-<div class="bg-gray-800 rounded-3xl px-6 pt-4 mt-4">
-	<div class="flex justify-between items-end text-white text-2xl pb-4 font-bold">
-		<p>My Commissions</p>
+<div class=" px-6 pt-4 mt-4 hover:bg-primary-hover-token">
+	<header class="flex justify-between items-center pb-4 border-b solid border-gray-700">
+		<h3>My Commissions</h3>
 		<div>
-			<button class="text-white bg-transparent" title="List View" on:click={listHandler}>
+			<button class="text-primary-500 bg-transparent" title="List View" on:click={listHandler}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="24"
@@ -49,13 +49,17 @@
 				</svg>
 			</button>
 		</div>
-	</div>
+	</header>
 
-	<div>
-		<div class="border-t solid border-gray-700 p-4 w-full hover:bg-gray-700 text-white">
-			<div class="py-2 text-2xl">
-				<div class="font-normal mr-4">Total: {total}</div>
-				<div class="font-normal">Balance: {formatEther(balance)} ETH</div>
+	<div class="py-4 w-full">
+		<div class="grid grid-cols-2 gap-8 text-center">
+			<div>
+				<div class="text-2xl">{total}</div>
+				<div class="opacity-50">Total</div>
+			</div>
+			<div>
+				<div class="text-2xl">{formatEther(balance)} <span class="text-sm">ETH</span></div>
+				<div class="opacity-50">Balance</div>
 			</div>
 		</div>
 	</div>

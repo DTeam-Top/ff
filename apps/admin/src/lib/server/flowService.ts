@@ -1,7 +1,7 @@
 import { db } from '$lib/server/dbService';
 import { LOGGER, STATUS_PUBLISHED } from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
-import { count, countDistinct, eq, sql } from 'drizzle-orm';
+import { count, countDistinct, eq, sql, and } from 'drizzle-orm';
 
 export type Flow = {
 	id?: string;
@@ -51,10 +51,26 @@ export const upsertFlow = async (flow: Flow) => {
 	}
 };
 
-export const getFlowList = async (creator: number, hasTraced: boolean) => {
+export const getFlowList = async (
+	creator: number,
+	status: number,
+	offset: number,
+	max: number,
+	hasTraced: boolean
+) => {
 	console.log(hasTraced);
+	let total = [];
+	let list = [];
 	if (hasTraced) {
-		return await db()
+		total = await db()
+			.select({
+				count: sql`count(distinct(flows.id))`.mapWith(Number)
+			})
+			.from(flows)
+			.rightJoin(traces, eq(traces.flow, flows.id))
+			.where(and(eq(flows.creator, creator), eq(flows.status, status)));
+		console.log(total);
+		list = await db()
 			.select({
 				id: flows.id,
 				name: flows.name,
@@ -62,31 +78,46 @@ export const getFlowList = async (creator: number, hasTraced: boolean) => {
 				createdAt: flows.createdAt,
 				input: flows.input,
 				traceCount: count(traces.id),
+				status: flows.status,
 				paymentCount: count(tracePayments.id)
 			})
 			.from(flows)
 			.leftJoin(traces, eq(traces.flow, flows.id))
 			.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
-			.where(eq(flows.creator, creator))
+			.where(and(eq(flows.creator, creator), eq(flows.status, status)))
 			.groupBy(flows.id)
-			.having(sql`${count(traces.id)} > 0`);
+			.having(sql`${count(traces.id)} > 0`)
+			.limit(max)
+			.offset(offset);
+		console.log(max, offset);
 	} else {
-		return await db()
+		total = await db()
+			.select({
+				count: count(flows.id)
+			})
+			.from(flows)
+			.where(and(eq(flows.creator, creator), eq(flows.status, status)));
+
+		list = await db()
 			.select({
 				id: flows.id,
 				name: flows.name,
 				cover: flows.cover,
 				createdAt: flows.createdAt,
 				input: flows.input,
+				status: flows.status,
 				traceCount: count(traces.id),
 				paymentCount: count(tracePayments.id)
 			})
 			.from(flows)
 			.leftJoin(traces, eq(traces.flow, flows.id))
 			.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
-			.where(eq(flows.creator, creator))
-			.groupBy(flows.id);
+			.where(and(eq(flows.creator, creator), eq(flows.status, status)))
+			.groupBy(flows.id)
+			.limit(max)
+			.offset(offset);
 	}
+	return { total: total[0].count, list };
 };
 
 export const deleteFlow = async (id: string) => {

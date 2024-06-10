@@ -1,11 +1,30 @@
-<script>
+<script lang="ts">
+	import 'tailwindcss/tailwind.css';
 	import { browser } from '$app/environment';
 	import { getItem } from '$lib/client/utils';
-	import Layout from '$lib/components/ui/Layout.svelte';
 	import { getCaster } from '$lib/client/casterService';
-	import './style.css';
+	import '../style.css';
 	import { USER_STORE_KEY } from '$lib/client/clientConsts';
+	import SWIN from '$lib/components/SWIN.svelte';
+	import SiteName from '$lib/components/ui/SiteName.svelte';
+	import {
+		AppShell,
+		Drawer,
+		initializeStores,
+		AppBar,
+		getDrawerStore,
+		type DrawerSettings,
+		Modal
+	} from '@skeletonlabs/skeleton';
+	import SidebarItems from '$lib/components/ui/sidebar/SidebarItems.svelte';
+	import { removeItem, signed } from '$lib/client/utils';
+
 	let loading = true;
+
+	initializeStores();
+
+	const drawerStore = getDrawerStore();
+
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);
 		if (item) {
@@ -16,12 +35,72 @@
 			loading = false;
 		}
 	}
+
+	const drawerSettings: DrawerSettings = {
+		width: 'w-[180px]'
+	};
+	function drawerOpen(): void {
+		drawerStore.open(drawerSettings);
+	}
+	$: classesSidebarLeft = $signed ? 'w-0 lg:w-[130px]' : 'w-0';
+
+	const onSingout = () => {
+		removeItem('user', window);
+		window.location.reload();
+	};
+	$: allyPageSmoothScroll = 'scroll-smooth';
 </script>
 
 {#if loading}
 	Loading ...
+	<div></div>
 {:else}
-	<Layout>
+	<Drawer>
+		<div class="container flex left-0 relative items-center p-4">
+			<img src="/images/logo.svg" width="40" height="40" alt="FF" class="mx-auto" />
+		</div>
+
+		<hr />
+		<SidebarItems />
+	</Drawer>
+	<Modal />
+	<AppShell
+		slotSidebarLeft="bg-surface-500/5 {classesSidebarLeft}"
+		scrollbarGutter="auto"
+		{allyPageSmoothScroll}
+	>
+		<svelte:fragment slot="header">
+			<AppBar shadow="shadow-2xl" slotTrail="!space-x-2" background="">
+				<svelte:fragment slot="lead">
+					<div class="flex items-center">
+						<button class="lg:hidden btn btn-sm mr-4" on:click={drawerOpen}>
+							<span>
+								<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+									<rect width="100" height="20" />
+									<rect y="30" width="100" height="20" />
+									<rect y="60" width="100" height="20" />
+								</svg>
+							</span>
+						</button>
+						<SiteName />
+					</div>
+				</svelte:fragment>
+				<svelte:fragment slot="trail">
+					{#if $signed}
+						<button
+							on:click={onSingout}
+							class=" hover:rounded-lg px-4 py-2 hover:variant-soft-primary">Sign out</button
+						>
+					{:else}
+						<button>Flows</button>
+						<SWIN />
+					{/if}
+				</svelte:fragment>
+			</AppBar>
+		</svelte:fragment>
+		<svelte:fragment slot="sidebarLeft">
+			<SidebarItems />
+		</svelte:fragment>
 		<slot />
-	</Layout>
+	</AppShell>
 {/if}

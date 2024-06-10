@@ -5,8 +5,9 @@
 	import { user, farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import toast, { Toaster } from 'svelte-french-toast';
-	import Tips from './Tips.svelte';
+	import Tips from '../Tips.svelte';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
+	import Button from '../Button.svelte';
 
 	export let farcasterId = 'uuid';
 	export let title = 'Create';
@@ -98,55 +99,62 @@
 	};
 </script>
 
-<div class="bg-gray-800 py-6 px-6 rounded-3xl">
-	<div class="text-white font-bold text-2xl mb-4">{title} Flow</div>
-	<section class="w-full max-w-[2000px] mx-auto table border-spacing-x-8">
-		<div class="w-2/5 bg-gray-100 rounded-3xl table-cell p-8">
-			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Design</div>
+<div class="p-6 m-4 text-black">
+	<ol class="breadcrumb mb-8">
+		<li class="crumb"><a class="anchor" href="/flows">Flow list</a></li>
+		<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+		<li class="text-white">{title} Flow</li>
+	</ol>
+	<section class="w-full max-w-[2000px] mx-auto border-spacing-x-8 table bg-transparent">
+		<div class="lg:w-2/5 md:w-2/5 card lg:table-cell md:table-cell">
+			<div class="py-4 px-6 mb-4 font-bold border-b border-surface-500/30 text-xl text-white">
+				Design
+			</div>
 			<div class="px-6">
-				<div class="flex items-center mb-2">
-					<div class="w-[50px] font-bold">Name:</div>
+				<label class="flex items-center mb-2">
+					<span>Name</span>
 					<input
-						class="border px-4 py-2 ml-4"
+						class="input rounded w-4/5"
 						placeholder="Flow name"
 						bind:value={name}
 						on:keyup={() => previewHandler()}
 					/>
-				</div>
-				<div class="flex items-center mb-2">
-					<div class="w-[50px] font-bold">ERC20:</div>
+				</label>
+				<label class="flex items-center mb-2">
+					<span class="">ERC20</span>
+
 					<input
-						class="border px-4 py-2 ml-4 w-full"
-						bind:value={address}
+						class="input rounded w-4/5"
 						placeholder="ERC20 address"
+						bind:value={address}
 						on:keyup={() => previewHandler()}
 					/>
-				</div>
-				<div class="flex items-center mb-2">
-					<div class="w-[50px] font-bold">Price:</div>
-					<div class="flex items-center">
-						<input
-							class="border px-4 py-2 ml-4 w-[100px]"
-							bind:value={price}
-							type="number"
-							on:keyup={() => previewHandler()}
-						/>
-						<div class="bg-gray-300 px-4 py-2 font-bold">ETH</div>
-					</div>
-				</div>
-				<div class="flex items-center mb-2">
-					<div class="w-[50px] font-bold">Cover:</div>
-					<textarea
-						class="border px-4 py-2 ml-4 w-full"
-						bind:value={cover}
-						placeholder="Image's url"
-						rows="5"
+				</label>
+
+				<label class="flex items-center mb-2">
+					<span>Price</span>
+					<input
+						class="input rounded w-1/6"
+						bind:value={price}
+						type="number"
 						on:keyup={() => previewHandler()}
-					></textarea>
-				</div>
+					/>
+					<div class="bg-gray-300 px-4 py-2 font-bold rounded-r text-black">ETH</div>
+				</label>
+
+				<label class="flex items-center">
+					<span>Cover</span>
+					<textarea
+						class="textarea w-4/5"
+						rows="5"
+						placeholder="Image's url"
+						bind:value={cover}
+						on:keyup={() => previewHandler()}
+					/>
+				</label>
 			</div>
 		</div>
-		<div class="w-2/5 bg-gray-100 rounded-3xl table-cell">
+		<div class="lg:w-2/5 md:w-2/5 bg-gray-100 rounded lg:table-cell md:table-cell">
 			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Preview</div>
 			<div class="px-6">
 				{#if loading}
@@ -168,18 +176,11 @@
 	</section>
 	{#if !isPublished}
 		<div class="flex mt-8 justify-center text-white">
-			<button
-				class="border rounded-lg mx-8 px-4 py-2 bg-gray-100 text-black"
-				on:click={cancelHandler}>Reset</button
-			>
-
-			<button class="rounded-lg mx-8 px-4 py-2 bg-violet-400 text-white" on:click={saveHandler}
-				>Save</button
-			>
-			<button class="rounded-lg mx-8 px-4 py-2 bg-blue-600 text-white" on:click={publishHandler}
-				>Publish
-			</button>
-			<!-- {$farcaster.id} -->
+			<Button cssClass="bg-gray-100 text-black" on:click={cancelHandler} title="Reset"></Button>
+			<Button cssClass="bg-secondary-500 text-white mx-8 " on:click={saveHandler} title="Save"
+			></Button>
+			<Button cssClass="bg-primary-500 text-white  " on:click={publishHandler} title="Publish"
+			></Button>
 		</div>
 	{/if}
 
@@ -191,17 +192,25 @@
 <Toaster />
 
 <style>
-	section {
-		/* flex-direction: column; */
-		justify-content: center;
-		align-items: center;
-		/* flex: 0.6; */
-	}
 	textarea {
 		resize: none;
 	}
 	textarea:focus,
 	input:focus {
 		outline: none;
+	}
+	.table {
+		background-color: transparent;
+	}
+
+	label {
+		color: white;
+	}
+
+	label > span {
+		width: 80px;
+		/*text-align: right;
+		padding-right: 8px; */
+		color: white;
 	}
 </style>

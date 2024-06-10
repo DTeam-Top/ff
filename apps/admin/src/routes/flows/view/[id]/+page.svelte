@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { signed } from '$lib/client/utils';
 	import { page } from '$app/stores';
-	import CreateFlow from '$lib/components/CreateFlow.svelte';
+	import ViewFlow from '$lib/components/flow/ViewFlow.svelte';
 	$: if (!$signed) {
 		console.log($signed);
 		goto('/');
@@ -10,9 +10,9 @@
 </script>
 
 <svelte:head>
-	<title>Edit</title>
-	<meta name="description" content="Create frame" />
+	<title>View</title>
+	<meta name="description" content="View flow" />
 </svelte:head>
 {#if $page.params.id}
-	<CreateFlow farcasterId={$page.params.id} title="Edit" />
+	<ViewFlow farcasterId={$page.params.id} title="View" />
 {/if}

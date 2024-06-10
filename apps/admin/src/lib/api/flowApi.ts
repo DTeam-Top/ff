@@ -8,7 +8,8 @@ import {
 } from '$lib/server/flowService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { fidRequest, flowRequest, idRequest } from './requests';
+import { flowRequest, idRequest } from './requests';
+import { STATUS_PUBLISHED } from '$lib/server/serverConsts';
 
 export const router = new Hono()
 	.post('/', zValidator('json', flowRequest), async (c) => {
@@ -28,8 +29,14 @@ export const router = new Hono()
 	})
 	.get('/list', async (c) => {
 		try {
-			const { creator, hasTraced } = c.req.query();
-			const result = await getFlowList(Number(creator), hasTraced === 'true');
+			const { creator, hasTraced, offset, max, status } = c.req.query();
+			const result = await getFlowList(
+				Number(creator),
+				Number(status),
+				Number(offset),
+				Number(max),
+				hasTraced === 'true'
+			);
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,9 +58,13 @@ export const router = new Hono()
 	.get('/get/:id', zValidator('param', idRequest), async (c) => {
 		try {
 			const { id } = c.req.param();
+			const { type } = c.req.query();
 			const result = await getFlowById(id);
-
+			if (type !== 'edit' && result && result.status !== STATUS_PUBLISHED) {
+				return c.json({ message: 'The flow is not published' }, 500);
+			}
 			return c.json(result);
+
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (e: any) {
 			return c.json({ message: e.code + ': ' + e.message }, 500);

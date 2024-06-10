@@ -50,3 +50,14 @@ export const getPreviewUrl = async (
 
 	return prviewImage;
 };
+
+export const activePipe = (pathname: string, link: string) => {
+	console.log(pathname, link);
+	if (link === '/' && pathname === link) {
+		return true;
+	} else if (link !== '/' && pathname.indexOf(link) > -1) {
+		return true;
+	} else {
+		return false;
+	}
+};

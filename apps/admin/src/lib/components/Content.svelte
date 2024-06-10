@@ -3,44 +3,55 @@
 	import dayjs from 'dayjs';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
-	import * as echarts from 'echarts';
 	import { getFlows, getStaticsCount } from '$lib/client/flowService';
-	import Commission from './Commission.svelte';
-	import { BG_COLORLIST, WARP_BASE } from '$lib/client/clientConsts';
+	import CommissionCard from './commission/CommissionCard.svelte';
+	import { BG_COLORLIST, LIMIT_MAX_HOME, WARP_BASE } from '$lib/client/clientConsts';
 
 	export let title;
 
 	let statistics: any[] = [];
-	let frameList: any[] = [];
 	let flowList: any[] = [];
-	let myChart;
-	let options;
+	let currentPage = 1;
+	let page = 0;
+	let offset = 0;
 	onMount(() => {});
 
 	$: if ($user) {
+		flowList = [];
 		getStaticsCount($user.fid).then((count) => {
 			statistics = count.banner;
-			//frameList = count.card;
 		});
-		getFlows($user.fid, true).then((flows) => {
-			console.log(flows);
-			flowList = flows;
-		});
+		getFlowList().then(() => {});
 	}
+	const getFlowList = async () => {
+		const flows = await getFlows($user.fid, 'published', offset, LIMIT_MAX_HOME, true);
+		console.log(flows);
+		page = Math.ceil(flows.total / LIMIT_MAX_HOME);
+		console.log(page);
+		flowList = [...flows.list];
+	};
+	const moreHandler = async () => {
+		if (currentPage < page) {
+			currentPage += 1;
+			offset = (currentPage - 1) * LIMIT_MAX_HOME;
+			console.log(currentPage, offset);
+			await getFlowList();
+		}
+	};
 </script>
 
-<div class="flex flex-wrap">
-	<div class="w-full lg:w-8/12 bg-gray-800 py-6 px-6 rounded-3xl">
-		<div class="flex justify-between text-white items-center mb-8">
-			<p class="text-2xl font-bold">{title}</p>
+<div class="flex flex-wrap m-4">
+	<div class="w-full lg:w-8/12 py-6 px-6 hover:bg-primary-hover-token">
+		<header class="flex justify-between items-center pb-4 border-b solid border-gray-700">
+			<h3>{title}</h3>
 			<p class="">{dayjs().format('MMMM, DD')}</p>
-		</div>
-		<div class="flex flex-wrap justify-between items-center pb-8">
-			<div class="flex flex-wrap text-white">
+		</header>
+		<div class="flex flex-wrap justify-between items-center py-4">
+			<div class="flex flex-wrap">
 				{#each statistics as { title, count }, i}
 					<div class="pr-10">
 						<div class="text-2xl font-bold">{count}</div>
-						<div class="">{title}</div>
+						<div class="opacity-50">{title}</div>
 					</div>
 				{/each}
 			</div>
@@ -48,11 +59,11 @@
 				<CreateButton />
 			</div>
 		</div>
-		<div class="grid grid-cols-3 gap-4">
+		<div class="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-4 text-black">
 			{#each flowList as item, i}
 				<div class="w-full">
 					<div class="p-2">
-						<div class={`p-4 rounded-3xl ${BG_COLORLIST[Math.floor(i % 6)]}`}>
+						<div class={`p-4 rounded-xl ${BG_COLORLIST[Math.floor(i % 6)]}`}>
 							<div class="flex items-center justify-b">
 								<span class="text-sm">{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</span>
 							</div>
@@ -65,34 +76,25 @@
 							<div class="flex justify-between pt-4 relative">
 								<div>Traced: {item.traceCount}</div>
 								<div>Paid: {item.paymentCount}</div>
-								<!-- <div class="flex items-center">
-									<img
-										class="w-5 h-5 rounded-full overflow-hidden object-cover"
-										src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
-										alt="participant"
-									/>
-									<img
-										class="w-5 h-5 rounded-full overflow-hidden object-cover"
-										src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTB8fG1hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
-										alt="participant"
-									/>
-								</div> -->
 							</div>
 						</div>
 					</div>
 				</div>
 			{/each}
 		</div>
+		{#if page > 0 && currentPage < page}
+			<div class="py-4 text-white mx-auto w-[100px] text-center text-lg">
+				<button on:click={moreHandler} class="underline cursor-pointer text-lg"> More </button>
+			</div>
+		{/if}
 	</div>
 	<div class="w-full mt-8 lg:mt-0 lg:w-4/12 lg:pl-4">
-		<div class="bg-gray-800 rounded-3xl px-6 pt-6">
-			<div class="flex text-white text-2xl pb-4 font-bold">
-				<p>Profile</p>
-			</div>
+		<div class=" px-6 pt-6 hover:bg-primary-hover-token">
+			<header class="flex pb-4 border-b solid border-gray-700">
+				<h3>Profile</h3>
+			</header>
 			<div>
-				<div
-					class="border-t solid border-gray-700 p-4 flex 2xl:items-start w-full hover:bg-gray-700"
-				>
+				<div class="py-4 flex 2xl:items-start w-full">
 					<img src={$user.pft} alt="profile" class="object-cover w-10 h-10 rounded-full" />
 					<div class="pl-4 w-full">
 						<div class="flex items-center justify-between w-full">
@@ -103,16 +105,17 @@
 								>
 							</div>
 						</div>
-						<p class="my-2 text-sm text-gray-400">
+						<p class="my-2 text-sm opacity-50">
 							{$user.profile.bio.text}
 						</p>
-						<p class="text-right text-gray-400 text-sm">
-							Following: {$user.followingCount}, Follower: {$user.followerCount}
+						<p class="text-right text-sm">
+							Following: <span class="font-bold">{$user.followingCount}</span>, Follower:
+							<span class="font-bold">{$user.followerCount}</span>
 						</p>
 					</div>
 				</div>
 			</div>
 		</div>
-		<Commission />
+		<CommissionCard />
 	</div>
 </div>
