@@ -26,6 +26,11 @@ contract FlowsDvp is IFlowsDvp, ICommissionController, Ownable {
     _commissionNumerator = 1000; // commission: 10% * fee
   }
 
+  modifier allowed(address account) {
+    require(IWorld(_worldContractAddress).notInBlacklist(account), "account in the blacklist!");
+    _;
+  }
+
   function setWorldContractAddress(address worldContractAddress) external onlyOwner {
     _worldContractAddress = worldContractAddress;
   }
@@ -64,6 +69,14 @@ contract FlowsDvp is IFlowsDvp, ICommissionController, Ownable {
     return IWorld(_worldContractAddress).notInBlacklist(account);
   }
 
+  function addToBlacklist(address account) external override onlyOwner {
+    IWorld(_worldContractAddress).addToBlacklist(account);
+  }
+
+  function removeFromBlacklist(address account) external override onlyOwner {
+    IWorld(_worldContractAddress).removeFromBlacklist(account);
+  }
+
   function feeAndCommission(uint256 amount) external view override returns (uint256, uint256) {
     uint256 fee = (amount * _feeNumerator) / COMMON_DENOMINATOR;
     uint256 commission = (fee * _commissionNumerator) / COMMON_DENOMINATOR;
@@ -77,9 +90,7 @@ contract FlowsDvp is IFlowsDvp, ICommissionController, Ownable {
     address to,
     Order memory order,
     bytes calldata sig
-  ) external payable override {
-    require(IWorld(_worldContractAddress).notInBlacklist(msg.sender), "msg.sender in the blacklist!");
-
+  ) external payable override allowed(from) allowed(to) allowed(msg.sender) {
     address signer = keccak256(abi.encodePacked(flowId, commissionReceiverFid, from, to))
       .toEthSignedMessageHash()
       .recover(sig);
@@ -87,8 +98,6 @@ contract FlowsDvp is IFlowsDvp, ICommissionController, Ownable {
     require(signer == _signer, "Invalid signature");
 
     require(msg.value == order.price, "Wrong value ETH");
-    require(IWorld(_worldContractAddress).notInBlacklist(from), "from in the blacklist!");
-    require(IWorld(_worldContractAddress).notInBlacklist(to), "to in the blacklist!");
 
     _batchTransfer(from, to, order);
     _pay(order.price, from, commissionReceiverFid);
@@ -100,9 +109,7 @@ contract FlowsDvp is IFlowsDvp, ICommissionController, Ownable {
     return IWorld(_worldContractAddress).balance(fid);
   }
 
-  function withdraw(uint256 fid, address account, bytes calldata sig) external {
-    require(IWorld(_worldContractAddress).notInBlacklist(msg.sender), "msg.sender in the blacklist!");
-
+  function withdraw(uint256 fid, address account, bytes calldata sig) external allowed(account) allowed(msg.sender) {
     address signer = keccak256(abi.encodePacked(fid, account)).toEthSignedMessageHash().recover(sig);
     require(IWorld(_worldContractAddress).notInBlacklist(signer), "signer in the blacklist!");
     require(signer == _signer, "Invalid signature");

@@ -38,6 +38,10 @@ interface IFlowsDvp {
 
   function notInBlacklist(address account) external view returns (bool);
 
+  function addToBlacklist(address account) external;
+
+  function removeFromBlacklist(address account) external;
+
   function feeAndCommission(uint256 price) external view returns (uint256, uint256);
 }
 

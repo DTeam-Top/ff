@@ -206,8 +206,6 @@ contract FlowsDvpTest is MudTest {
     assertEqUint(commission, 100);
   }
 
-  function test_withdraw() public {}
-
   function test_cannotAccessWorldDirectly() public {
     vm.expectRevert();
     IWorld(worldAddress).pay(1, 1);
@@ -222,9 +220,41 @@ contract FlowsDvpTest is MudTest {
     IWorld(worldAddress).notInBlacklist(address(this));
 
     vm.expectRevert();
-    IWorld(worldAddress).add(address(this));
+    IWorld(worldAddress).addToBlacklist(address(this));
 
     vm.expectRevert();
-    IWorld(worldAddress).remove(address(this));
+    IWorld(worldAddress).removeFromBlacklist(address(this));
+  }
+
+  function test_blacklist() public {
+    address banned = makeAddr("banned");
+
+    assertTrue(dvp.notInBlacklist(banned));
+
+    dvp.addToBlacklist(banned);
+
+    assertFalse(dvp.notInBlacklist(banned));
+
+    vm.startPrank(banned);
+
+    vm.expectRevert(bytes("account in the blacklist!"));
+    // must be value = 0,  pranked sender has no balance
+    // else it will revert with another error message
+    dvp.deliver{ value: 0 }(
+      "flow1",
+      uint256(1),
+      seller,
+      buyer,
+      Order(100000, new TransferRequestERC20[](0), new TransferRequestERC721[](0), new TransferRequestERC1155[](0)),
+      ""
+    );
+
+    vm.expectRevert(bytes("account in the blacklist!"));
+    dvp.withdraw(1, commissionReceiver, "");
+
+    vm.stopPrank();
+
+    dvp.removeFromBlacklist(banned);
+    assertTrue(dvp.notInBlacklist(banned));
   }
 }
