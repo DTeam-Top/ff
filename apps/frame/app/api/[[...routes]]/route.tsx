@@ -21,7 +21,7 @@ import { neynar } from "frog/hubs";
 const app = new Frog({
   assetsPath: "/",
   basePath: "/api",
-  hub: neynar({ apiKey: `${process.env.PUBLIC_NEYNAR_KEY}` }),
+  hub: neynar({ apiKey: `${process.env.NEYNAR_KEY}` }),
   verify: "silent",
 });
 
@@ -64,7 +64,7 @@ app.frame(
         contract = flow.input.address as `0x${string}`;
       }
     }
-    const shareLink = `${process.env.PUBLIC_BASE_URL}share/${flowId}}`;
+    const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}}`;
 
     return c.res({
       action: `/finish/${flowId}`,

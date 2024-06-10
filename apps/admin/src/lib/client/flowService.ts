@@ -3,10 +3,10 @@ import { setFarcaster } from './store';
 import { BASE_URL, LIMIT_MAX } from './clientConsts';
 export type Flow = {
 	name: string;
-	cover: string | undefined;
-	input: { price: string; address: string };
+	cover?: string;
+	input: any;
 	creator: number;
-	id: string | undefined;
+	id?: string;
 };
 
 export type Cast = {

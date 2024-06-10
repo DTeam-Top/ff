@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow, insertFlow, publishFlow } from '$lib/client/flowService';
-	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
+	import { errorPipe, getPreviewUrl, isValidAddress } from '$lib/client/utils';
 	import { user, farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import Tips from '../Tips.svelte';
@@ -15,19 +15,21 @@
 	export let title = 'Create';
 	let frameUrl = '';
 	let name: string = '';
-	let address: string = '';
+	let addressList: any[] = [];
 	let cover: string = '';
 	let price: number = 0;
 	let isPublished = false;
 	const cancelHandler = () => {
 		name = '';
-		address = '';
+		addressList = [];
 		cover = '';
 		price = 0;
 		prviewImage = '';
+		newList = [];
 	};
 	let prviewImage = '';
 	let loading = false;
+	let newList: any[] = [];
 
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
@@ -35,7 +37,7 @@
 			const flow = await getFlow(farcasterId);
 			if (flow) {
 				name = flow.name;
-				address = flow.input?.address;
+				addressList = flow.input?.addressList;
 				price = flow.input?.price;
 				cover = flow.cover;
 				isPublished = flow.status === STATUS_PUBLISHED;
@@ -47,36 +49,37 @@
 			}
 		} else {
 			name = 'test'; //'test';
-			address = '0x2F6F12b68165aBb483484927919D0d3fE450462E'; //'0x2F6F12b68165aBb483484927919D0d3fE450462E';
+			addressList = [{ ERC20: '0x2F6F12b68165aBb483484927919D0d3fE450462E' }]; //'0x2F6F12b68165aBb483484927919D0d3fE450462E';
 			cover =
 				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png'; //'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
 			price = 0.005; //0.005;
 		}
+		newList = addressList;
 		previewHandler();
 	});
 
 	const previewHandler = async () => {
-		if (!name || !address) {
+		if (!name || addressList.length === 0) {
 			return;
 		}
 		loading = true;
 
-		//frameUrl = '';
-		prviewImage = await getPreviewUrl(FRAME_BASE_URL, name, cover, price, address);
+		frameUrl = '';
+		prviewImage = await getPreviewUrl(FRAME_BASE_URL, name, cover, price, addressList);
 		loading = false;
 	};
 
 	const saveHandler = async () => {
 		try {
-			if (!name || !address || !cover) {
-				toast.error(toastStore, 'Please input name , ERC20 , cover');
+			if (!name || addressList.length === 0 || !cover) {
+				toast.error(toastStore, 'Please input name , address , cover');
 				return;
 			}
 
 			await insertFlow({
 				name: name,
 				cover: cover,
-				input: { price: price.toString(), address: address },
+				input: { price: price.toString(), addressList: addressList },
 				creator: $user.fid,
 				id: $farcaster.id
 			});
@@ -98,6 +101,27 @@
 			toast.error(toastStore, 'Please save first!');
 		}
 	};
+	const addAddressHandler = () => {
+		if (!isValidAddress(newAddress)) {
+			toast.error(toastStore, 'Please input correct address');
+			return;
+		}
+
+		let newLine = {};
+		newLine[selected] = newAddress;
+		addressList.push(newLine);
+		newList = addressList;
+		newAddress = '';
+		selected = 'ERC20';
+	};
+	let selected: string;
+	let types = ['ERC20', 'ERC721'];
+	let newAddress = '';
+	const deleteAddressHandler = (index: number) => {
+		addressList.splice(index, 1);
+		console.log(addressList);
+		newList = addressList;
+	};
 </script>
 
 <div class="p-6 m-4 text-black">
@@ -118,16 +142,6 @@
 						class="input rounded w-4/5"
 						placeholder="Flow name"
 						bind:value={name}
-						on:keyup={() => previewHandler()}
-					/>
-				</label>
-				<label class="flex items-center mb-2">
-					<span class="">ERC20</span>
-
-					<input
-						class="input rounded w-4/5"
-						placeholder="ERC20 address"
-						bind:value={address}
 						on:keyup={() => previewHandler()}
 					/>
 				</label>
@@ -153,6 +167,46 @@
 						on:keyup={() => previewHandler()}
 					/>
 				</label>
+				{#each newList as address, index}
+					{#each Object.entries(address) as [key, value], i}
+						<div class="flex items-center mb-2" id="addressDiv">
+							<div class="w-[100px] font-bold">{key}:</div>
+							<input
+								class="border border-gray-500 px-4 py-2 w-4/5"
+								{value}
+								placeholder="ERC20 address"
+								on:keyup={() => previewHandler()}
+								disabled
+							/>
+							<img
+								src="/images/trash.svg"
+								alt="trash"
+								class="w-4 h-4 ml-2 cursor-pointer"
+								on:click={() => deleteAddressHandler(index)}
+							/>
+						</div>
+					{/each}
+				{/each}
+				{#if newList.length < 3}
+					<div class="flex items-center mb-6">
+						<div class="w-[100px] font-bold">
+							<select bind:value={selected} class="py-2">
+								{#each types as type}
+									<option value={type}>
+										{type}
+									</option>
+								{/each}
+							</select>
+						</div>
+						<input class="border px-4 py-2 w-4/5" bind:value={newAddress} placeholder="Address" />
+						<img
+							src="/images/plus.svg"
+							alt="plus"
+							class="w-4 h-4 ml-2 cursor-pointer"
+							on:click={addAddressHandler}
+						/>
+					</div>
+				{/if}
 			</div>
 		</div>
 		<div class="lg:w-2/5 md:w-2/5 bg-gray-100 rounded lg:table-cell md:table-cell">
@@ -161,15 +215,17 @@
 				{#if loading}
 					Loading ...
 				{:else if prviewImage}
-					<div class="relative rounded-md relative w-full mb-4">
-						<div class="relative">
-							<img
-								class="bg-background-200 border border-slate-200 max-h-[532px] object-cover rounded-t-lg text-background-200 w-full"
-								src={prviewImage}
-								alt="Preview Frame"
-							/>
+					<div class="border border-gray-700 rounded-3xl p-4">
+						<div class="relative rounded-md relative w-full mb-4">
+							<div class="relative">
+								<img
+									class="bg-background-200 border border-slate-200 max-h-[532px] object-cover rounded-t-lg text-background-200 w-full"
+									src={prviewImage}
+									alt="Preview Frame"
+								/>
+							</div>
+							<FrameButtons />
 						</div>
-						<FrameButtons />
 					</div>
 				{/if}
 			</div>
