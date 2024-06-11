@@ -1,7 +1,13 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow, insertFlow, publishFlow } from '$lib/client/flowService';
-	import { errorPipe, getPreviewUrl, isValidAddress } from '$lib/client/utils';
+	import {
+		addressDataPipe,
+		addressListPipe,
+		errorPipe,
+		getPreviewUrl,
+		isValidAddress
+	} from '$lib/client/utils';
 	import { user, farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import Tips from '../Tips.svelte';
@@ -9,6 +15,7 @@
 	import Button from '../Button.svelte';
 	import { toast } from '$lib/client/popup';
 	import { getToastStore } from '@skeletonlabs/skeleton';
+	import TrashIcon from '../ui/icons/TrashIcon.svelte';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -37,7 +44,7 @@
 			const flow = await getFlow(farcasterId);
 			if (flow) {
 				name = flow.name;
-				addressList = flow.input?.addressList;
+				addressList = addressDataPipe(flow.input?.addressList);
 				price = flow.input?.price;
 				cover = flow.cover;
 				isPublished = flow.status === STATUS_PUBLISHED;
@@ -75,15 +82,23 @@
 				toast.error(toastStore, 'Please input name , address , cover');
 				return;
 			}
-
-			await insertFlow({
+			console.log({
 				name: name,
 				cover: cover,
 				input: { price: price.toString(), addressList: addressList },
 				creator: $user.fid,
 				id: $farcaster.id
 			});
-			//toast.success('Save success!');
+
+			console.log(addressList);
+			const addressData = addressListPipe(addressList);
+			await insertFlow({
+				name: name,
+				cover: cover,
+				input: { price: price.toString(), addressList: addressData },
+				creator: $user.fid,
+				id: $farcaster.id
+			});
 			toast.success(toastStore, 'Save success!');
 		} catch (e: any) {
 			//alert(e);
@@ -113,9 +128,11 @@
 		newList = addressList;
 		newAddress = '';
 		selected = 'ERC20';
+
+		console.log(newList);
 	};
 	let selected: string;
-	let types = ['ERC20', 'ERC721'];
+	let types = ['ERC20', 'ERC721', 'ERC1155'];
 	let newAddress = '';
 	const deleteAddressHandler = (index: number) => {
 		addressList.splice(index, 1);
@@ -157,7 +174,7 @@
 					<div class="bg-gray-300 px-4 py-2 font-bold rounded-r text-black">ETH</div>
 				</label>
 
-				<label class="flex items-center">
+				<label class="flex items-center mb-2">
 					<span>Cover</span>
 					<textarea
 						class="textarea w-4/5"
@@ -169,44 +186,34 @@
 				</label>
 				{#each newList as address, index}
 					{#each Object.entries(address) as [key, value], i}
-						<div class="flex items-center mb-2" id="addressDiv">
-							<div class="w-[100px] font-bold">{key}:</div>
-							<input
-								class="border border-gray-500 px-4 py-2 w-4/5"
-								{value}
-								placeholder="ERC20 address"
-								on:keyup={() => previewHandler()}
-								disabled
-							/>
-							<img
-								src="/images/trash.svg"
-								alt="trash"
-								class="w-4 h-4 ml-2 cursor-pointer"
-								on:click={() => deleteAddressHandler(index)}
-							/>
-						</div>
+						<label class="flex items-center mb-2">
+							<span>{key}</span>
+							<input class="input rounded" {value} on:keyup={() => previewHandler()} disabled />
+							<div class="text-primary-500" on:click={() => deleteAddressHandler(index)}>
+								<svelte:component this={TrashIcon} />
+							</div>
+						</label>
 					{/each}
 				{/each}
-				{#if newList.length < 3}
-					<div class="flex items-center mb-6">
-						<div class="w-[100px] font-bold">
-							<select bind:value={selected} class="py-2">
-								{#each types as type}
-									<option value={type}>
-										{type}
-									</option>
-								{/each}
-							</select>
-						</div>
-						<input class="border px-4 py-2 w-4/5" bind:value={newAddress} placeholder="Address" />
-						<img
-							src="/images/plus.svg"
-							alt="plus"
-							class="w-4 h-4 ml-2 cursor-pointer"
-							on:click={addAddressHandler}
-						/>
+
+				<label class="flex items-center mb-6">
+					<div class="w-[100px] font-bold">
+						<select bind:value={selected} class="select">
+							{#each types as type}
+								<option value={type}>
+									{type}
+								</option>
+							{/each}
+						</select>
 					</div>
-				{/if}
+					<input class="input rounded" bind:value={newAddress} placeholder="Address" />
+					<img
+						src="/images/plus.svg"
+						alt="plus"
+						class="w-4 h-4 ml-2 cursor-pointer"
+						on:click={addAddressHandler}
+					/>
+				</label>
 			</div>
 		</div>
 		<div class="lg:w-2/5 md:w-2/5 bg-gray-100 rounded lg:table-cell md:table-cell">

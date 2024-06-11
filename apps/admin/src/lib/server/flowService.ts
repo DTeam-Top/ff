@@ -7,7 +7,7 @@ export type Flow = {
 	id?: string;
 	name: string;
 	cover?: string;
-	input: { price: string; address: string };
+	input: { price: string; addressList: { ERC20: string[]; ERC721: string[]; ERC1155: string[] } };
 	creator: number;
 };
 

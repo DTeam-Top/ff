@@ -24,7 +24,7 @@ export function addressPipe(address: string | `0x${string}` | undefined, start: 
 }
 
 export function errorPipe(message: string) {
-	if (message.indexOf('flows.name') > -1) {
+	if (message?.indexOf('flows.name') > -1) {
 		return 'Duplicate flow name';
 	} else {
 		return message;
@@ -92,3 +92,39 @@ function verifyChecksum(address: string): boolean {
 
 	return true;
 }
+
+export const addressListPipe = (addressList: any[]) => {
+	const data: { ERC20: string[]; ERC721: string[]; ERC1155: string[] } = {
+		ERC20: [],
+		ERC721: [],
+		ERC1155: []
+	};
+	for (const address of addressList) {
+		console.log(address);
+		console.log(Object.entries(address)[0]);
+		const [key, value] = Object.entries(address)[0];
+		console.log(key, value);
+		data[`${key}`].push(value);
+	}
+	console.log(data);
+	return data;
+};
+
+export const addressDataPipe = (addressList: {
+	ERC20: string[];
+	ERC721: string[];
+	ERC1155: string[];
+}) => {
+	const data: any[] = [];
+	for (const address of Object.entries(addressList)) {
+		console.log(address);
+		const [key, value] = address;
+		for (const el of value) {
+			const obj = {};
+			obj[`${key}`] = el;
+			data.push(obj);
+		}
+	}
+	console.log(data);
+	return data;
+};
