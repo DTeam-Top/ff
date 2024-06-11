@@ -12,7 +12,7 @@ COPY . /usr/app/
 WORKDIR /usr/app/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   pnpm install --frozen-lockfile && \
-  pnpm -r run build && \
+  pnpm -F admin -F bot -F cron -F frame run build && \
   pnpm --filter dbdomain --prod deploy pruned/dbdomain && \
   pnpm --filter admin --prod deploy pruned/admin && \
   pnpm --filter bot --prod deploy pruned/bot && \
