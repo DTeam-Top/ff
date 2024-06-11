@@ -12,5 +12,6 @@ vite.config.ts.timestamp-*
 dist
 pruned/
 db-data/
+cache
 
 .vercel

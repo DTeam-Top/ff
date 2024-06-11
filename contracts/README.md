@@ -1,19 +1,41 @@
 # Contracts
 
+All contracts are deployed on base and base sepolia
+
+## Env
+
+An example `.env` is below:
+
+```env
+PRIVATE_KEY=...
+SIGNER=...
+ETHERSCAN_API_KEY=...
+```
+
 ## How To Deploy
 
-1. deploy `FlowsDvp`.
-1. set the address of `FlowsDvp` in `mud.config.ts`.
-1. set `PRIVATE_KEY` in `.env`, see the example below.
-1. deploy the world contract with `pnpm mud deploy`.
-1. set the world address to `FlowsDvp`.
+- `source .env`
+- deploy & verify `FlowsDvp`.
+
+```sh
+forge script --chain 84532 script/DeployDVP.s.sol:DeployDVP --rpc-url https://sepolia.base.org --broadcast --verify -vvvv
+```
+
+- set the address of `FlowsDvp` in `mud.config.ts`.
+- deploy the world contract.
+
+```sh
+pnpm mud deploy --rpc https://sepolia.base.org
+```
+
+- verify the world contract.
+
+```sh
+pnpm mud verify --worldAddress $world_address --rpc https://sepolia.base.org
+```
+
+- set the world address to `FlowsDvp`.
 
 ## How to test
 
-1. create `.env` with the following content:
-
-```sh
-PRIVATE_KEY=...
-```
-
-2. run `pnpm mud test`
+run `pnpm mud test`
