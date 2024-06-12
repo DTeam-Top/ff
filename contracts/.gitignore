@@ -8,5 +8,7 @@ artifacts/
 broadcast/
 .env
 
+test.ts
+
 # Ignore MUD deploy artifacts
 deploys/**/*.json
