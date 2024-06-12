@@ -18,7 +18,7 @@ export const flows = pgTable(
     input: jsonb("input").notNull(), // flow input json for flow frame
     creator: integer("creator").notNull(), // flow creator fid
     createdAt: bigint("created_at", { mode: "number" }).notNull(),
-    status: integer("status").notNull().default(0), // status: 0 for draft,1 for published, 2 for unavailable
+    status: integer("status").notNull().default(0), // status: 0 draft, 1 published, 2 unavailable, 3 done
   },
   (flows) => ({
     idxName: uniqueIndex("idx_flow_name").on(flows.name),

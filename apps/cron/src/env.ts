@@ -7,7 +7,8 @@ dotenv.config();
 export const env = createEnv({
   clientPrefix: "",
   server: {
-    INFURA_PROJECT_ID: z.string(),
+    INFURA_PROJECT_ID: z.string().default(""),
+    NETWORK: z.string().default("base-sepolia"),
     DB_HOST: z.string().default("127.0.0.1"),
     DB_PORT: z.coerce.number().default(5432),
     DB_USER: z.string().default("ff_admin"),

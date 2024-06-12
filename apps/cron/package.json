@@ -7,7 +7,7 @@
     "dist/"
   ],
   "scripts": {
-    "dev": "tsx dist/index.js",
+    "dev": "pnpm build && tsx dist/index.js",
     "build": "tsup src/index.ts --sourcemap --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
