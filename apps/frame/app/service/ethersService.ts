@@ -9,11 +9,11 @@ export const getSignWallet = () => {
   return new ethers.Wallet(env.OWNER_WALLET_PK!, provider);
 };
 
-export const encodePacked = (params = []) => {
+export const encodePacked = (params: any) => {
   let types: any[] = [];
   let values: any[] = [];
 
-  params.forEach((itemArray) => {
+  params.forEach((itemArray: any) => {
     types.push(itemArray[0]);
     values.push(itemArray[1]);
   });

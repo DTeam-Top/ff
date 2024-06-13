@@ -32,12 +32,19 @@ export function nodeConfig() {
       network: "base-sepolia",
       dvp: "0xFcAc032068C867373d0BA48aB0fa83142D557069",
     },
-    production: { network: "base", dvp: "" }, //todo
+    production: {
+      network: "base-sepolia",
+      dvp: "0xFcAc032068C867373d0BA48aB0fa83142D557069",
+    }, //todo
     test: { network: "base-sepolia", dvp: "" },
   };
 }
 
-console.log(process.env.NODE_ENV, nodeConfig()[process.env.NODE_ENV]?.dvp);
+console.log(
+  "node-env",
+  process.env.NODE_ENV,
+  nodeConfig()[process.env.NODE_ENV]?.dvp
+);
 
 export const DVP_ADDRESS: `0x${string}` = nodeConfig()[process.env.NODE_ENV]
   ?.dvp as `0x${string}`;

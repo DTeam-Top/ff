@@ -115,6 +115,16 @@ app.transaction("/pay/:flowId", async (c) => {
   const flowId = c.req.param("flowId");
   console.log(c);
   const { address, frameData } = c;
+  if (!frameData) {
+    return c.contract({
+      abi: FLOWSDVP_ABI,
+      // @ts-ignore   using this to remove the ts error by hwh
+      chainId: "eip155:84532",
+      functionName: "wrong",
+      args: [],
+      to: DVP_ADDRESS,
+    });
+  }
   const price = parseEther("0.005");
   const to = address;
   const from = obj.seller;
@@ -184,7 +194,7 @@ app.transaction("/pay/:flowId", async (c) => {
     args: args,
     to: DVP_ADDRESS,
     value: price,
-    gas: 6_000_000n,
+    gas: BigInt(6000000),
   });
 });
 
