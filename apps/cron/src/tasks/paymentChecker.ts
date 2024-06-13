@@ -1,6 +1,8 @@
 import { commissions, flows, tracePayments, traces } from "dbdomain";
 import { eq, isNotNull, isNull, and } from "drizzle-orm";
 import { db, provider } from "../utils.js";
+import { formatEther, parseEther } from "ethers";
+import BigNumber from "bignumber.js";
 
 export async function paymentChecker() {
   const rows = await db()
@@ -34,7 +36,13 @@ export async function paymentChecker() {
           payment: row.trace_payments.id,
           fid: Number(row.traces.caster),
           // TODO: change to bignumber.js for better precision
-          commission: (row.trace_payments.amount * 1 * 10) / 10000,
+          commission: parseEther(
+            new BigNumber(formatEther(row.trace_payments.amount))
+              .multipliedBy(1)
+              .multipliedBy(10)
+              .dividedBy(10000)
+              .toString()
+          ),
           createdAt: Date.now(),
         });
       });
