@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "exchange": "node scripts/exchange.js"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.1",

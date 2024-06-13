@@ -1,22 +1,16 @@
 /** @jsxImportSource frog/jsx */
-import { parseEther } from "ethers";
-import { Button, Frog, TextInput } from "frog";
+import { ethers, keccak256, parseEther } from "ethers";
+import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
-// import { neynar } from 'frog/hubs'
 import { handle } from "frog/next";
 import { serveStatic } from "frog/serve-static";
 import { cors } from "hono/cors";
-import {
-  ERC20_ABI,
-  ERC721_ABI,
-  ERC721_contract_84532,
-  test_CONTRACT,
-  test_abi,
-  text_css,
-} from "./constants";
 import { getFlowById, upateTxById } from "@/app/service/externalApi";
 import { addressPipe, castIdPipe } from "@/app/service/utile";
 import { neynar } from "frog/hubs";
+import { DVP_ADDRESS, test_CONTRACT, text_css } from "@/app/service/constants";
+import { FLOWSDVP_ABI, test_abi } from "@/app/service/abi";
+import { encodePacked, getSignWallet } from "@/app/service/ethersService";
 
 const app = new Frog({
   assetsPath: "/",
@@ -25,13 +19,13 @@ const app = new Frog({
   verify: "silent",
 });
 
-let contract: `0x${string}` = "0x";
 let obj = {
   name: "",
   price: "",
   image: "",
   flowId: "",
-  contract: "",
+  seller: "",
+  addressList: [{ type: "", address: "", amount: "", tokenId: "" }],
 };
 
 app.frame(
@@ -47,24 +41,31 @@ app.frame(
   async (c) => {
     const { flowId } = c.req.param();
     if (Number(flowId) === 0) {
-      const { name, price, address, image } = c.req.query();
-      contract = address as `0x${string}`;
-      obj = { name, price, image, flowId, contract: address };
+      const { name, price, image } = c.req.query();
+      obj = {
+        name,
+        price,
+        image,
+        flowId,
+        seller: "",
+        addressList: [{ type: "", address: "", amount: "", tokenId: "" }],
+      };
     } else {
       const flow = await getFlowById(flowId);
-      console.log(flow);
       if (flow) {
         obj = {
           name: flow.name,
           price: flow.input.price,
           image: flow.cover,
           flowId,
-          contract: flow.input.address,
+          seller: flow.seller,
+          addressList: flow.input.addressList,
         };
-        contract = flow.input.address as `0x${string}`;
       }
     }
-    const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}}`;
+    console.log(obj);
+    const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}`;
+    const detailLink = `${process.env.ADMIN_BASE_URL}flows/view/${flowId}`;
 
     return c.res({
       action: `/finish/${flowId}`,
@@ -83,45 +84,123 @@ app.frame(
             width: "100%",
           }}
         >
-          <div tw={`text-[30px] text-white `} style={text_css}>
-            Name:&nbsp;&nbsp;{obj.name}
-          </div>
-          <div tw={`text-[30px] text-white `} style={text_css}>
-            Price:&nbsp;&nbsp;{obj.price} ETH
-          </div>
-          <div tw={`text-[30px] text-white `} style={text_css}>
-            ERC20:&nbsp;&nbsp;{obj.contract}
-          </div>
           {obj.image && (
             <img
               src={obj.image}
-              style={{ width: "200px", height: "200px" }}
+              style={{ height: "100%" }}
               tw={`mx-auto mt-4`}
             />
           )}
+
+          <div
+            tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-gray-100 rounded `}
+            style={text_css}
+          >
+            Name:&nbsp;&nbsp;{obj.name}&nbsp;&nbsp;&nbsp;&nbsp;
+            Price:&nbsp;&nbsp;
+            {obj.price} ETH
+          </div>
         </div>
       ),
       intents: [
-        <Button.Transaction target="/mint/erc20">Mint</Button.Transaction>,
+        <Button.Transaction target={`/pay/${flowId}`}>Pay</Button.Transaction>,
+        <Button.Link href={detailLink}>View Details</Button.Link>,
         <Button.Link href={shareLink}>Share To Earn</Button.Link>,
       ],
     });
   }
 );
 
-app.transaction("/mint/:type", (c) => {
-  const type = c.req.param("type");
-  const { address } = c;
+app.transaction("/pay/:flowId", async (c) => {
+  const flowId = c.req.param("flowId");
+  console.log(c);
+  const { address, frameData } = c;
+  const price = parseEther("0.005");
+  const to = address;
+  const from = obj.seller;
+  const commissionReceiverFid = BigInt(frameData?.fid);
+
+  const message = keccak256(
+    encodePacked([
+      ["string", flowId],
+      ["uint256", commissionReceiverFid],
+      ["address", from],
+      ["address", to],
+    ])
+  );
+
+  const signer = await getSignWallet();
+
+  const sig = await signer.signMessage(ethers.getBytes(message));
+  console.log("sig--", sig);
+  console.log("obj---", obj);
+
+  const ERC20List: any[] = [];
+  obj.addressList
+    .filter((item) => item.type === "ERC20")
+    .forEach((el) => {
+      ERC20List.push([el.address, BigInt(parseEther(el.amount))]);
+    });
+
+  const ERC721List: any[] = [];
+  obj.addressList
+    .filter((item) => item.type === "ERC721")
+    .forEach((el) => {
+      ERC721List.push([el.address, BigInt(el.tokenId)]);
+    });
+
+  const ERC1155List: any[] = [];
+  obj.addressList
+    .filter((item) => item.type === "ERC1155")
+    .forEach((el) => {
+      ERC1155List.push([
+        el.address,
+        BigInt(el.tokenId),
+        BigInt(parseEther(el.amount)),
+      ]);
+    });
+
+  console.log(ERC20List);
+  console.log(ERC721List);
+
+  console.log(ERC1155List);
+
+  const args = [
+    flowId,
+    commissionReceiverFid,
+    from,
+    to,
+    [price, ERC20List, ERC721List, ERC1155List],
+    sig,
+  ];
+
+  console.log("args----", args, ERC20List, ERC721List, ERC1155List);
+  console.log(DVP_ADDRESS);
   return c.contract({
-    abi: type === "erc20" ? ERC20_ABI : ERC721_ABI,
+    abi: FLOWSDVP_ABI,
     // @ts-ignore   using this to remove the ts error by hwh
     chainId: "eip155:84532",
-    functionName: "mint",
-    args: type === "erc20" ? [address, 1] : [address, 2],
-    to: type === "erc20" ? contract : ERC721_contract_84532,
-    value: parseEther("0.005"),
+    functionName: "deliver",
+    args: args,
+    to: DVP_ADDRESS,
+    value: price,
+    gas: 6_000_000n,
   });
 });
+
+// app.transaction("/mint-old/:type", (c) => {
+//   const type = c.req.param("type");
+//   const { address } = c;
+//   return c.contract({
+//     abi: type === "erc20" ? ERC20_ABI : ERC721_ABI,
+//     // @ts-ignore   using this to remove the ts error by hwh
+//     chainId: "eip155:84532",
+//     functionName: "mint",
+//     args: type === "erc20" ? [address, 1] : [address, 2],
+//     to: type === "erc20" ? contract : ERC721_contract_84532,
+//     value: parseEther("0.005"),
+//   });
+// });
 
 app.transaction("/buy/:price", async (c) => {
   const price = c.req.param("price");
