@@ -35,6 +35,8 @@
 				{:else if tabSet === 1}
 					<FlowList type="published" />
 				{:else if tabSet === 2}
+					<FlowList type="unavailable" />
+				{:else if tabSet === 3}
 					<FlowList />
 				{/if}
 			</svelte:fragment>

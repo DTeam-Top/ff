@@ -1,4 +1,3 @@
-// import { createCast, lookupSigner, lookupUserByFid } from '$lib/clients';
 import { insertTrace } from '$lib/server/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';

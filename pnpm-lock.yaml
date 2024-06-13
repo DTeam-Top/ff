@@ -194,6 +194,10 @@ importers:
         version: 3.23.8
 
   apps/cron:
+    dependencies:
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
     devDependencies:
       '@t3-oss/env-core':
         specifier: ^0.10.1

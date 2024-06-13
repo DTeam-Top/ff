@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { setFarcaster } from './store';
 import { BASE_URL, LIMIT_MAX } from './clientConsts';
+import { statusPipe } from './utils';
 export type Flow = {
 	name: string;
 	cover?: string;
@@ -30,18 +31,7 @@ export const getFlows = async (
 	max: number = LIMIT_MAX,
 	hasTraced: boolean = false
 ) => {
-	let url = `${BASE_URL}api/flows/list?creator=${creator}&hasTraced=${hasTraced}&offset=${offset}&max=${max}`;
-	switch (type) {
-		case 'draft':
-			url += '&status=0';
-			break;
-		case 'published':
-			url += '&status=1';
-			break;
-		default:
-			url += '&status=2';
-			break;
-	}
+	const url = `${BASE_URL}api/flows/list?creator=${creator}&hasTraced=${hasTraced}&offset=${offset}&max=${max}&status=${statusPipe(type)}`;
 	const result = await axios.get(url);
 	return result.data;
 };

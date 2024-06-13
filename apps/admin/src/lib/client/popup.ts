@@ -5,26 +5,6 @@ import {
 	type ToastStore
 } from '@skeletonlabs/skeleton';
 
-// export const modal = (
-// 	modalStore: any,
-// 	type: 'alert' | 'confirm' | 'prompt' | 'component',
-// 	title: string,
-// 	body: string,
-// 	cssClass: string,
-// 	handler: (r: boolean) => void
-// ) => {
-// 	const modal: ModalSettings = {
-// 		type: type,
-// 		title,
-// 		body,
-// 		modalClasses: cssClass,
-// 		response: async (r: boolean) => {
-// 			handler(r);
-// 		}
-// 	};
-// 	modalStore.trigger(modal);
-// };
-
 const modalHander = (type: 'alert' | 'confirm' | 'prompt' | 'component') => {
 	return (
 		modalStore: ModalStore,

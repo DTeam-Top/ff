@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { getFlows, deleteFlowById } from '$lib/client/flowService';
-	import { addressPipe } from '$lib/client/utils';
 	import { user, signed } from '$lib/client/store';
 	import Button from '$lib/components/Button.svelte';
 	import { Paginator, getModalStore, type PaginationSettings } from '@skeletonlabs/skeleton';
@@ -12,7 +11,7 @@
 	let offset = 0;
 	let currentPage = 0;
 	let total = 0;
-	export let type = 'unavailable';
+	export let type = 'done';
 	$: if (!$signed) {
 		goto('/');
 	}

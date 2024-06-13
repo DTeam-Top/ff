@@ -1,5 +1,3 @@
-import { ethers } from 'ethers';
-
 export const USER_STORE_KEY = 'user';
 
 function scanURL() {
@@ -31,7 +29,7 @@ export const COMMISSIOM_MAX = 12;
 
 export const COMISSION_TABS = ['Avaliable', 'History'];
 
-export const FLOW_TABS = ['Draft', 'Published', 'Unavailable'];
+export const FLOW_TABS = ['Draft', 'Published', 'Unavailable', 'Done'];
 
 export const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 export const FRAME_BASE_URL = import.meta.env.VITE_FRAME_BASE_URL;

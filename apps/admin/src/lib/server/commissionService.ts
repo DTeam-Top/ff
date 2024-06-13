@@ -2,7 +2,8 @@ import { count, eq, inArray, isNull, sum, and, isNotNull } from 'drizzle-orm';
 
 import { commissions, flows, tracePayments } from 'dbdomain';
 import { db } from '$lib/server/dbService';
-import { withdrawContract } from '$lib/server/serverConsts';
+import { flowContract, serverWallet } from '$lib/server/serverConsts';
+import { ethers, keccak256 } from 'ethers';
 
 export const getCommissionList = async (fid: string, offset: number, max: number) => {
 	const result = await db()
@@ -31,9 +32,15 @@ export const getCommissionList = async (fid: string, offset: number, max: number
 		.from(commissions)
 		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
 
+	let totalCommisstion = total[0].value;
+	const available = await flowContract().available(fid);
+
+	if (available === BigInt(totalCommisstion)) {
+		totalCommisstion = available;
+	}
 	return {
 		commissionList: result,
-		total: total[0].value,
+		total: totalCommisstion,
 		balance: balance[0].value ? balance[0].value : 0
 	};
 };
@@ -75,30 +82,63 @@ export const getHistoryList = async (fid: string, offset: number, max: number) =
 };
 
 export const withdraw = async (address: string, fid: number) => {
-	const commissionList = await db()
-		.select()
-		.from(commissions)
-		.where(and(eq(commissions.fid, fid), isNull(commissions.withdrawnTx)));
+	try {
+		const commissionList = await db()
+			.select()
+			.from(commissions)
+			.where(and(eq(commissions.fid, fid), isNull(commissions.withdrawnTx)));
 
-	const idList = [];
-	let amount = 0;
+		const idList = [];
+		let amount = 0;
 
-	for (const commission of commissionList) {
-		idList.push(commission.id);
-		amount += commission.commission;
+		for (const commission of commissionList) {
+			idList.push(commission.id);
+			amount += commission.commission;
+		}
+
+		console.log(amount);
+
+		const available = await flowContract().available(fid);
+
+		if (available === BigInt(amount)) {
+			amount = available;
+		}
+		console.log(available, amount, available === BigInt(amount));
+		const message = keccak256(
+			encodePacked([
+				['uint256', fid],
+				['address', address]
+			])
+		);
+		console.log(message);
+		const sig = await serverWallet.signMessage(ethers.getBytes(message));
+		console.log({ address, amount: amount.toString(), sig });
+		const tx = await flowContract().withdraw(fid, address, sig, {
+			gasLimit: 600000
+		});
+
+		console.log('hash--', tx.hash);
+
+		const result = await db()
+			.update(commissions)
+			.set({ withdrawnTx: tx.hash })
+			.where(inArray(commissions.id, idList));
+
+		return result;
+	} catch (e) {
+		console.log(e);
+		return { error: e };
 	}
-	const mintData = {
-		to: address,
-		amount: amount.toString()
-	};
-	const tx = await withdrawContract().transferEarnings(mintData.to, mintData.amount, {
-		gasLimit: 600000
+};
+
+export const encodePacked = (params: any) => {
+	let types: any[] = [];
+	let values: any[] = [];
+
+	params.forEach((itemArray: any) => {
+		types.push(itemArray[0]);
+		values.push(itemArray[1]);
 	});
 
-	const result = await db()
-		.update(commissions)
-		.set({ withdrawnTx: tx.hash })
-		.where(inArray(commissions.id, idList));
-
-	return result;
+	return ethers.solidityPacked(types, values);
 };

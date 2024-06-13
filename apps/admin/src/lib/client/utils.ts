@@ -210,3 +210,16 @@ export const approve = async (
 	}
 	return isApproved;
 };
+
+export const statusPipe = (type: string) => {
+	switch (type) {
+		case 'draft':
+			return 0;
+		case 'published':
+			return 1;
+		case 'unavailable':
+			return 2;
+		default: //done
+			return 3;
+	}
+};
