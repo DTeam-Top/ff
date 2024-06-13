@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 	import Tips from '../Tips.svelte';
 	import {
+		BASESCAN_URL,
 		CREATE_TABS,
 		ERC20,
 		ERC721,
@@ -18,6 +19,8 @@
 	import { Tab, TabGroup, getToastStore } from '@skeletonlabs/skeleton';
 	import TokenList from './TokenList.svelte';
 	import { goto } from '$app/navigation';
+	import TipIcon from '../ui/icons/TipIcon.svelte';
+	import TokenTip from './TokenTip.svelte';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -181,21 +184,18 @@
 						</div>
 					</div>
 					<hr />
-					<div class="my-4 justify-center w-1/2 mx-auto bg-purple-200 rounded-lg p-6 text-black">
-						Please add addresses, you can use the following test token: <br />ERC20 : {ERC20}<br
-						/>ERC721 : {ERC721}
-					</div>
 					<TabGroup class="w-full">
 						{#each TOKEN_TABS as tab, i}
 							<Tab bind:group={tokenTabSet} name={`tab${i}`} value={i}>{tab}</Tab>
 						{/each}
+						<TokenTip />
 						<svelte:fragment slot="panel">
 							{#if tokenTabSet === 0}
 								<TokenList bind:value={ERC20List} type="ERC20" />
 							{:else if tokenTabSet === 1}
 								<TokenList bind:value={ERC721List} type="ERC721" />
-							{:else}
-								<TokenList bind:value={ERC1155List} type="ERC1155" />
+								<!-- {:else}
+								<TokenList bind:value={ERC1155List} type="ERC1155" /> -->
 							{/if}
 						</svelte:fragment>
 					</TabGroup>
