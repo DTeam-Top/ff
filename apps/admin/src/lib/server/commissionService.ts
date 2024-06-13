@@ -2,7 +2,7 @@ import { count, eq, inArray, isNull, sum, and, isNotNull } from 'drizzle-orm';
 
 import { commissions, flows, tracePayments } from 'dbdomain';
 import { db } from '$lib/server/dbService';
-import { flowContract, serverWallet } from '$lib/server/serverConsts';
+import { flowContract, getServerWallet } from '$lib/server/serverConsts';
 import { ethers, keccak256 } from 'ethers';
 
 export const getCommissionList = async (fid: string, offset: number, max: number) => {
@@ -111,7 +111,7 @@ export const withdraw = async (address: string, fid: number) => {
 			])
 		);
 		console.log(message);
-		const sig = await serverWallet.signMessage(ethers.getBytes(message));
+		const sig = await getServerWallet().signMessage(ethers.getBytes(message));
 		console.log({ address, amount: amount.toString(), sig });
 		const tx = await flowContract().withdraw(fid, address, sig, {
 			gasLimit: 600000

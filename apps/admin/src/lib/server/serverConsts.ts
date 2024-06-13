@@ -10,8 +10,6 @@ function networkConfig() {
 	return { dev: 'base-sepolia', prod: 'base', test: 'base-sepolia' };
 }
 
-const network = networkConfig()[env.VITE_NODE_ENV];
-
 function envConfig(): {
 	[key: string]: {
 		[key: string]: {
@@ -43,18 +41,19 @@ function envConfig(): {
 }
 
 function contracts() {
-	return envConfig()[env.VITE_NODE_ENV][network];
+	return envConfig()[env.VITE_NODE_ENV][networkConfig()[env.VITE_NODE_ENV]];
 }
 
-const projectId = env.INFURA_PROJECT_ID;
-const provider = new ethers.InfuraProvider(network, projectId);
+function getProvider() {
+	return new ethers.InfuraProvider(networkConfig()[env.VITE_NODE_ENV], env.INFURA_PROJECT_ID);
+}
 
-export const serverWallet = new ethers.Wallet(env.OWNER_WALLET_PK!, provider);
+export function getServerWallet() {
+	return new ethers.Wallet(env.OWNER_WALLET_PK!, getProvider());
+}
 
 export function flowContract() {
-	console.log('####', contracts().deliver);
-	console.log(serverWallet);
-	return new ethers.Contract(contracts().deliver, FLOW_ABI, serverWallet);
+	return new ethers.Contract(contracts().deliver, FLOW_ABI, getServerWallet());
 }
 
 export const STATUS_PUBLISHED = 1;
