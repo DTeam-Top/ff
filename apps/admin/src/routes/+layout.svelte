@@ -19,9 +19,6 @@
 	import Spin from '$lib/components/Spin.svelte';
 	import TopBar from '$lib/components/ui/TopBar.svelte';
 	import { getItem, signed } from '$lib/client/store';
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	let loading = true;
 

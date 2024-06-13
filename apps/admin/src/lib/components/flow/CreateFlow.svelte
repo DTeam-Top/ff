@@ -184,11 +184,11 @@
 						</div>
 					</div>
 					<hr />
-					<TabGroup class="w-full">
+					<TabGroup class="w-full relative">
 						{#each TOKEN_TABS as tab, i}
 							<Tab bind:group={tokenTabSet} name={`tab${i}`} value={i}>{tab}</Tab>
 						{/each}
-						<TokenTip />
+
 						<svelte:fragment slot="panel">
 							{#if tokenTabSet === 0}
 								<TokenList bind:value={ERC20List} type="ERC20" />
@@ -198,7 +198,31 @@
 								<TokenList bind:value={ERC1155List} type="ERC1155" /> -->
 							{/if}
 						</svelte:fragment>
+
+						<TokenTip />
 					</TabGroup>
+					<div class="lg:w-3/5 md:w-3/5 text-white mt-2">
+						{#if !isPublished}
+							<div class="flex mt-8 justify-center text-white">
+								<Button cssClass="bg-gray-100 text-black" on:click={cancelHandler} title="Reset"
+								></Button>
+								<Button
+									cssClass="bg-secondary-500 text-white mx-8 "
+									on:click={saveHandler}
+									title="Save"
+								></Button>
+								<Button
+									cssClass="bg-primary-500 text-white  "
+									on:click={publishHandler}
+									title="Publish"
+								></Button>
+							</div>
+						{/if}
+
+						{#if frameUrl || (frameUrl && isPublished)}
+							<Tips {frameUrl} />
+						{/if}
+					</div>
 				{:else if tabSet === 1}
 					<div class="px-6">
 						{#if loading}
@@ -220,21 +244,6 @@
 			</svelte:fragment>
 		</TabGroup>
 	</section>
-	<div class="lg:w-3/5 md:w-3/5 text-white mt-2 mx-auto">
-		{#if !isPublished}
-			<div class="flex mt-8 justify-center text-white">
-				<Button cssClass="bg-gray-100 text-black" on:click={cancelHandler} title="Reset"></Button>
-				<Button cssClass="bg-secondary-500 text-white mx-8 " on:click={saveHandler} title="Save"
-				></Button>
-				<Button cssClass="bg-primary-500 text-white  " on:click={publishHandler} title="Publish"
-				></Button>
-			</div>
-		{/if}
-
-		{#if frameUrl || (frameUrl && isPublished)}
-			<Tips {frameUrl} />
-		{/if}
-	</div>
 </div>
 <div id="clipboard"></div>
 

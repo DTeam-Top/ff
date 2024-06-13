@@ -40,7 +40,6 @@
 	"type": "module",
 	"dependencies": {
 		"@coinbase/wallet-sdk": "^4.0.3",
-		"@floating-ui/dom": "^1.6.5",
 		"@hono/zod-validator": "^0.2.1",
 		"@neynar/nodejs-sdk": "^1.26.0",
 		"@skeletonlabs/skeleton": "^2.10.0",
