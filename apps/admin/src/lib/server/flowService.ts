@@ -1,14 +1,26 @@
 import { db } from '$lib/server/dbService';
-import { LOGGER, STATUS_PUBLISHED } from '$lib/server/serverConsts';
+import {
+	LOGGER,
+	STATUS_PUBLISHED,
+	deliverContract,
+	getServerWallet,
+	owner,
+	ownerWallet
+} from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
 import { count, countDistinct, eq, sql, and } from 'drizzle-orm';
+import { ethers, keccak256, parseEther } from 'ethers';
 
 export type Flow = {
 	id?: string;
 	name: string;
 	cover?: string;
-	input: { price: string; addressList: { ERC20: string[]; ERC721: string[]; ERC1155: string[] } };
+	input: {
+		price: string;
+		addressList: { type: string; address: string; amount?: string; tokenId?: string }[];
+	};
 	creator: number;
+	seller: string;
 };
 
 const logger = LOGGER.child({ from: 'db flowService' });
@@ -36,7 +48,8 @@ export const upsertFlow = async (flow: Flow) => {
 					cover: flow.cover!,
 					input: flow.input,
 					creator: Number(flow.creator),
-					createdAt: Date.now()
+					createdAt: Date.now(),
+					seller: flow.seller
 				})
 				.returning();
 		}
@@ -47,6 +60,51 @@ export const upsertFlow = async (flow: Flow) => {
 		logger.error(e);
 		throw e;
 	}
+
+	// const price = parseEther('0.005');
+	// const to = '0x16f1CdF5200d7ae7f07c1522f19052A722D93970'; //address;
+	// const serverWallet = getServerWallet();
+	// const from = '0x851438Ecb37FAe596DcD49bDe643D170F3aa225B';
+	// serverWallet.address;
+	// const commissionReceiverFid = 1;
+	// const flowId = 'ec4170e6-e22d-4274-b2b1-ef5e4ba9958e';
+
+	// const message = keccak256(
+	// 	encodePacked([
+	// 		['string', flowId],
+	// 		['uint256', commissionReceiverFid],
+	// 		['address', from],
+	// 		['address', to]
+	// 	])
+	// );
+	// const sig = await serverWallet.signMessage(ethers.getBytes(message));
+
+	// const tx = await deliverContract().deliver(
+	// 	flowId,
+	// 	commissionReceiverFid,
+	// 	from,
+	// 	to,
+	// 	[price, [['0x2F6F12b68165aBb483484927919D0d3fE450462E', 1]], [], []],
+	// 	sig,
+	// 	{
+	// 		gasLimit: 600000,
+	// 		value: price
+	// 	}
+	// );
+	// return tx.hash;
+};
+
+export const encodePacked = (params = []) => {
+	let types: any[] = [];
+	let values: any[] = [];
+
+	params.forEach((itemArray) => {
+		types.push(itemArray[0]);
+		values.push(itemArray[1]);
+	});
+
+	console.log(ethers.solidityPacked(types, values));
+	return ethers.solidityPacked(types, values);
 };
 
 export const getFlowList = async (
@@ -130,7 +188,8 @@ export const getFlowById = async (id: string) => {
 			input: flows.input,
 			status: flows.status,
 			traceCount: count(traces.id),
-			paymentCount: count(tracePayments.id)
+			paymentCount: count(tracePayments.id),
+			seller: flows.seller
 		})
 		.from(flows)
 		.leftJoin(traces, eq(traces.flow, flows.id))
@@ -141,11 +200,11 @@ export const getFlowById = async (id: string) => {
 };
 
 export const getStatics = async (fid: number | undefined) => {
-	const runData = await db()
+	const publishData = await db()
 		.select({ value: count() })
 		.from(flows)
-		.where(fid ? eq(flows.creator, fid) : undefined);
-	const publishData = await db()
+		.where(and(fid ? eq(flows.creator, fid) : undefined, eq(flows.status, 1)));
+	const runData = await db()
 		.select({ value: count() })
 		.from(traces)
 		.where(fid ? eq(traces.caster, fid) : undefined);
@@ -161,8 +220,8 @@ export const getStatics = async (fid: number | undefined) => {
 
 	return {
 		banner: [
-			{ title: 'Published', count: runData[0].value },
-			{ title: 'Running', count: publishData[0].value },
+			{ title: 'Published', count: publishData[0].value },
+			{ title: 'Running', count: runData[0].value },
 			{ title: 'Dealed', count: dealedData[0].value }
 		],
 		card: [

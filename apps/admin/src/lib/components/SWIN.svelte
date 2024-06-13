@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { getCaster } from '$lib/client/casterService';
 	import { CLIENT_ID, USER_STORE_KEY } from '$lib/client/clientConsts';
-	import { setItem } from '$lib/client/utils';
+	import { setItem } from '$lib/client/store';
 	import { onDestroy, onMount } from 'svelte';
 
 	onDestroy(() => {

@@ -6,13 +6,17 @@ export const flowRequest = z.object({
 	creator: z.number(),
 	input: z.object({
 		price: z.string(),
-		addressList: z.object({
-			ERC20: z.array(z.string()),
-			ERC721: z.array(z.string()),
-			ERC1155: z.array(z.string())
-		})
+		addressList: z.array(
+			z.object({
+				type: z.string(),
+				address: z.string(),
+				amount: z.string().optional(),
+				tokenId: z.string().optional()
+			})
+		)
 	}),
-	id: z.string().optional()
+	id: z.string().optional(),
+	seller: z.string()
 });
 
 export const getRequest = z.object({

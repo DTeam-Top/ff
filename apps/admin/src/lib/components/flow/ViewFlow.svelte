@@ -2,7 +2,7 @@
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow } from '$lib/client/flowService';
 	import { addressPipe, getPreviewUrl } from '$lib/client/utils';
-	import { farcaster, setFarcaster } from '$lib/client/store';
+	import { farcaster, setFarcaster, signed } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
@@ -22,6 +22,7 @@
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
 		flow = await getFlow(farcasterId);
+		console.log(flow);
 		if (flow) {
 			isPublished = flow.status === STATUS_PUBLISHED;
 			if (isPublished) {
@@ -34,27 +35,23 @@
 	});
 
 	const previewHandler = async () => {
-		if (!flow.name || !flow.input.address) {
+		if (!flow.name || !flow.cover) {
 			return;
 		}
 		loading = true;
-		prviewImage = await getPreviewUrl(
-			FRAME_BASE_URL,
-			flow.name,
-			flow.cover,
-			flow.input.price,
-			flow.input.address
-		);
+		prviewImage = await getPreviewUrl(FRAME_BASE_URL, flow.name, flow.cover, flow.input.price);
 		loading = false;
 	};
 </script>
 
 <div class="p-6 m-4 text-black">
-	<ol class="breadcrumb mb-8">
-		<li class="crumb"><a class="anchor" href="/flows">Flow list</a></li>
-		<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
-		<li class="text-white">{title} Flow</li>
-	</ol>
+	{#if $signed}
+		<ol class="breadcrumb mb-8">
+			<li class="crumb"><a class="anchor" href="/flows">Flow list</a></li>
+			<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+			<li class="text-white">{title} Flow</li>
+		</ol>
+	{/if}
 	<section class="w-full max-w-[2000px] mx-auto border-spacing-x-8 table bg-transparent">
 		<div class="lg:w-2/5 md:w-2/5 card lg:table-cell md:table-cell text-white">
 			<div class="py-4 px-6 mb-4 font-bold border-b border-surface-500/30 text-xl">Design</div>
@@ -65,10 +62,6 @@
 						<div>{flow.name}</div>
 					</div>
 					<div class="flex items-center mb-2">
-						<div class="w-[80px] text-right pr-3">ERC20:</div>
-						<div>{addressPipe(flow.input.address)}</div>
-					</div>
-					<div class="flex items-center mb-2">
 						<div class="w-[80px] text-right pr-3">Price:</div>
 						<div>{flow.input.price} ETH</div>
 					</div>
@@ -76,15 +69,29 @@
 						<div class="w-[80px] text-right pr-3">Cover:</div>
 						<img src={flow.cover} alt="cover" class="w-40" />
 					</div>
+					{#each flow.input.addressList as token}
+						<div class="flex items-center mb-2">
+							<div class="w-[80px] text-right pr-3">{token.type}:</div>
+							<div>{addressPipe(token.address)}</div>
+							{#if token.amount}
+								<div class="ml-4">Amount:&nbsp;&nbsp;&nbsp;&nbsp;{token.amount}</div>
+							{/if}
+							{#if token.tokenId}
+								<div class="ml-4">TokenId:&nbsp;&nbsp;&nbsp;{token.tokenId}</div>
+							{/if}
+						</div>
+					{/each}
 					<div class="flex items-center mb-2">
 						<div class="w-[80px] text-right pr-3">Traces:</div>
 						<div class="flex">
 							{flow.traceCount}
-							<a
-								href={`/flows/trace/${flow.id}`}
-								class="ml-8 underline cursor-pointer text-primary-500 hover:text-primary-300"
-								><svelte:component this={ListIcon} /></a
-							>
+							{#if $signed}
+								<a
+									href={`/flows/trace/${flow.id}`}
+									class="ml-8 underline cursor-pointer text-primary-500 hover:text-primary-300"
+									><svelte:component this={ListIcon} /></a
+								>
+							{/if}
 						</div>
 					</div>
 				</div>

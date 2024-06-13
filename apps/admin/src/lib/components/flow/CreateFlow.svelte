@@ -1,21 +1,23 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow, insertFlow, publishFlow } from '$lib/client/flowService';
-	import {
-		addressDataPipe,
-		addressListPipe,
-		errorPipe,
-		getPreviewUrl,
-		isValidAddress
-	} from '$lib/client/utils';
-	import { user, farcaster, setFarcaster } from '$lib/client/store';
+	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
+	import { user, farcaster, setFarcaster, walletAddress } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import Tips from '../Tips.svelte';
-	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
+	import {
+		CREATE_TABS,
+		ERC20,
+		ERC721,
+		FRAME_BASE_URL,
+		STATUS_PUBLISHED,
+		TOKEN_TABS
+	} from '$lib/client/clientConsts';
 	import Button from '../Button.svelte';
 	import { toast } from '$lib/client/popup';
-	import { getToastStore } from '@skeletonlabs/skeleton';
-	import TrashIcon from '../ui/icons/TrashIcon.svelte';
+	import { Tab, TabGroup, getToastStore } from '@skeletonlabs/skeleton';
+	import TokenList from './TokenList.svelte';
+	import { goto } from '$app/navigation';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -26,17 +28,14 @@
 	let cover: string = '';
 	let price: number = 0;
 	let isPublished = false;
-	const cancelHandler = () => {
-		name = '';
-		addressList = [];
-		cover = '';
-		price = 0;
-		prviewImage = '';
-		newList = [];
-	};
+
 	let prviewImage = '';
 	let loading = false;
-	let newList: any[] = [];
+	let tabSet = 0;
+	let tokenTabSet = 0;
+	let ERC20List: any[] = [];
+	let ERC721List: any[] = [];
+	let ERC1155List: any[] = [];
 
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
@@ -44,64 +43,74 @@
 			const flow = await getFlow(farcasterId);
 			if (flow) {
 				name = flow.name;
-				addressList = addressDataPipe(flow.input?.addressList);
+				addressList = flow.input?.addressList;
 				price = flow.input?.price;
 				cover = flow.cover;
 				isPublished = flow.status === STATUS_PUBLISHED;
 				if (isPublished) {
 					frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
 				}
+				ERC20List = flow.input.addressList.filter((item: any) => item.type === 'ERC20');
+				ERC721List = flow.input.addressList.filter((item: any) => item.type === 'ERC721');
+				ERC1155List = flow.input.addressList.filter((item: any) => item.type === 'ERC1155');
 			} else {
 				toast.error(toastStore, 'Wrong id');
 			}
 		} else {
 			name = 'test'; //'test';
-			addressList = [{ ERC20: '0x2F6F12b68165aBb483484927919D0d3fE450462E' }]; //'0x2F6F12b68165aBb483484927919D0d3fE450462E';
+			addressList = [
+				{ type: 'ERC20', address: '0xf1731D81BC7be92DBD9b759a63ECAFaA569C7D0a', amount: 1 },
+				{ type: 'ERC721', address: '0xce8fec9a10d4642368f124593098f2e4dd643652', tokenId: 2 },
+				{
+					type: 'ERC1155',
+					address: '0x2F6F12b68165aBb483484927919D0d3fE450462E',
+					tokenId: 2,
+					amount: 3
+				}
+			];
 			cover =
-				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png'; //'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
+				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
 			price = 0.005; //0.005;
 		}
-		newList = addressList;
-		previewHandler();
 	});
 
+	const cancelHandler = () => {
+		name = '';
+		addressList = [];
+		cover = '';
+		price = 0;
+		prviewImage = '';
+		ERC20List = [];
+		ERC721List = [];
+		ERC1155List = [];
+	};
+
 	const previewHandler = async () => {
-		if (!name || addressList.length === 0) {
+		if (!name || !cover) {
 			return;
 		}
-		loading = true;
-
 		frameUrl = '';
-		prviewImage = await getPreviewUrl(FRAME_BASE_URL, name, cover, price, addressList);
-		loading = false;
+		return await getPreviewUrl(FRAME_BASE_URL, name, cover, price);
 	};
 
 	const saveHandler = async () => {
 		try {
+			addressList = [...ERC20List, ...ERC721List, ...ERC1155List];
+			console.log(addressList);
 			if (!name || addressList.length === 0 || !cover) {
-				toast.error(toastStore, 'Please input name , address , cover');
+				toast.error(toastStore, 'Please input name , addresses , cover');
 				return;
 			}
-			console.log({
+			await insertFlow({
 				name: name,
 				cover: cover,
 				input: { price: price.toString(), addressList: addressList },
 				creator: $user.fid,
-				id: $farcaster.id
-			});
-
-			console.log(addressList);
-			const addressData = addressListPipe(addressList);
-			await insertFlow({
-				name: name,
-				cover: cover,
-				input: { price: price.toString(), addressList: addressData },
-				creator: $user.fid,
-				id: $farcaster.id
+				id: $farcaster.id,
+				seller: $walletAddress
 			});
 			toast.success(toastStore, 'Save success!');
 		} catch (e: any) {
-			//alert(e);
 			console.log(e.response);
 			toast.error(toastStore, errorPipe(e.response?.data?.message));
 		}
@@ -109,36 +118,24 @@
 
 	const publishHandler = async () => {
 		if ($farcaster.id !== 'uuid') {
-			const result = await publishFlow($farcaster.id);
+			await publishFlow($farcaster.id);
 			frameUrl = `${FRAME_BASE_URL}/api/${$farcaster.id}`;
 			isPublished = true;
+			goto(`/flows/view/${$farcaster.id}`);
 		} else {
 			toast.error(toastStore, 'Please save first!');
 		}
 	};
-	const addAddressHandler = () => {
-		if (!isValidAddress(newAddress)) {
-			toast.error(toastStore, 'Please input correct address');
-			return;
-		}
 
-		let newLine = {};
-		newLine[selected] = newAddress;
-		addressList.push(newLine);
-		newList = addressList;
-		newAddress = '';
-		selected = 'ERC20';
-
-		console.log(newList);
-	};
-	let selected: string;
-	let types = ['ERC20', 'ERC721', 'ERC1155'];
-	let newAddress = '';
-	const deleteAddressHandler = (index: number) => {
-		addressList.splice(index, 1);
-		console.log(addressList);
-		newList = addressList;
-	};
+	$: if (tabSet === 1) {
+		loading = true;
+		previewHandler().then((url) => {
+			if (url) {
+				prviewImage = url;
+			}
+			loading = false;
+		});
+	}
 </script>
 
 <div class="p-6 m-4 text-black">
@@ -147,110 +144,97 @@
 		<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 		<li class="text-white">{title} Flow</li>
 	</ol>
-	<section class="w-full max-w-[2000px] mx-auto border-spacing-x-8 table bg-transparent">
-		<div class="lg:w-2/5 md:w-2/5 card lg:table-cell md:table-cell">
-			<div class="py-4 px-6 mb-4 font-bold border-b border-surface-500/30 text-xl text-white">
-				Design
-			</div>
-			<div class="px-6">
-				<label class="flex items-center mb-2">
-					<span>Name</span>
-					<input
-						class="input rounded w-4/5"
-						placeholder="Flow name"
-						bind:value={name}
-						on:keyup={() => previewHandler()}
-					/>
-				</label>
+	<section class="w-full max-w-[2000px] mx-auto bg-transparent text-white">
+		<TabGroup class="w-full">
+			{#each CREATE_TABS as tab, i}
+				<Tab bind:group={tabSet} name="tab" value={i}>{tab}</Tab>
+			{/each}
 
-				<label class="flex items-center mb-2">
-					<span>Price</span>
-					<input
-						class="input rounded w-1/4"
-						bind:value={price}
-						type="number"
-						on:keyup={() => previewHandler()}
-					/>
-					<div class="bg-gray-300 px-4 py-2 font-bold rounded-r text-black">ETH</div>
-				</label>
+			<svelte:fragment slot="panel">
+				{#if tabSet === 0}
+					<div class="w-full">
+						<div class="flex justify-start mb-4">
+							<label class="flex items-center mr-8 w-[400px]">
+								<span>Name</span>
+								<input class="input rounded" placeholder="Flow name" bind:value={name} />
+							</label>
 
-				<label class="flex items-center mb-2">
-					<span>Cover</span>
-					<textarea
-						class="textarea w-4/5"
-						rows="5"
-						placeholder="Image's url"
-						bind:value={cover}
-						on:keyup={() => previewHandler()}
-					/>
-				</label>
-				{#each newList as address, index}
-					{#each Object.entries(address) as [key, value], i}
-						<label class="flex items-center mb-2">
-							<span>{key}</span>
-							<input class="input rounded" {value} on:keyup={() => previewHandler()} disabled />
-							<div class="text-primary-500" on:click={() => deleteAddressHandler(index)}>
-								<svelte:component this={TrashIcon} />
-							</div>
-						</label>
-					{/each}
-				{/each}
-
-				<label class="flex items-center mb-6">
-					<div class="w-[100px] font-bold">
-						<select bind:value={selected} class="select">
-							{#each types as type}
-								<option value={type}>
-									{type}
-								</option>
-							{/each}
-						</select>
-					</div>
-					<input class="input rounded" bind:value={newAddress} placeholder="Address" />
-					<img
-						src="/images/plus.svg"
-						alt="plus"
-						class="w-4 h-4 ml-2 cursor-pointer"
-						on:click={addAddressHandler}
-					/>
-				</label>
-			</div>
-		</div>
-		<div class="lg:w-2/5 md:w-2/5 bg-gray-100 rounded lg:table-cell md:table-cell">
-			<div class="py-4 px-6 mb-4 font-bold border-b border-gray-300 text-xl">Preview</div>
-			<div class="px-6">
-				{#if loading}
-					Loading ...
-				{:else if prviewImage}
-					<div class="border border-gray-700 rounded-3xl p-4">
-						<div class="relative rounded-md relative w-full mb-4">
-							<div class="relative">
-								<img
-									class="bg-background-200 border border-slate-200 max-h-[532px] object-cover rounded-t-lg text-background-200 w-full"
-									src={prviewImage}
-									alt="Preview Frame"
-								/>
-							</div>
-							<FrameButtons />
+							<label class="flex items-center">
+								<span>Price</span>
+								<input class="input rounded w-1/4" bind:value={price} type="number" />
+								<div class="bg-gray-300 px-4 py-2 font-bold rounded-r text-black">ETH</div>
+							</label>
+						</div>
+						<div class="flex justify-start items-start mb-4">
+							<label class="flex items-center w-[400px] mr-8">
+								<span>Cover</span>
+								<textarea class="textarea" rows="5" placeholder="Image's url" bind:value={cover} />
+							</label>
+							<label class="flex items-center">
+								<span>Preview</span>
+								{#if cover}
+									<img src={cover} alt="corver" class="w-40 h-40" />
+								{:else}
+									<img src="/images/placeholder.png" alt="corver" class="w-40 h-40 bg-gray-300" />
+								{/if}
+							</label>
 						</div>
 					</div>
+					<hr />
+					<div class="my-4 justify-center w-1/2 mx-auto bg-purple-200 rounded-lg p-6 text-black">
+						Please add addresses, you can use the following test token: <br />ERC20 : {ERC20}<br
+						/>ERC721 : {ERC721}
+					</div>
+					<TabGroup class="w-full">
+						{#each TOKEN_TABS as tab, i}
+							<Tab bind:group={tokenTabSet} name={`tab${i}`} value={i}>{tab}</Tab>
+						{/each}
+						<svelte:fragment slot="panel">
+							{#if tokenTabSet === 0}
+								<TokenList bind:value={ERC20List} type="ERC20" />
+							{:else if tokenTabSet === 1}
+								<TokenList bind:value={ERC721List} type="ERC721" />
+							{:else}
+								<TokenList bind:value={ERC1155List} type="ERC1155" />
+							{/if}
+						</svelte:fragment>
+					</TabGroup>
+				{:else if tabSet === 1}
+					<div class="px-6">
+						{#if loading}
+							Loading ...
+						{:else if prviewImage}
+							<div class="border border-gray-700 rounded-3xl p-4 w-3/5 mx-auto">
+								<div class="relative rounded-lg relative w-full mb-4 pb-4 bg-[#f3f3f3]">
+									<img
+										class="bg-background-200 max-h-[532px] object-cover rounded-t-lg text-background-200 w-full"
+										src={prviewImage}
+										alt="Preview Frame"
+									/>
+									<FrameButtons />
+								</div>
+							</div>
+						{/if}
+					</div>
 				{/if}
-			</div>
-		</div>
+			</svelte:fragment>
+		</TabGroup>
 	</section>
-	{#if !isPublished}
-		<div class="flex mt-8 justify-center text-white">
-			<Button cssClass="bg-gray-100 text-black" on:click={cancelHandler} title="Reset"></Button>
-			<Button cssClass="bg-secondary-500 text-white mx-8 " on:click={saveHandler} title="Save"
-			></Button>
-			<Button cssClass="bg-primary-500 text-white  " on:click={publishHandler} title="Publish"
-			></Button>
-		</div>
-	{/if}
+	<div class="lg:w-3/5 md:w-3/5 text-white mt-2 mx-auto">
+		{#if !isPublished}
+			<div class="flex mt-8 justify-center text-white">
+				<Button cssClass="bg-gray-100 text-black" on:click={cancelHandler} title="Reset"></Button>
+				<Button cssClass="bg-secondary-500 text-white mx-8 " on:click={saveHandler} title="Save"
+				></Button>
+				<Button cssClass="bg-primary-500 text-white  " on:click={publishHandler} title="Publish"
+				></Button>
+			</div>
+		{/if}
 
-	{#if frameUrl || (frameUrl && isPublished)}
-		<Tips {frameUrl} />
-	{/if}
+		{#if frameUrl || (frameUrl && isPublished)}
+			<Tips {frameUrl} />
+		{/if}
+	</div>
 </div>
 <div id="clipboard"></div>
 

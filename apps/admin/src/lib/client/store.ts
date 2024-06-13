@@ -1,5 +1,23 @@
 import { writable } from 'svelte/store';
 
+export const signed = writable();
+
+export const removeItem = (key: string, window: any) => {
+	signed.set(false);
+	window.localStorage.removeItem(key);
+};
+
+export const getItem = (key: string, window: any) => {
+	const item = window.localStorage.getItem(key);
+	signed.set(!!item);
+	return item ? JSON.parse(item) : null;
+};
+
+export const setItem = (key: string, window: any, data: any) => {
+	signed.set(true);
+	window.localStorage.setItem(key, data);
+};
+
 type User = {
 	fid: number;
 	pft: string;
@@ -45,3 +63,27 @@ const setFarcaster = (value: Farcaster) => {
 };
 
 export { farcaster, setFarcaster };
+
+const walletAddress = writable('');
+
+const setWalletAddress = (value: string) => {
+	walletAddress.update(() => value);
+};
+
+export { walletAddress, setWalletAddress };
+
+const provider = writable();
+
+const setProvider = (value: any) => {
+	provider.update(() => value);
+};
+
+export { provider, setProvider };
+
+const ethProvider = writable();
+
+const setEthProvider = (value: any) => {
+	ethProvider.update(() => value);
+};
+
+export { ethProvider, setEthProvider };

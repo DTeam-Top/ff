@@ -1,11 +1,6 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { signed } from '$lib/client/utils';
 	import { page } from '$app/stores';
 	import ViewFlow from '$lib/components/flow/ViewFlow.svelte';
-	$: if (!$signed) {
-		goto('/');
-	}
 </script>
 
 <svelte:head>

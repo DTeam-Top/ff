@@ -7,6 +7,7 @@ export type Flow = {
 	input: any;
 	creator: number;
 	id?: string;
+	seller: string;
 };
 
 export type Cast = {

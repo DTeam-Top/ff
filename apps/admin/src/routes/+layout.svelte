@@ -1,7 +1,6 @@
 <script lang="ts">
 	import 'tailwindcss/tailwind.css';
 	import { browser } from '$app/environment';
-	import { getItem } from '$lib/client/utils';
 	import { getCaster } from '$lib/client/casterService';
 	import '../style.css';
 	import { USER_STORE_KEY } from '$lib/client/clientConsts';
@@ -17,9 +16,9 @@
 		Toast
 	} from '@skeletonlabs/skeleton';
 	import SidebarItems from '$lib/components/ui/sidebar/SidebarItems.svelte';
-	import { removeItem, signed } from '$lib/client/utils';
 	import Spin from '$lib/components/Spin.svelte';
 	import TopBar from '$lib/components/ui/TopBar.svelte';
+	import { getItem, signed } from '$lib/client/store';
 
 	let loading = true;
 

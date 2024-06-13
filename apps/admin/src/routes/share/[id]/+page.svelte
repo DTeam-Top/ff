@@ -16,8 +16,7 @@
 				FRAME_BASE_URL || 'http://localhost:3000',
 				flow.name,
 				flow.cover,
-				flow.input.price,
-				flow.input.address
+				flow.input.price
 			);
 		});
 	}

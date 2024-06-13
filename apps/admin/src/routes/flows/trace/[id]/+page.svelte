@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { getTracesByFlowId } from '$lib/client/flowService';
-	import { signed } from '$lib/client/utils';
-	import { setFarcaster, user } from '$lib/client/store';
+	import { setFarcaster, user, signed } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import dayjs from 'dayjs';

@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { signed } from '$lib/client/utils';
 	import WithdrawButton from '$lib/components/WithdrawButton.svelte';
 	import HistoryList from '$lib/components/commission/HistoryList.svelte';
 	import AvaliableList from '$lib/components/commission/AvaliableList.svelte';
 	import { goto } from '$app/navigation';
 	import { postWithdraw } from '$lib/client/commissionService';
-	import { user } from '$lib/client/store';
+	import { user, signed } from '$lib/client/store';
 	import { COMISSION_TABS } from '$lib/client/clientConsts';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { TabGroup, Tab } from '@skeletonlabs/skeleton';

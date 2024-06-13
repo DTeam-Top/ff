@@ -25,7 +25,7 @@
 		getFlowList().then(() => {});
 	}
 	const getFlowList = async () => {
-		const flows = await getFlows($user.fid, 'published', offset, LIMIT_MAX_HOME, true);
+		const flows = await getFlows($user.fid, 'published', offset, LIMIT_MAX_HOME, false);
 		page = Math.ceil(flows.total / LIMIT_MAX_HOME);
 		flowList = [...flows.list];
 	};

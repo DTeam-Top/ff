@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { signed } from '$lib/client/utils';
 	import CreateFlow from '$lib/components/flow/CreateFlow.svelte';
+	import { signed } from '$lib/client/store';
 
 	$: if (!$signed) {
 		goto('/');

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SWIN from '$lib/components/SWIN.svelte';
-	import { removeItem, signed } from '$lib/client/utils';
-	import { user } from '$lib/client/store';
+	import { user, removeItem, signed } from '$lib/client/store';
+	import WalletButton from '../WalletButton.svelte';
 	const onSingout = () => {
 		removeItem('user', window);
 		window.location.reload();
@@ -16,7 +16,10 @@
 			class="h-8 mx-auto object-cover rounded-full w-8 bg-white"
 		/></span
 	>
-	<button on:click={onSingout} class=" hover:rounded-lg px-4 py-2 hover:variant-soft-primary"
+	<WalletButton />
+	<button
+		on:click={onSingout}
+		class="border border-primary-800 rounded-lg px-4 py-2 hover:variant-soft-primary"
 		>Sign out</button
 	>
 {:else}

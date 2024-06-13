@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { getFlows, deleteFlowById } from '$lib/client/flowService';
-	import { addressPipe, signed } from '$lib/client/utils';
-	import { user } from '$lib/client/store';
+	import { addressPipe } from '$lib/client/utils';
+	import { user, signed } from '$lib/client/store';
 	import Button from '$lib/components/Button.svelte';
 	import { Paginator, getModalStore, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import { LIMIT_MAX } from '$lib/client/clientConsts';
@@ -69,7 +69,6 @@
 				<tr>
 					<th>Name</th>
 					<th>Price</th>
-					<th>Contract</th>
 					{#if type !== 'draft'}
 						<th>Trace Count</th>
 					{/if}
@@ -81,7 +80,6 @@
 					<tr>
 						<td>{row.name}</td>
 						<td>{row.input.price} <span class="text-xs opacity-50">ETH</span></td>
-						<td>{addressPipe(row.input.address)}</td>
 						{#if type !== 'draft'}
 							<td><span class="badge variant-soft-primary">{row.traceCount}</span></td>
 						{/if}
@@ -110,6 +108,7 @@
 									on:click={() => actionHandler(row.id, 'view')}
 									cssClass="bg-warning-500 mr-4"
 								/>
+
 								{#if row.traceCount > 0}
 									<Button
 										title="Trace"

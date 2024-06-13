@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { signed } from '$lib/client/utils';
 	import Content from '$lib/components/Content.svelte';
 	import Landing from '$lib/components/Landing.svelte';
+	import { signed } from '$lib/client/store';
 </script>
 
 <svelte:head>
