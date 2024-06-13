@@ -22,6 +22,13 @@
       "when": 1717813951370,
       "tag": "0002_stale_martin_li",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1718191860932,
+      "tag": "0003_sticky_molten_man",
+      "breakpoints": true
     }
   ]
 }
