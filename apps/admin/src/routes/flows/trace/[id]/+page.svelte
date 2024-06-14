@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import dayjs from 'dayjs';
+	import CheckIcon from '$lib/components/ui/icons/CheckIcon.svelte';
 	let list: any[] = [];
 	onMount(() => {
 		setFarcaster({ id: '0' });
@@ -18,8 +19,8 @@
 		getTraceList();
 	}
 	const getTraceList = async () => {
-		const result = await getTracesByFlowId($page.params.id, $user.fid);
-		list = result;
+		list = await getTracesByFlowId($page.params.id, $user.fid);
+		console.log(list);
 	};
 </script>
 
@@ -48,6 +49,7 @@
 					<tr>
 						<th>Cast</th>
 						<th>Trace Time</th>
+						<th>Paid</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -55,6 +57,11 @@
 						<tr>
 							<td><a href="">{item.cast}</a></td>
 							<td>{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</td>
+							<td class="text-primary-500">
+								{#if item.paymentTx && item.paymentTs}
+									<svelte:component this={CheckIcon} />
+								{/if}
+							</td>
 						</tr>
 					{/each}
 				</tbody>

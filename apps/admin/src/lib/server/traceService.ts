@@ -74,10 +74,13 @@ export const getTraces = async (flow: string, caster: string) => {
 			creator: flows.creator,
 			id: flows.id,
 			cast: traces.cast,
-			traceTime: traces.createdAt
+			traceTime: traces.createdAt,
+			paymentTx: tracePayments.paymentTx,
+			paymentTs: tracePayments.paymentTs
 		})
 		.from(traces)
 		.leftJoin(flows, eq(traces.flow, flows.id))
+		.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
 		.where(and(eq(traces.flow, flow), eq(traces.caster, Number(caster))));
 	return result;
 };

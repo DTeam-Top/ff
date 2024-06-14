@@ -5,8 +5,7 @@
 	let frameList: any[] = [];
 	$: {
 		getStaticsCount(undefined).then((count) => {
-			statistics = count.banner;
-			frameList = count.card;
+			statistics = [...count.banner, ...count.card];
 		});
 	}
 </script>
@@ -29,20 +28,6 @@
 			</div>
 		</div>
 
-		<div class="flex flex-wrap w-1/2 mx-auto mt-10">
-			{#each frameList as item, i}
-				<div class="w-full md:w-6/12">
-					<div class="p-2">
-						<div class="p-4 card">
-							<div class="text-center">
-								<p class="text-4xl font-bold opacity-70 text-primary-500">{item.count}</p>
-								<p class="text-sm opacity-70 mt-2">{item.title}</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
 		<div class="text-white text-4xl text-center mx-auto my-40">TODO ....</div>
 	</div>
 </div>

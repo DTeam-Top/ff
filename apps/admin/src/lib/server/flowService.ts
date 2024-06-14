@@ -1,7 +1,7 @@
 import { db } from '$lib/server/dbService';
 import { LOGGER, STATUS_PUBLISHED } from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
-import { count, countDistinct, eq, sql, and } from 'drizzle-orm';
+import { count, countDistinct, eq, sql, and, ne } from 'drizzle-orm';
 
 export type Flow = {
 	id?: string;
@@ -147,33 +147,32 @@ export const getFlowById = async (id: string) => {
 };
 
 export const getStatics = async (fid: number | undefined) => {
-	const publishData = await db()
+	const runData = await db()
 		.select({ value: count() })
 		.from(flows)
 		.where(and(fid ? eq(flows.creator, fid) : undefined, eq(flows.status, 1)));
-	const runData = await db()
-		.select({ value: count() })
-		.from(traces)
-		.where(fid ? eq(traces.caster, fid) : undefined);
+
 	const dealedData = await db()
 		.select({ value: count() })
-		.from(tracePayments)
-		.leftJoin(traces, eq(traces.id, tracePayments.trace))
-		.where(fid ? eq(traces.caster, fid) : undefined);
+		.from(flows)
+		.where(and(fid ? eq(flows.creator, fid) : undefined, eq(flows.status, 3)));
 
 	const fidCount = await db()
 		.select({ value: countDistinct(traces.caster) })
 		.from(traces);
+	const totalData = await db()
+		.select({ value: count() })
+		.from(flows)
+		.where(and(fid ? eq(flows.creator, fid) : undefined, ne(flows.status, 2)));
 
 	return {
 		banner: [
-			{ title: 'Published', count: publishData[0].value },
-			{ title: 'Running', count: runData[0].value },
-			{ title: 'Dealed', count: dealedData[0].value }
+			{ title: 'Running Flows', count: runData[0].value },
+			{ title: 'Dealed Flows', count: dealedData[0].value }
 		],
 		card: [
-			{ title: 'Unique fids', count: fidCount[0].value, color: '#fee4cb' },
-			{ title: 'Trade volume', count: dealedData[0].value, color: '#d1d5db' }
+			{ title: 'Total Volume', count: totalData[0].value, color: '#d1d5db' },
+			{ title: 'Unique Fids', count: fidCount[0].value, color: '#fee4cb' }
 		]
 	};
 };
