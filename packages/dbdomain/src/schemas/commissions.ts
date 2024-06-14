@@ -15,7 +15,7 @@ export const commissions = pgTable(
     flow: uuid("flow_id").notNull(), // flow id,
     payment: integer("payment_id").notNull(), // payment id
     fid: integer("fid").notNull(), // fid of the commission receiver
-    commission: bigint("commission", { mode: "number" }).notNull(), // commission amount
+    commission: bigint("commission", { mode: "bigint" }).notNull(), // commission amount
     createdAt: bigint("created_at", { mode: "number" }).notNull(),
     withdrawnTx: text("withdrawn_tx"), // withdrawn tx hash
     withdrawnAt: bigint("withdrawn_at", { mode: "number" }), // withdrawn timestamp
