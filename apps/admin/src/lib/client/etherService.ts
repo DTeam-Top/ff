@@ -1,4 +1,5 @@
 import { ethers, formatEther, parseEther } from 'ethers';
+import { setWalletAddress } from './store';
 
 export const ERC20_ABI = [
 	'function transferEarnings(address, uint256) public',
@@ -137,5 +138,14 @@ const getERC721Approved = async (
 	} catch (error) {
 		console.error('getApproved failed, try isApprovedForAll function');
 		return await erc721Contract.isApprovedForAll(owner, dvp);
+	}
+};
+
+export const connectWallet = async (provider: any) => {
+	const addresses: string[] = await provider.request({
+		method: 'eth_requestAccounts'
+	});
+	if (addresses.length > 0) {
+		setWalletAddress(addresses[0]);
 	}
 };
