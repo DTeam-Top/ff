@@ -33,11 +33,12 @@ export const getCommissionList = async (fid: string, offset: number, max: number
 		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)));
 
 	let totalCommisstion = total[0].value;
-	const available = await flowContract().available(fid);
 
-	if (available === BigInt(totalCommisstion)) {
+	const available = await flowContract().available(fid);
+	if (totalCommisstion && available === BigInt(totalCommisstion)) {
 		totalCommisstion = available;
 	}
+
 	return {
 		commissionList: result,
 		total: totalCommisstion,

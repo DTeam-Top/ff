@@ -3,8 +3,10 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { castRequest, userRequest, verfiyUserRequest } from './requests';
 import { createCast, lookupSigner, lookupUserByFid } from '$lib/server/neynarClient';
+import { logger } from 'hono/logger';
 
 export const router = new Hono()
+	.use(logger())
 	.post('/verify-user', zValidator('json', verfiyUserRequest), async (c) => {
 		const { fid, signerUuid } = c.req.valid('json');
 		if (!fid || !signerUuid) {

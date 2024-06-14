@@ -2,9 +2,10 @@ import { createTracePayment, getTraces } from '$lib/server/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { idRequest, updateTxRequest } from './requests';
+import { logger } from 'hono/logger';
 
 export const router = new Hono()
-
+	.use(logger())
 	.post(
 		'/update-tx/:id',
 		zValidator('param', idRequest),

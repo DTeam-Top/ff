@@ -10,8 +10,10 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { flowRequest, idRequest } from './requests';
 import { STATUS_PUBLISHED } from '$lib/server/serverConsts';
+import { logger } from 'hono/logger';
 
 export const router = new Hono()
+	.use(logger())
 	.post('/', zValidator('json', flowRequest), async (c) => {
 		try {
 			const { name, cover, creator, input, id, seller } = c.req.valid('json');

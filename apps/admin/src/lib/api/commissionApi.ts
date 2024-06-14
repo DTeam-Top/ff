@@ -2,8 +2,10 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { fidRequest, withdrawRequest } from './requests';
 import { getCommissionList, getHistoryList, withdraw } from '$lib/server/commissionService';
+import { logger } from 'hono/logger';
 
 export const router = new Hono()
+	.use(logger())
 	.get('/:fid', zValidator('param', fidRequest), async (c) => {
 		try {
 			const { fid } = c.req.param(); //
