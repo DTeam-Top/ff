@@ -157,13 +157,15 @@ export const getStatics = async (fid: number | undefined) => {
 		.from(flows)
 		.where(and(fid ? eq(flows.creator, fid) : undefined, eq(flows.status, 3)));
 
-	const fidCount = await db()
-		.select({ value: countDistinct(traces.caster) })
-		.from(traces);
+	const fidCount = await db().execute<{ value: number }>(
+		sql`select count(distinct(fid)) from ((select  distinct(caster) as fid from traces) union (select distinct(creator) as fid from flows)) as fids;`
+	);
+	console.log(fidCount.rows[0]);
 	const totalData = await db()
 		.select({ value: count() })
-		.from(flows)
-		.where(and(fid ? eq(flows.creator, fid) : undefined, ne(flows.status, 2)));
+		.from(tracePayments)
+		.innerJoin(traces, eq(traces.id, tracePayments.trace))
+		.where(fid ? eq(traces.caster, fid) : undefined);
 
 	return {
 		banner: [
@@ -172,7 +174,7 @@ export const getStatics = async (fid: number | undefined) => {
 		],
 		card: [
 			{ title: 'Total Volume', count: totalData[0].value, color: '#d1d5db' },
-			{ title: 'Unique Fids', count: fidCount[0].value, color: '#fee4cb' }
+			{ title: 'Unique Fids', count: fidCount.rows[0].count, color: '#fee4cb' }
 		]
 	};
 };
