@@ -74,6 +74,7 @@ export const getTraces = async (flow: string, caster: string) => {
 			creator: flows.creator,
 			id: flows.id,
 			cast: traces.cast,
+			casterProfile: traces.casterProfile,
 			traceTime: traces.createdAt,
 			paymentTx: tracePayments.paymentTx,
 			paymentTs: tracePayments.paymentTs

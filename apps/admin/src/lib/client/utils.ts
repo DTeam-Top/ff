@@ -7,6 +7,7 @@ import {
 	approveERC20,
 	approveERC721
 } from './etherService';
+import { WARPCAST_URL } from './clientConsts';
 
 export function addressPipe(address: string | `0x${string}` | undefined, start: number = 38) {
 	return address ? `${address.slice(0, 6)}...${address.slice(start)}` : '';
@@ -222,4 +223,10 @@ export const statusPipe = (type: string) => {
 		default: //done
 			return 3;
 	}
+};
+
+export const castAddressPipe = (cast: string, usernmae: string) => {
+	const castData = cast.split('_');
+	const castId = castData[1].slice(0, 10);
+	return `${WARPCAST_URL}${usernmae}/${castId}`;
 };
