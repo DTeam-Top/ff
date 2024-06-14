@@ -12,6 +12,7 @@ export const router = new Hono()
 		}
 		let isVerifiedUser = false;
 		try {
+			console.log(new Date(), 'verify-user', fid, signerUuid);
 			const signer = await lookupSigner(signerUuid);
 
 			if (!signer) {

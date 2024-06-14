@@ -10,7 +10,8 @@ export const lookupSigner = async (signerUuid: string) => {
 		});
 		return signer.data;
 	} catch (e: any) {
-		await lookupSigner(signerUuid);
+		console.log(e);
+		//await lookupSigner(signerUuid);
 	}
 };
 
