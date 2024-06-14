@@ -7,6 +7,7 @@ import {
   uniqueIndex,
   uuid,
   serial,
+  jsonb,
 } from "drizzle-orm/pg-core";
 
 export const traces = pgTable(
@@ -17,6 +18,7 @@ export const traces = pgTable(
     flow: uuid("flow_id").notNull(), // flow id
     parentCast: text("parent_cast"), // parent cast id
     caster: integer("caster").notNull(), // trace caster fid
+    casterProfile: jsonb("caster_profile"), // caster profile json {username,displayName,avatar}
     createdAt: bigint("created_at", { mode: "number" }).notNull(),
   },
   (traces) => ({

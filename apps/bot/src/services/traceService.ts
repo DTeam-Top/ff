@@ -16,6 +16,11 @@ export const createTrace = async (data: any) => {
       flow: params[1],
       parentCast: parentCast,
       caster: data.author.fid,
+      casterProfile: {
+        username: data.author.username,
+        displayName: data.author.display_name,
+        avatar: data.author.pfp_url,
+      },
     };
 
     console.log(trace);
@@ -27,6 +32,7 @@ export const createTrace = async (data: any) => {
         flow: trace.flow,
         parentCast: trace.parentCast,
         caster: trace.caster,
+        casterProfile: trace.casterProfile,
         createdAt: Date.now(),
       })
       .onConflictDoNothing()

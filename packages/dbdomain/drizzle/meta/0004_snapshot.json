@@ -1,0 +1,298 @@
+{
+  "id": "e20d4997-dfc7-4998-b2a5-5fb02a732896",
+  "prevId": "06e3772e-a795-4508-85a0-bf567289d263",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.commissions": {
+      "name": "commissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "flow_id": {
+          "name": "flow_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment_id": {
+          "name": "payment_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fid": {
+          "name": "fid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "commission": {
+          "name": "commission",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "withdrawn_tx": {
+          "name": "withdrawn_tx",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "withdrawn_at": {
+          "name": "withdrawn_at",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_commissions_flow": {
+          "name": "idx_commissions_flow",
+          "columns": [
+            "flow_id"
+          ],
+          "isUnique": false
+        },
+        "idx_commissions_fid": {
+          "name": "idx_commissions_fid",
+          "columns": [
+            "fid"
+          ],
+          "isUnique": false
+        },
+        "idx_commissions_payment": {
+          "name": "idx_commissions_payment",
+          "columns": [
+            "payment_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.flows": {
+      "name": "flows",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cover": {
+          "name": "cover",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "input": {
+          "name": "input",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "creator": {
+          "name": "creator",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "seller": {
+          "name": "seller",
+          "type": "varchar(42)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_flow_name": {
+          "name": "idx_flow_name",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        },
+        "idx_flow_creator": {
+          "name": "idx_flow_creator",
+          "columns": [
+            "creator"
+          ],
+          "isUnique": false
+        },
+        "idx_flow_seller": {
+          "name": "idx_flow_seller",
+          "columns": [
+            "seller"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.trace_payments": {
+      "name": "trace_payments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "trace": {
+          "name": "trace",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment_tx": {
+          "name": "payment_tx",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment_ts": {
+          "name": "payment_ts",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "commission_paid": {
+          "name": "commission_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_tp_trace": {
+          "name": "idx_tp_trace",
+          "columns": [
+            "trace"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.traces": {
+      "name": "traces",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "cast": {
+          "name": "cast",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flow_id": {
+          "name": "flow_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_cast": {
+          "name": "parent_cast",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "caster": {
+          "name": "caster",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caster_profile": {
+          "name": "caster_profile",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_traces_flow": {
+          "name": "idx_traces_flow",
+          "columns": [
+            "flow_id"
+          ],
+          "isUnique": false
+        },
+        "idx_traces_cast": {
+          "name": "idx_traces_cast",
+          "columns": [
+            "cast"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
