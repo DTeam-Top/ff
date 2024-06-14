@@ -54,7 +54,7 @@ services:
     build:
       target: frame
     ports:
-      - 3002:3000
+      - 3002:3002
     env_file:
       - .env
     depends_on:

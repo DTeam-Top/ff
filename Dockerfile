@@ -1,6 +1,7 @@
 FROM node:20-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV NODE_OPTIONS="--enable-source-maps"
 RUN corepack enable
 RUN apk add --no-cache tini su-exec
 RUN adduser -s /bin/false -S -D app
@@ -44,5 +45,6 @@ CMD ["su-exec", "app", "node", "dist/index.js"]
 FROM base AS frame
 COPY --from=build --chown=app /usr/app/pruned/frame/ /usr/app/
 WORKDIR /usr/app/
+ENV PORT=3002
 EXPOSE 3002
 CMD ["su-exec", "app", "pnpm", "start"]

@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup src/index.ts --sourcemap"
+    "build": "tsup src/index.ts --sourcemap --minify"
   },
   "devDependencies": {
     "@hono/node-server": "^1.11.1",
