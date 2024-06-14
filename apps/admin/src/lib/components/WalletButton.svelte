@@ -5,7 +5,9 @@
 	import Button from './Button.svelte';
 	import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 	import { ethers } from 'ethers';
+	import WalletIcon from './ui/icons/WalletIcon.svelte';
 	const APP_SUPPORTED_CHAIN_IDS = [84532];
+
 	const sdk = new CoinbaseWalletSDK({
 		appName: 'Farcaster flow',
 		appChainIds: APP_SUPPORTED_CHAIN_IDS
@@ -18,8 +20,6 @@
 	const ethProvider = new ethers.BrowserProvider(provider);
 	setProvider(provider);
 	setEthProvider(ethProvider);
-
-	onMount(() => {});
 
 	const connectHanlder = async () => {
 		await connectWallet();
@@ -48,15 +48,17 @@
 {#if !$walletAddress}
 	<Button
 		title="Connect"
-		cssClass="text-primary-500 cursor-pointer bg-primary-800 text-white w-40"
-		width="w-[100px]"
+		cssClass="flex gap-2 mr-4 border border-[#495A8C] rounded items-center h-[48px] px-[15px]"
+		width="w-[130px]"
 		on:click={connectHanlder}
+		icon={WalletIcon}
 	/>
 {:else}
 	<div
-		class="border border-primary-800 p-2 rounded-lg hover:variant-soft-primary"
+		class="flex gap-2 border border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary"
 		on:click={disConnectHanlder}
 	>
+		<svelte:component this={WalletIcon} />
 		{addressPipe($walletAddress)}
 	</div>
 {/if}

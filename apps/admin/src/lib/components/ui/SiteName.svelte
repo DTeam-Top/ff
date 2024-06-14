@@ -3,6 +3,6 @@
 </script>
 
 <div class="container flex left-0 relative items-center">
-	<img src="/images/logo.svg" width="40" height="40" alt="FF" class="hidden lg:block" />
+	<img src="/images/logo.svg" width="40" height="40" alt="FF" class="hidden lg:block mr-4" />
 	<a class={`${cssClass} uppercase font-bold`} href="/">Farcaster Flow</a>
 </div>

@@ -42,7 +42,7 @@
 		}
 
 		neynarDiv = document.createElement('div');
-		neynarDiv.classList = ['neynar_signin'];
+		neynarDiv.classList = ['neynar_signin hover:variant-soft-primary'];
 		neynarDiv.setAttribute('data-client_id', CLIENT_ID);
 		neynarDiv.setAttribute('data-success-callback', 'onSignInSuccess');
 		//neynarDiv.setAttribute("data-theme", "light");
