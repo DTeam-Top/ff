@@ -4,10 +4,10 @@
 	import UserAvatar from '$lib/components/UserAvatar.svelte';
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
 	import dayjs from 'dayjs';
-	let intervalMs = 5000;
+	//let intervalMs = 5000;
 	const query = createInfiniteQuery({
 		queryKey: ['traces'],
-		refetchInterval: intervalMs,
+		//refetchInterval: intervalMs,
 		queryFn: (pageParam) => getAllTraces({ pageParam }),
 		initialPageParam: 1,
 		getNextPageParam: (lastPage) => {
@@ -74,11 +74,9 @@
 					on:click={() => $query.fetchNextPage()}
 					disabled={!$query.hasNextPage || $query.isFetchingNextPage}
 				>
-					{#if $query.isFetching}
-						Loading more...
-					{:else if $query.hasNextPage}
+					{#if $query.isFetching}{:else if $query.hasNextPage}
 						Load More
-					{:else}Nothing more to load{/if}
+					{/if}
 				</button>
 			</div>
 		{/if}
