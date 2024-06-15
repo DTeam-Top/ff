@@ -8,6 +8,7 @@
 	import CheckIcon from '$lib/components/ui/icons/CheckIcon.svelte';
 	import { castAddressPipe } from '$lib/client/utils';
 	import { WARPCAST_URL } from '$lib/client/clientConsts';
+	import UserAvatar from '$lib/components/UserAvatar.svelte';
 	let list: any[] = [];
 	onMount(() => {
 		setFarcaster({ id: '0' });
@@ -57,32 +58,28 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each list as item, i}
+					{#each list as trace}
 						<tr>
 							<td
 								><a
-									href={castAddressPipe(item.cast, item.casterProfile?.username)}
+									href={castAddressPipe(trace.cast, trace.casterProfile?.username)}
 									class="underline cursor-pointer text-primary-500 hover:text-primary-300"
-									target="_blank">{castAddressPipe(item.cast, item.casterProfile.username)}</a
+									target="_blank">{castAddressPipe(trace.cast, trace.casterProfile.username)}</a
 								></td
 							>
 							<td class="hover:text-primary-300">
 								<a
-									href={`${WARPCAST_URL}${item.casterProfile.username}`}
+									href={`${WARPCAST_URL}${trace.casterProfile.username}`}
 									target="_blank"
-									class="flex gap-2 rounded items-center cursor-pointer underline"
+									class="flex gap-2 rounded traces-center cursor-pointer underline"
 								>
-									<img
-										src={item.casterProfile.avatar}
-										alt="caster"
-										class="h-8 object-cover rounded-full w-8 bg-white mr-4"
-									/>
-									{item.casterProfile.displayName}
+									<UserAvatar url={trace.casterProfile.avatar} />
+									<span class="ml-4">{trace.casterProfile.displayName}</span>
 								</a>
 							</td>
-							<td>{dayjs(item.createdAt).format('YYYY, MMMM, DD')}</td>
+							<td>{dayjs(trace.createdAt).format('YYYY, MMMM, DD')}</td>
 							<td class="text-primary-500">
-								{#if item.paymentTx && item.paymentTs}
+								{#if trace.paymentTx && trace.paymentTs}
 									<svelte:component this={CheckIcon} />
 								{/if}
 							</td>

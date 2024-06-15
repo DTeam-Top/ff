@@ -19,11 +19,18 @@
 	import Spin from '$lib/components/Spin.svelte';
 	import TopBar from '$lib/components/ui/TopBar.svelte';
 	import { getItem, signed } from '$lib/client/store';
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 
 	let loading = true;
 
 	initializeStores();
-
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				enabled: browser
+			}
+		}
+	});
 	const drawerStore = getDrawerStore();
 
 	$: if (browser) {
@@ -90,6 +97,9 @@
 		<svelte:fragment slot="sidebarLeft">
 			<SidebarItems />
 		</svelte:fragment>
-		<slot />
+
+		<QueryClientProvider client={queryClient}>
+			<slot />
+		</QueryClientProvider>
 	</AppShell>
 {/if}

@@ -1,7 +1,7 @@
 import { parseEther } from 'ethers';
 import { flows, tracePayments, traces } from 'dbdomain';
 
-import { and, eq } from 'drizzle-orm';
+import { and, count, eq, isNull } from 'drizzle-orm';
 import { db } from '$lib/server/dbService';
 import { LOGGER } from '$lib/server/serverConsts';
 export type Trace = {
@@ -84,4 +84,40 @@ export const getTraces = async (flow: string, caster: string) => {
 		.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
 		.where(and(eq(traces.flow, flow), eq(traces.caster, Number(caster))));
 	return result;
+};
+
+export const getAllTraces = async (offset: number, max: number) => {
+	const result = await db()
+		.select({
+			name: flows.name,
+			cover: flows.cover,
+			input: flows.input,
+			creator: flows.creator,
+			id: flows.id,
+			cast: traces.cast,
+			casterProfile: traces.casterProfile,
+			traceTime: traces.createdAt,
+			paymentTx: tracePayments.paymentTx,
+			paymentTs: tracePayments.paymentTs,
+			traceId: traces.id
+		})
+		.from(traces)
+		.leftJoin(flows, eq(traces.flow, flows.id))
+		.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
+		.where(
+			and(eq(flows.status, 1), isNull(tracePayments.paymentTx), isNull(tracePayments.paymentTs))
+		)
+		.offset(offset)
+		.limit(max);
+	const total = await db()
+		.select({
+			count: count(flows.id)
+		})
+		.from(traces)
+		.leftJoin(flows, eq(traces.flow, flows.id))
+		.leftJoin(tracePayments, eq(tracePayments.trace, traces.id))
+		.where(
+			and(eq(flows.status, 1), isNull(tracePayments.paymentTx), isNull(tracePayments.paymentTs))
+		);
+	return { result, total: total[0].count };
 };

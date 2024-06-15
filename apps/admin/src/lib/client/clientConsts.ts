@@ -38,7 +38,7 @@ export const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const STATUS_PUBLISHED = 1;
 
 export const LIMIT_MAX = 10;
-export const LIMIT_MAX_HOME = 6;
+export const LIMIT_MAX_HOME = 9;
 
 export const CREATE_TABS = ['Design', 'Preview'];
 
