@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Loading from './Loading.svelte';
+	import Loading from '$lib/components/Loading.svelte';
 
 	const dispatch = createEventDispatcher();
 	export let loading = false;

@@ -2,10 +2,8 @@
 	import { getStaticsCount } from '$lib/client/flowService';
 	import Button from './Button.svelte';
 	import Footer from './Footer.svelte';
-	import GithubIcon from './ui/icons/GithubIcon.svelte';
 
 	let statistics: any[] = [];
-	let frameList: any[] = [];
 	$: {
 		getStaticsCount(undefined).then((count) => {
 			statistics = [...count.banner, ...count.card];

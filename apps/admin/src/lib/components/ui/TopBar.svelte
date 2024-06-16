@@ -1,10 +1,9 @@
 <script lang="ts">
 	import SWIN from '$lib/components/SWIN.svelte';
 	import { user, removeItem, signed } from '$lib/client/store';
-	import WalletButton from '../WalletButton.svelte';
-	import SocialLinks from '../SocialLinks.svelte';
-	import SignoutIcon from './icons/SignoutIcon.svelte';
-	import UserAvatar from '../UserAvatar.svelte';
+	import WalletButton from '$lib/components/WalletButton.svelte';
+	import SocialLinks from '$lib/components/SocialLinks.svelte';
+	import UserAvatar from '$lib/components/UserAvatar.svelte';
 	const onSingout = () => {
 		removeItem('user', window);
 		window.location.reload();

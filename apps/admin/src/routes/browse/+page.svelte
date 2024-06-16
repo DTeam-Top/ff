@@ -3,7 +3,11 @@
 	import { castAddressPipe } from '$lib/client/utils';
 	import UserAvatar from '$lib/components/UserAvatar.svelte';
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
+	import ShareIcon from '$lib/components/ui/icons/ShareIcon.svelte';
 	import dayjs from 'dayjs';
+	import WarpIcon from '$lib/components/ui/icons/WarpIcon.svelte';
+	import DetailIcon from '$lib/components/ui/icons/DetailIcon.svelte';
+	import { BASE_URL } from '$lib/client/clientConsts';
 	//let intervalMs = 5000;
 	const query = createInfiniteQuery({
 		queryKey: ['traces'],
@@ -39,18 +43,14 @@
 				{#each $query.data.pages as { results }}
 					{#each results as trace, i}
 						<figure class="mb-4">
-							<a
-								class="cursor-pointer hover:variant-soft-primary h-fit"
-								href={castAddressPipe(trace.cast, trace.casterProfile?.username)}
-								target="_blank"
-							>
+							<div class="cursor-pointer hover:variant-soft-primary h-fit">
 								<img src={trace.cover} alt="cover" class="w-full rounded-t-lg border-primary-100" />
 								<div
 									class="p-2 border-l border-r border-b border-[#495A8C] rounded-b-lg text-white bg-surface-500"
 								>
 									<div class="flex justify-between items-end mb-2">
 										<div class="text-2xl font-bold">{trace.name}</div>
-										<div>{trace.input.price} <span class="opacity-50">ETH</span></div>
+										<div>{trace.input.price} <span class="opacity-50 text-xs">ETH</span></div>
 									</div>
 
 									<div class="text-sm flex items-center justify-between my-3">
@@ -62,8 +62,31 @@
 											{dayjs(trace.traceTime).format('MMMM, DD')}
 										</div>
 									</div>
+									<div class="flex justify-end">
+										<a
+											class="text-[#472A91] hover:text-secondary-900"
+											href={castAddressPipe(trace.cast, trace.casterProfile?.username)}
+											target="_blank"
+										>
+											<svelte:component this={WarpIcon} />
+										</a>
+										<a
+											class="text-tertiary-500 hover:text-tertiary-900 mx-4"
+											href={`${BASE_URL}flows/view/${trace.id}`}
+											target="_blank"
+										>
+											<svelte:component this={DetailIcon} />
+										</a>
+										<a
+											class="text-primary-500 hover:text-primary-900"
+											href={`${BASE_URL}share/${trace.id}`}
+											target="_blank"
+										>
+											<svelte:component this={ShareIcon} />
+										</a>
+									</div>
 								</div>
-							</a>
+							</div>
 						</figure>
 					{/each}
 				{/each}

@@ -4,12 +4,9 @@
 	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
 	import { user, farcaster, setFarcaster, walletAddress } from '$lib/client/store';
 	import { onMount } from 'svelte';
-	import Tips from '../Tips.svelte';
+	import Tips from '$lib/components/Tips.svelte';
 	import {
-		BASESCAN_URL,
 		CREATE_TABS,
-		ERC20,
-		ERC721,
 		FRAME_BASE_URL,
 		STATUS_PUBLISHED,
 		TOKEN_TABS
@@ -19,7 +16,6 @@
 	import { Tab, TabGroup, getToastStore } from '@skeletonlabs/skeleton';
 	import TokenList from './TokenList.svelte';
 	import { goto } from '$app/navigation';
-	import TipIcon from '../ui/icons/TipIcon.svelte';
 	import TokenTip from './TokenTip.svelte';
 	const toastStore = getToastStore();
 

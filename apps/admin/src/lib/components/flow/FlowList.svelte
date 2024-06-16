@@ -3,6 +3,7 @@
 	import { getFlows, deleteFlowById } from '$lib/client/flowService';
 	import { user, signed } from '$lib/client/store';
 	import Button from '$lib/components/Button.svelte';
+	import ETH from '$lib/components/ETH.svelte';
 	import { Paginator, getModalStore, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import { LIMIT_MAX } from '$lib/client/clientConsts';
 	import { modal } from '$lib/client/popup';
@@ -78,7 +79,7 @@
 				{#each list as row, i}
 					<tr>
 						<td>{row.name}</td>
-						<td>{row.input.price} <span class="text-xs opacity-50">ETH</span></td>
+						<td>{row.input.price} <ETH /></td>
 						{#if type !== 'draft'}
 							<td><span class="badge variant-soft-primary">{row.traceCount}</span></td>
 						{/if}

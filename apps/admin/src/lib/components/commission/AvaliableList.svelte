@@ -3,10 +3,10 @@
 	import { getCommissionList } from '$lib/client/commissionService';
 	import { addressPipe } from '$lib/client/utils';
 	import { user } from '$lib/client/store';
-	import dayjs from 'dayjs';
 	import { formatEther } from 'ethers';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import List from './List.svelte';
+	import ETH from '$lib/components/ETH.svelte';
 	export let needRefresh = false;
 	let commissionList: any[] = [];
 	let total = 0;
@@ -68,7 +68,7 @@
 	{/if}
 	<div class="text-white text-xl text-right">
 		Total: {total}
-		<span class="ml-8">Balance: {formatEther(balance)} <span class="text-sm">ETH</span></span>
+		<span class="ml-8">Balance: {formatEther(balance)} <ETH /></span>
 	</div>
 </div>
 

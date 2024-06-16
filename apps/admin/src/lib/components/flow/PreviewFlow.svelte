@@ -1,11 +1,13 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow } from '$lib/client/flowService';
-	import { addressDataPipe, getPreviewUrl } from '$lib/client/utils';
+	import { getPreviewUrl } from '$lib/client/utils';
 	import { farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
 	import { toast } from '$lib/client/popup';
+	import { getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
 	let frameUrl = '';
@@ -24,7 +26,6 @@
 			const flow = await getFlow(farcasterId);
 			if (flow) {
 				name = flow.name;
-				addressList = addressDataPipe(flow.input?.addressList);
 				price = flow.input?.price;
 				cover = flow.cover;
 				isPublished = flow.status === STATUS_PUBLISHED;

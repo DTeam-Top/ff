@@ -6,9 +6,10 @@
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
-	import Tips from '../Tips.svelte';
+	import Tips from '$lib/components/Tips.svelte';
 	import { toast } from '$lib/client/popup';
-	import ListIcon from '../ui/icons/ListIcon.svelte';
+	import ListIcon from '$lib/components/ui/icons/ListIcon.svelte';
+	import ETH from '$lib/components/ETH.svelte';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -63,7 +64,7 @@
 					</div>
 					<div class="flex items-center mb-2">
 						<div class="w-[80px] text-right pr-3">Price:</div>
-						<div>{flow.input.price} ETH</div>
+						<div>{flow.input.price} <ETH /></div>
 					</div>
 					<div class="flex items-center mb-2">
 						<div class="w-[80px] text-right pr-3">Cover:</div>

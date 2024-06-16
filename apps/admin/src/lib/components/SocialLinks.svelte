@@ -1,6 +1,5 @@
 <script lang="ts">
 	import BrowseIcon from './ui/icons/BrowseIcon.svelte';
-	import DiscordIcon from './ui/icons/DiscordIcon.svelte';
 	import GithubIcon from './ui/icons/GithubIcon.svelte';
 </script>
 

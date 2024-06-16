@@ -49,22 +49,6 @@
 									rel="noreferrer">Github Organization</a
 								>
 							</li>
-							<!-- <li>
-								<a
-									class="anchor"
-									href="https://www.npmjs.com/org/skeletonlabs"
-									target="_blank"
-									rel="noreferrer">NPM Organization</a
-								>
-							</li>
-							<li>
-								<a
-									class="anchor"
-									href="https://www.npmjs.com/package/@skeletonlabs/skeleton"
-									target="_blank"
-									rel="noreferrer">NPM Package</a
-								>
-							</li> -->
 						</ul>
 					</div>
 				</div>

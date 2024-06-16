@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { addressPipe, approve, prepareAddressData, validateData } from '$lib/client/utils';
+	import { approve, prepareAddressData, validateData } from '$lib/client/utils';
 	import { onMount } from 'svelte';
 	import { toast } from '$lib/client/popup';
 	import { getToastStore } from '@skeletonlabs/skeleton';
-	import TrashIcon from '../ui/icons/TrashIcon.svelte';
-	import PlusIcon from '../ui/icons/PlusIcon.svelte';
+	import TrashIcon from '$lib/components/ui/icons/TrashIcon.svelte';
+	import PlusIcon from '$lib/components/ui/icons/PlusIcon.svelte';
 	import { walletAddress, ethProvider } from '$lib/client/store';
-	import { formatEther } from 'ethers';
-	import Loading from '../Loading.svelte';
+	import Loading from '$lib/components/Loading.svelte';
 	const toastStore = getToastStore();
 
 	export let value: any[] = [];

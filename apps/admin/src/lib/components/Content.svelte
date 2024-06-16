@@ -4,10 +4,11 @@
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
 	import { getFlows, getStaticsCount } from '$lib/client/flowService';
-	import CommissionCard from './commission/CommissionCard.svelte';
+	import CommissionCard from '$lib/components/commission/CommissionCard.svelte';
 	import { BG_COLORLIST, LIMIT_MAX_HOME, WARP_BASE } from '$lib/client/clientConsts';
 	import { goto } from '$app/navigation';
-	import UserAvatar from './UserAvatar.svelte';
+	import UserAvatar from '$lib/components/UserAvatar.svelte';
+	import WarpIcon from '$lib/components/ui/icons/WarpIcon.svelte';
 
 	export let title;
 
@@ -104,9 +105,12 @@
 						<div class="flex items-center justify-between w-full">
 							<div class="text-white font-medium">{$user.displayName}</div>
 							<div class="flex justify-center items-center cursor-pointer h-7 w-7">
-								<a target="_blank" href={`${WARP_BASE}${$user.username}`}
-									><img src="/images/warp.svg" alt="share" /></a
-								>
+								<a
+									target="_blank"
+									href={`${WARP_BASE}${$user.username}`}
+									class="text-[#472A91] hover:text-secondary-900"
+									><svelte:component this={WarpIcon} />
+								</a>
 							</div>
 						</div>
 						<p class="my-2 text-sm opacity-50">

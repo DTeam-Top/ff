@@ -5,6 +5,7 @@
 	import { formatEther } from 'ethers';
 	import { createEventDispatcher } from 'svelte';
 	import List from './List.svelte';
+	import ETH from '$lib/components/ETH.svelte';
 
 	export let needRefresh = false;
 	let commissionList: any[] = [];
@@ -44,6 +45,6 @@
 
 <div class="text-white my-4 text-xl text-right">
 	Total: {total}
-	<span class="ml-8">Balance: {formatEther(balance)} <span class="text-sm">ETH</span></span>
+	<span class="ml-8">Balance: {formatEther(balance)} <ETH /></span>
 </div>
 <List {commissionList} {page} {currentPage} on:load={moreHandler} />

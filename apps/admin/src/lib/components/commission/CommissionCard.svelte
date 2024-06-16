@@ -5,6 +5,7 @@
 	import { formatEther } from 'ethers';
 	import { COMMISSIOM_MAX } from '$lib/client/clientConsts';
 	import ListIcon from '$lib/components/ui/icons/ListIcon.svelte';
+	import ETH from '$lib/components/ETH.svelte';
 	let total = 0;
 	let balance = 0;
 	let offset: number = 0;
@@ -46,7 +47,10 @@
 				<div class="opacity-50">Total</div>
 			</div>
 			<div>
-				<div class="text-2xl">{formatEther(balance)} <span class="text-sm">ETH</span></div>
+				<div class="text-2xl">
+					{formatEther(balance)}
+					<ETH />
+				</div>
 				<div class="opacity-50">Balance</div>
 			</div>
 		</div>

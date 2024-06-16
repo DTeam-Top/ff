@@ -3,6 +3,7 @@
 	import dayjs from 'dayjs';
 	import { formatEther } from 'ethers';
 	import { createEventDispatcher } from 'svelte';
+	import ETH from '$lib/components/ETH.svelte';
 
 	const dispatch = createEventDispatcher();
 	export let commissionList: any[] = [];
@@ -32,7 +33,8 @@
 						</div>
 					</div>
 					<p class="my-2 text-sm text-gray-400">
-						{formatEther(item.commission)} ETH
+						{formatEther(item.commission)}
+						<ETH />
 					</p>
 					<p class="text-right text-gray-400 text-sm">
 						{#if type === 'history'}

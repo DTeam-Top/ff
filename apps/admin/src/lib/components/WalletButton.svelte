@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { walletAddress, setWalletAddress, setProvider, setEthProvider } from '$lib/client/store';
 	import { addressPipe } from '$lib/client/utils';
-	import { onMount } from 'svelte';
-	import Button from './Button.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 	import { ethers } from 'ethers';
-	import WalletIcon from './ui/icons/WalletIcon.svelte';
+	import WalletIcon from '$lib/components/ui/icons/WalletIcon.svelte';
 	const APP_SUPPORTED_CHAIN_IDS = [84532];
 
 	const sdk = new CoinbaseWalletSDK({
