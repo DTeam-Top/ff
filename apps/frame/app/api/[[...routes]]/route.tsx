@@ -6,10 +6,15 @@ import { handle } from "frog/next";
 import { serveStatic } from "frog/serve-static";
 import { cors } from "hono/cors";
 import { getFlowById, upateTxById } from "@/app/service/externalApi";
-import { addressPipe, castIdPipe } from "@/app/service/utile";
+import { addressPipe, castIdPipe, statusPipe } from "@/app/service/utile";
 import { neynar } from "frog/hubs";
-import { DVP_ADDRESS, test_CONTRACT, text_css } from "@/app/service/constants";
-import { FLOWSDVP_ABI, test_abi } from "@/app/service/abi";
+import {
+  DVP_ADDRESS,
+  INFO_CSS,
+  PUBLISHED,
+  TEXT_CSS,
+} from "@/app/service/constants";
+import { FLOWSDVP_ABI } from "@/app/service/abi";
 import { encodePacked, getSignWallet } from "@/app/service/ethersService";
 
 const app = new Frog({
@@ -26,7 +31,10 @@ let obj = {
   flowId: "",
   seller: "",
   addressList: [{ type: "", address: "", amount: "", tokenId: "" }],
+  status: 0,
 };
+
+let statusMassage = "";
 
 app.frame(
   "/:flowId",
@@ -49,18 +57,32 @@ app.frame(
         flowId,
         seller: "",
         addressList: [{ type: "", address: "", amount: "", tokenId: "" }],
+        status: 1,
       };
     } else {
-      const flow = await getFlowById(flowId);
-      if (flow) {
-        obj = {
-          name: flow.name,
-          price: flow.input.price,
-          image: flow.cover,
-          flowId,
-          seller: flow.seller,
-          addressList: flow.input.addressList,
-        };
+      try {
+        const flow = await getFlowById(flowId);
+
+        if (flow) {
+          console.log("flow.status--", flow.status);
+          obj = {
+            name: flow.name,
+            price: flow.input.price,
+            image: flow.cover,
+            flowId,
+            seller: flow.seller,
+            addressList: flow.input.addressList,
+            status: flow.status,
+          };
+
+          statusMassage = statusPipe(flow.status);
+        }
+      } catch (e: any) {
+        console.log(e.response.data.message);
+
+        return e.response?.data?.message
+          ? invalidFlow(c, e.response.data.message)
+          : invalidFlow(c, "Unknow error, please connect to the admin");
       }
     }
     console.log(obj);
@@ -70,20 +92,7 @@ app.frame(
     return c.res({
       action: `/finish/${flowId}`,
       image: (
-        <div
-          style={{
-            alignItems: "flex-start",
-            background: "black",
-            backgroundSize: "100% 100%",
-            display: "flex",
-            flexDirection: "column",
-            flexWrap: "nowrap",
-            height: "100%",
-            justifyContent: "center",
-            textAlign: "center",
-            width: "100%",
-          }}
-        >
+        <div style={INFO_CSS}>
           {obj.image && (
             <img
               src={obj.image}
@@ -92,21 +101,36 @@ app.frame(
             />
           )}
 
-          <div
-            tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-gray-100 rounded `}
-            style={text_css}
-          >
-            Name:&nbsp;&nbsp;{obj.name}&nbsp;&nbsp;&nbsp;&nbsp;
-            Price:&nbsp;&nbsp;
-            {obj.price} ETH
-          </div>
+          {obj.status === PUBLISHED && (
+            <div
+              tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-gray-100 rounded `}
+              style={TEXT_CSS}
+            >
+              Name:&nbsp;&nbsp;{obj.name}&nbsp;&nbsp;&nbsp;&nbsp;
+              Price:&nbsp;&nbsp;
+              {obj.price} ETH
+            </div>
+          )}
+          {obj.status !== PUBLISHED && (
+            <div
+              tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-red-500 rounded `}
+              style={TEXT_CSS}
+            >
+              {statusMassage}
+            </div>
+          )}
         </div>
       ),
-      intents: [
-        <Button.Transaction target={`/pay/${flowId}`}>Pay</Button.Transaction>,
-        <Button.Link href={detailLink}>View Details</Button.Link>,
-        <Button.Link href={shareLink}>Share To Earn</Button.Link>,
-      ],
+      intents:
+        obj.status !== PUBLISHED
+          ? []
+          : [
+              <Button.Transaction target={`/pay/${flowId}`}>
+                Pay
+              </Button.Transaction>,
+              <Button.Link href={detailLink}>View Details</Button.Link>,
+              <Button.Link href={shareLink}>Share To Earn</Button.Link>,
+            ],
     });
   }
 );
@@ -170,11 +194,6 @@ app.transaction("/pay/:flowId", async (c) => {
       ]);
     });
 
-  console.log(ERC20List);
-  console.log(ERC721List);
-
-  console.log(ERC1155List);
-
   const args = [
     flowId,
     commissionReceiverFid,
@@ -185,7 +204,6 @@ app.transaction("/pay/:flowId", async (c) => {
   ];
 
   console.log("args----", args, ERC20List, ERC721List, ERC1155List);
-  console.log(DVP_ADDRESS);
   return c.contract({
     abi: FLOWSDVP_ABI,
     // @ts-ignore   using this to remove the ts error by hwh
@@ -198,36 +216,7 @@ app.transaction("/pay/:flowId", async (c) => {
   });
 });
 
-// app.transaction("/mint-old/:type", (c) => {
-//   const type = c.req.param("type");
-//   const { address } = c;
-//   return c.contract({
-//     abi: type === "erc20" ? ERC20_ABI : ERC721_ABI,
-//     // @ts-ignore   using this to remove the ts error by hwh
-//     chainId: "eip155:84532",
-//     functionName: "mint",
-//     args: type === "erc20" ? [address, 1] : [address, 2],
-//     to: type === "erc20" ? contract : ERC721_contract_84532,
-//     value: parseEther("0.005"),
-//   });
-// });
-
-app.transaction("/buy/:price", async (c) => {
-  const price = c.req.param("price");
-  return c.contract({
-    abi: test_abi,
-    // @ts-ignore   using this to remove the ts error by hwh
-    chainId: "eip155:84532",
-    functionName: "buyHat",
-    args: [c.frameData?.fid],
-    to: test_CONTRACT,
-    value: parseEther(`${price}`),
-  });
-});
-
 app.frame("/finish/:flowId", async (c) => {
-  console.log("finish", c);
-  console.log(obj);
   const { transactionId, buttonIndex, frameData, verified } = c;
   if (!verified) console.log("Frame verification failed");
 
@@ -235,116 +224,59 @@ app.frame("/finish/:flowId", async (c) => {
   if (frameData) {
     const castId = castIdPipe(frameData?.castId);
 
-    if (buttonIndex === 2) {
-      return c.res({
-        action: `/${flowId}`,
-        image: (
-          <div
-            style={{
-              alignItems: "flex-start",
-              background: "black",
-              backgroundSize: "100% 100%",
-              display: "flex",
-              flexDirection: "column",
-              flexWrap: "nowrap",
-              height: "100%",
-              justifyContent: "center",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            <div tw={`text-[30px] text-white `} style={text_css}>
-              Share successfully!
-            </div>
-          </div>
-        ),
-
-        intents: [<Button>Return</Button>],
-      });
+    if (transactionId) {
+      await upateTxById(flowId, transactionId, castId, obj.price);
+      return transactionSucceed(c, flowId, transactionId);
     } else {
-      if (transactionId) {
-        await upateTxById(flowId, transactionId, castId, obj.price);
-        return c.res({
-          action: `/${flowId}`,
-          image: (
-            <div
-              style={{
-                alignItems: "flex-start",
-                background: "black",
-                backgroundSize: "100% 100%",
-                display: "flex",
-                flexDirection: "column",
-                flexWrap: "nowrap",
-                height: "100%",
-                justifyContent: "center",
-                textAlign: "center",
-                width: "100%",
-              }}
-            >
-              <div tw={`text-[30px] text-white `} style={text_css}>
-                Congratulation! Mint successfully!
-              </div>
-              <div tw={`text-[30px] text-white `} style={text_css}>
-                Transaction ID: {addressPipe(transactionId, 60)}
-              </div>
-            </div>
-          ),
-          intents: [<Button>Return</Button>],
-        });
-      } else {
-        return c.res({
-          action: `/${flowId}`,
-          image: (
-            <div
-              style={{
-                alignItems: "flex-start",
-                background: "black",
-                backgroundSize: "100% 100%",
-                display: "flex",
-                flexDirection: "column",
-                flexWrap: "nowrap",
-                height: "100%",
-                justifyContent: "center",
-                textAlign: "center",
-                width: "100%",
-              }}
-            >
-              <div tw={`text-[30px] text-white `} style={text_css}>
-                Invalidate transaction hash!
-              </div>
-            </div>
-          ),
-          intents: [<Button>Return</Button>],
-        });
-      }
+      return infoFlow(c, flowId, "Invalidate transaction hash!");
     }
   } else {
-    return c.res({
-      action: `/${flowId}`,
-      image: (
-        <div
-          style={{
-            alignItems: "flex-start",
-            background: "black",
-            backgroundSize: "100% 100%",
-            display: "flex",
-            flexDirection: "column",
-            flexWrap: "nowrap",
-            height: "100%",
-            justifyContent: "center",
-            textAlign: "center",
-            width: "100%",
-          }}
-        >
-          <div tw={`text-[30px] text-white `} style={text_css}>
-            Error!
-          </div>
-        </div>
-      ),
-      intents: [<Button>Return</Button>],
-    });
+    return infoFlow(c, flowId, "Error!");
   }
 });
+
+const transactionSucceed = (c: any, flowId: string, transactionId: string) => {
+  c.res({
+    action: `/${flowId}`,
+    image: (
+      <div style={INFO_CSS}>
+        <div tw={`text-[30px] text-white  mx-auto`} style={TEXT_CSS}>
+          Congratulation! Mint successfully!
+        </div>
+        <div tw={`text-[30px] text-white  mx-auto`} style={TEXT_CSS}>
+          Transaction ID: {addressPipe(transactionId, 60)}
+        </div>
+      </div>
+    ),
+    intents: [<Button>Return</Button>],
+  });
+};
+
+const invalidFlow = (c: any, message: string) => {
+  return c.res({
+    image: (
+      <div style={INFO_CSS}>
+        <div tw={`text-[30px] text-white mx-auto`} style={TEXT_CSS}>
+          {message}
+        </div>
+      </div>
+    ),
+  });
+};
+
+const infoFlow = (c: any, flowId: string, message: string) => {
+  return c.res({
+    action: `/${flowId}`,
+    image: (
+      <div style={INFO_CSS}>
+        <div tw={`text-[30px] text-white mx-auto`} style={TEXT_CSS}>
+          {message}
+        </div>
+      </div>
+    ),
+    intents: [<Button>Return</Button>],
+  });
+};
 
 devtools(app, { serveStatic });
 
