@@ -6,8 +6,6 @@
 <div
 	class="w-[300px] mx-auto bg-purple-200 rounded-lg p-4 text-black shadow-xl absolute right-10 top-14"
 >
-	<span class="text-warning-500"><svelte:component this={TipIcon} /></span>
-
 	If you have no test token, please visit<a
 		href={`${BASESCAN_URL}/${ERC20}`}
 		target="_blank"

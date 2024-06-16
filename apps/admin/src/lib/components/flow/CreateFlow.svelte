@@ -176,9 +176,9 @@
 							<label class="flex items-center">
 								<span>Preview</span>
 								{#if cover}
-									<img src={cover} alt="corver" class="w-40 h-40" />
+									<img src={cover} alt="corver" class="w-40" />
 								{:else}
-									<img src="/images/placeholder.png" alt="corver" class="w-40 h-40 bg-gray-300" />
+									<img src="/images/placeholder.png" alt="corver" class="w-40 bg-gray-300" />
 								{/if}
 							</label>
 						</div>

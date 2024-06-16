@@ -7,6 +7,7 @@
 	import CommissionCard from './commission/CommissionCard.svelte';
 	import { BG_COLORLIST, LIMIT_MAX_HOME, WARP_BASE } from '$lib/client/clientConsts';
 	import { goto } from '$app/navigation';
+	import UserAvatar from './UserAvatar.svelte';
 
 	export let title;
 
@@ -96,7 +97,9 @@
 			</header>
 			<div>
 				<div class="py-4 flex 2xl:items-start w-full">
-					<img src={$user.pft} alt="profile" class="object-cover w-10 h-10 rounded-full" />
+					<div class="object-cover">
+						<UserAvatar url={$user.pft} width={'w-10'} />
+					</div>
 					<div class="pl-4 w-full">
 						<div class="flex items-center justify-between w-full">
 							<div class="text-white font-medium">{$user.displayName}</div>

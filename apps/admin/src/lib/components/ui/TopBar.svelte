@@ -4,6 +4,7 @@
 	import WalletButton from '../WalletButton.svelte';
 	import SocialLinks from '../SocialLinks.svelte';
 	import SignoutIcon from './icons/SignoutIcon.svelte';
+	import UserAvatar from '../UserAvatar.svelte';
 	const onSingout = () => {
 		removeItem('user', window);
 		window.location.reload();
@@ -18,13 +19,7 @@
 		on:click={onSingout}
 		class="flex gap-2 border border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary"
 	>
-		<span class="block mr-2"
-			><img
-				alt="User"
-				src={$user.pft}
-				class="h-8 mx-auto object-cover rounded-full w-8 bg-white"
-			/></span
-		>
+		<span class="block mr-2"> <UserAvatar url={$user.pft} /></span>
 		Sign out</button
 	>
 {:else}
