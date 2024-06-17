@@ -19,7 +19,7 @@
 	let offset = 0;
 	onMount(() => {});
 
-	$: if ($user) {
+	$: if ($user && $user.fid > 0) {
 		flowList = [];
 		getStaticsCount($user.fid).then((count) => {
 			statistics = count.banner;
@@ -74,7 +74,7 @@
 								<p class="text-base font-bold opacity-70">{item.name}</p>
 							</div>
 							<div>
-								<img src={item.cover} alt="cover" class="mx-auto w-20" />
+								<img src={item.cover} alt="cover" class="mx-auto h-24" />
 							</div>
 							<div class="flex justify-between pt-4 relative">
 								<div>Traced: {item.traceCount}</div>

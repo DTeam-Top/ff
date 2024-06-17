@@ -57,19 +57,10 @@
 			}
 		} else {
 			name = 'test'; //'test';
-			addressList = [
-				{ type: 'ERC20', address: '0xf1731D81BC7be92DBD9b759a63ECAFaA569C7D0a', amount: 1 },
-				{ type: 'ERC721', address: '0xce8fec9a10d4642368f124593098f2e4dd643652', tokenId: 2 },
-				{
-					type: 'ERC1155',
-					address: '0x2F6F12b68165aBb483484927919D0d3fE450462E',
-					tokenId: 2,
-					amount: 3
-				}
-			];
-			cover =
-				'https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png';
-			price = 0.005; //0.005;
+			addressList = [];
+			cover = '';
+			//https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png
+			//price = 0; //0.005;
 		}
 	});
 
@@ -100,6 +91,12 @@
 				toast.error(toastStore, 'Please input name , addresses , cover');
 				return;
 			}
+
+			if (price < 0) {
+				toast.error(toastStore, 'The price should be larger than 0');
+				return;
+			}
+
 			await insertFlow({
 				name: name,
 				cover: cover,

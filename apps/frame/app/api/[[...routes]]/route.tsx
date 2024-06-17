@@ -94,11 +94,7 @@ app.frame(
       image: (
         <div style={INFO_CSS}>
           {obj.image && (
-            <img
-              src={obj.image}
-              style={{ height: "100%" }}
-              tw={`mx-auto mt-4`}
-            />
+            <img src={obj.image} style={{ width: "100%" }} tw={`mx-auto`} />
           )}
 
           {obj.status === PUBLISHED && (

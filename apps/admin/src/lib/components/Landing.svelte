@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { getStaticsCount } from '$lib/client/flowService';
 	import Button from './Button.svelte';
 	import Footer from './Footer.svelte';
 
 	let statistics: any[] = [];
 	$: {
-		getStaticsCount(undefined).then((count) => {
+		getStaticsCount(0).then((count) => {
 			statistics = [...count.banner, ...count.card];
 		});
 	}
@@ -23,18 +24,19 @@
 				This is the decription of facaster flow is the decription of facaster flow...<br />This is
 				the decription of facaster flow.....
 			</p>
-			<Button title="Browse" cssClass="bg-primary-500 text-black mr-4 " width="w-[150px]" />
+			<Button
+				title="Browse"
+				cssClass="bg-primary-500 text-black mr-4 hover:variant-soft-primary "
+				width="w-[150px]"
+				on:click={() => goto('/browse')}
+			/>
 		</div>
 		<div class="">
 			<div
 				class="shadow-2xl shadow-surface-500/10 dark:shadow-black/10 rounded-container-token overflow-hidden"
 			>
 				<div class="p-4 bg-gradient-to-br variant-gradient-primary-secondary">
-					<img
-						src="/images/placeholder.png"
-						class="bg-gray-300 rounded w-full h-[300px]"
-						alt="image"
-					/>
+					<img src="/images/dragon.png" class="bg-gray-300 rounded-lg h-full" alt="image" />
 				</div>
 			</div>
 		</div>
