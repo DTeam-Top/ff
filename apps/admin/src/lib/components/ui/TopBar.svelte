@@ -23,6 +23,5 @@
 	>
 {:else}
 	<SocialLinks />
-	<!-- <button>Flows</button> -->
 	<SWIN />
 {/if}

@@ -56,9 +56,9 @@
 				toast.error(toastStore, 'Wrong id');
 			}
 		} else {
-			name = 'test'; //'test';
+			name = ''; //'test';
 			addressList = [];
-			cover = '';
+			cover = 'http://localhost:5173/images/samples/sample1.jpg';
 			//https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png
 			//price = 0; //0.005;
 		}

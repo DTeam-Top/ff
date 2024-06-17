@@ -72,6 +72,23 @@ const setWalletAddress = (value: string) => {
 
 export { walletAddress, setWalletAddress };
 
+export const disconnectedKey = 'DISCONNECTED';
+
+export const removeStorage = (key: string, window: any) => {
+	window.localStorage.removeItem(key);
+};
+
+export const getStorage = (key: string, window: any) => {
+	console.log(key);
+	const item = window.localStorage.getItem(key);
+	console.log(item);
+	return item ? item : null;
+};
+
+export const setStorage = (key: string, window: any, data: any) => {
+	window.localStorage.setItem(key, data);
+};
+
 const provider = writable();
 
 const setProvider = (value: any) => {

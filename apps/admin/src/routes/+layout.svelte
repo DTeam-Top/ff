@@ -13,13 +13,16 @@
 		getDrawerStore,
 		type DrawerSettings,
 		Modal,
-		Toast
+		Toast,
+		storePopup
 	} from '@skeletonlabs/skeleton';
 	import SidebarItems from '$lib/components/ui/sidebar/SidebarItems.svelte';
 	import Spin from '$lib/components/Spin.svelte';
 	import TopBar from '$lib/components/ui/TopBar.svelte';
 	import { getItem, signed } from '$lib/client/store';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
+	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	let loading = true;
 

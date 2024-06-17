@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { GITHUB_URL } from '$lib/client/clientConsts';
 	import BrowseIcon from './ui/icons/BrowseIcon.svelte';
 	import GithubIcon from './ui/icons/GithubIcon.svelte';
 </script>
@@ -13,7 +14,7 @@
 	>
 	<a
 		class="flex gap-2 border border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary"
-		href="https://github.com/DTeam-Top/ff/"
+		href={GITHUB_URL}
 		target="_blank"
 		rel="noreferrer"
 	>
