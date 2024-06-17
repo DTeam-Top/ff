@@ -8,7 +8,7 @@ The directories:
 
 - frame, farcaster frame
 - indexer, farcaster replicator
-- admin, flow admin site
+- web, flow  admin web site
 
 ## Architecture
 

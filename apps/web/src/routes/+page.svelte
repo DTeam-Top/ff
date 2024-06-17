@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>Admin</title>
+	<title>Farcaster Flow</title>
 </svelte:head>
 
 {#if $signed}

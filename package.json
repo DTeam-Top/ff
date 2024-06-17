@@ -6,7 +6,7 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "dbdomain": "pnpm --filter dbdomain",
-    "admin": "pnpm --filter admin",
+    "web": "pnpm --filter web",
     "frame": "pnpm --filter frame",
     "cron": "pnpm --filter cron"
   },

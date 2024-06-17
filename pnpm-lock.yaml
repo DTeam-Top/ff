@@ -39,7 +39,7 @@ importers:
         specifier: ^4.11.2
         version: 4.11.2
 
-  apps/admin:
+  apps/web:
     dependencies:
       '@coinbase/wallet-sdk':
         specifier: ^4.0.3
