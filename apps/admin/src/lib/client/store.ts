@@ -74,6 +74,8 @@ export { walletAddress, setWalletAddress };
 
 export const disconnectedKey = 'DISCONNECTED';
 
+export const withdrawAddressKey = 'WITHDRAW_ADDRESS';
+
 export const removeStorage = (key: string, window: any) => {
 	window.localStorage.removeItem(key);
 };
@@ -87,6 +89,10 @@ export const getStorage = (key: string, window: any) => {
 
 export const setStorage = (key: string, window: any, data: any) => {
 	window.localStorage.setItem(key, data);
+};
+
+export const delteStorage = (key: string) => {
+	window.localStorage.removeItem(key);
 };
 
 const provider = writable();

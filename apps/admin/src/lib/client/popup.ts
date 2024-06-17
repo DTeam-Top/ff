@@ -1,4 +1,5 @@
 import {
+	type ModalComponent,
 	type ModalSettings,
 	type ModalStore,
 	type ToastSettings,
@@ -25,8 +26,25 @@ const modalHander = (type: 'alert' | 'confirm' | 'prompt' | 'component') => {
 		modalStore.trigger(modal);
 	};
 };
+const modalComponentForm = (
+	modalStore: ModalStore,
+	message: string,
+	c: ModalComponent,
+	handler: (r: boolean) => void
+) => {
+	const modal: ModalSettings = {
+		type: 'component',
+		component: c,
+		title: 'Withdraw confirm',
+		body: message,
+		response: (r: any) => {
+			handler(r);
+		}
+	};
+	modalStore.trigger(modal);
+};
 
-export const modal = { confirm: modalHander('confirm') };
+export const modal = { confirm: modalHander('confirm'), prompt: modalComponentForm };
 
 const toastlHander = (type: 'success' | 'error') => {
 	return (toastStore: ToastStore, message: string) => {

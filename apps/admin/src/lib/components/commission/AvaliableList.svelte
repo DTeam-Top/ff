@@ -52,13 +52,7 @@
 </script>
 
 <div class="flex justify-between my-4">
-	{#if $user.verifiedAddresses.eth_addresses[0]}
-		<div class="mb-4 text-green-300">
-			Tips: Will withdraw to your verified address in farcaster: {addressPipe(
-				$user.verifiedAddresses.eth_addresses[0]
-			)}
-		</div>
-	{:else}
+	{#if !$user.verifiedAddresses.eth_addresses[0]}
 		<div class="mb-4 text-red-200">
 			Tips: You have not set your verified address in farcaster, please go to <a
 				href={WARPCAST_SETTING_URL}

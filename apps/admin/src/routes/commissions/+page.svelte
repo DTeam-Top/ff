@@ -4,11 +4,12 @@
 	import AvaliableList from '$lib/components/commission/AvaliableList.svelte';
 	import { goto } from '$app/navigation';
 	import { postWithdraw } from '$lib/client/commissionService';
-	import { user, signed } from '$lib/client/store';
+	import { user, signed, withdrawAddressKey, setStorage } from '$lib/client/store';
 	import { COMISSION_TABS } from '$lib/client/clientConsts';
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { TabGroup, Tab } from '@skeletonlabs/skeleton';
 	import { modal } from '$lib/client/popup';
+	import WithdrawConform from '$lib/components/WithdrawConform.svelte';
 
 	let loading = false;
 	let needRefresh = false;
@@ -17,19 +18,24 @@
 	const modalStore = getModalStore();
 	$: if (!$signed) {
 		goto('/');
+	} else {
+		console.log($user);
+		console.log($user.verifications);
+		console.log($user.verifiedAddresses.eth_addresses);
 	}
 
 	const withdrawHandler = async () => {
-		modal.confirm(
+		modal.prompt(
 			modalStore,
-			'Withdraw Confirm',
-			'Are you sure to withdraw?',
-			'w-[500px]',
-			async (r: boolean) => {
-				if (r) {
+			'Please select withdraw deposit address, and confirm.',
+			{ ref: WithdrawConform },
+			async (address: any) => {
+				if (address) {
 					try {
 						loading = true;
-						await postWithdraw($user.verifiedAddresses.eth_addresses[0], $user.fid);
+						console.log('address', address);
+						setStorage(withdrawAddressKey, window, address);
+						await postWithdraw(address, $user.fid);
 						needRefresh = true;
 					} catch (e: any) {
 						console.log(e.message);

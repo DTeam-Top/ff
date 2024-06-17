@@ -43,6 +43,7 @@
 			'Delete Confirm',
 			'Are you sure to delete?',
 			'w-[500px]',
+			undefined,
 			async (r: boolean) => {
 				if (r) {
 					await deleteFlowById(id);
