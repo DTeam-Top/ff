@@ -15,7 +15,7 @@
 				<div
 					class="grid grid-cols-1 gap-2 place-content-center place-items-center md:place-items-start"
 				>
-					<img src="/images/logo.svg" alt="logo" class="h-10 w-10" />
+					<img src="/images/logo.png" alt="logo" class="h-10 w-10" />
 					<p class="!text-sm opacity-80" data-svelte-h="svelte-1vcymyf">
 						Farcaster flow for Token + NFT.
 					</p>

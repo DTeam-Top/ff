@@ -39,57 +39,64 @@
 		{:else if $query.isError}
 			<p>Error: {$query.error.message}</p>
 		{:else if $query.isSuccess}
-			<div class="max-w-[1200px] mx-auto gap-8 columns-4">
-				{#each $query.data.pages as { results }}
-					{#each results as trace, i}
-						<figure class="mb-4">
-							<div class="cursor-pointer hover:variant-soft-primary h-fit">
-								<img src={trace.cover} alt="cover" class="w-full rounded-t-lg border-primary-100" />
-								<div
-									class="p-2 border-l border-r border-b border-[#495A8C] rounded-b-lg text-white bg-surface-500"
-								>
-									<div class="flex justify-between items-end mb-2">
-										<div class="text-2xl font-bold">{trace.name}</div>
-										<div>{trace.input.price} <span class="opacity-50 text-xs">ETH</span></div>
-									</div>
+			<div class="max-w-[1200px] mx-auto">
+				<div class="text-2xl font-bold mb-4">Running Traces</div>
+				<div class="columns-4 gap-8">
+					{#each $query.data.pages as { results }}
+						{#each results as trace, i}
+							<figure class="mb-4">
+								<div class="cursor-pointer hover:variant-soft-primary h-fit">
+									<img
+										src={trace.cover}
+										alt="cover"
+										class="w-full rounded-t-lg border-primary-100"
+									/>
+									<div
+										class="p-2 border-l border-r border-b border-[#495A8C] rounded-b-lg text-white bg-surface-500"
+									>
+										<div class="flex justify-between items-end mb-2">
+											<div class="text-2xl font-bold">{trace.name}</div>
+											<div>{trace.input.price} <span class="opacity-50 text-xs">ETH</span></div>
+										</div>
 
-									<div class="text-sm flex items-center justify-between my-3">
-										<div class="flex items-center">
-											<UserAvatar url={trace.casterProfile.avatar} />
-											<span class="ml-2">{trace.casterProfile.displayName}</span>
+										<div class="text-sm flex items-center justify-between my-3">
+											<div class="flex items-center">
+												<UserAvatar url={trace.casterProfile.avatar} />
+												<span class="ml-2">{trace.casterProfile.displayName}</span>
+											</div>
+											<div>
+												{dayjs(trace.traceTime).format('MMMM, DD')}
+											</div>
 										</div>
-										<div>
-											{dayjs(trace.traceTime).format('MMMM, DD')}
+										<div class="flex justify-end">
+											<a
+												class="text-[#472A91] hover:text-secondary-900"
+												href={castAddressPipe(trace.cast, trace.casterProfile?.username)}
+												target="_blank"
+											>
+												<svelte:component this={WarpIcon} />
+											</a>
+											<a
+												class="text-tertiary-500 hover:text-tertiary-900 mx-4"
+												href={`${BASE_URL}flows/view/${trace.id}`}
+												target="_blank"
+											>
+												<svelte:component this={DetailIcon} />
+											</a>
+											<a
+												class="text-primary-500 hover:text-primary-900"
+												href={`${BASE_URL}share/${trace.id}`}
+												target="_blank"
+											>
+												<svelte:component this={ShareIcon} />
+											</a>
 										</div>
-									</div>
-									<div class="flex justify-end">
-										<a
-											class="text-[#472A91] hover:text-secondary-900"
-											href={castAddressPipe(trace.cast, trace.casterProfile?.username)}
-											target="_blank"
-										>
-											<svelte:component this={WarpIcon} />
-										</a>
-										<a
-											class="text-tertiary-500 hover:text-tertiary-900 mx-4"
-											href={`${BASE_URL}flows/view/${trace.id}`}
-											target="_blank"
-										>
-											<svelte:component this={DetailIcon} />
-										</a>
-										<a
-											class="text-primary-500 hover:text-primary-900"
-											href={`${BASE_URL}share/${trace.id}`}
-											target="_blank"
-										>
-											<svelte:component this={ShareIcon} />
-										</a>
 									</div>
 								</div>
-							</div>
-						</figure>
+							</figure>
+						{/each}
 					{/each}
-				{/each}
+				</div>
 			</div>
 			<div class="mx-auto w-[300px]">
 				<button

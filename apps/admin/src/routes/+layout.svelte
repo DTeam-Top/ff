@@ -60,7 +60,7 @@
 {:else}
 	<Drawer>
 		<div class="container flex left-0 relative items-center p-4">
-			<img src="/images/logo.svg" width="40" height="40" alt="FF" class="mx-auto" />
+			<img src="/images/logo.png" width="40" height="40" alt="FF" class="mx-auto" />
 		</div>
 
 		<hr />
