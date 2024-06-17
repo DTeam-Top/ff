@@ -1,4 +1,4 @@
-import { count, eq, inArray, isNull, sum, and, isNotNull } from 'drizzle-orm';
+import { count, eq, inArray, isNull, sum, and, isNotNull, sql } from 'drizzle-orm';
 
 import { commissions, flows, tracePayments } from 'dbdomain';
 import { db } from '$lib/server/dbService';
@@ -10,7 +10,7 @@ export const getCommissionList = async (fid: string, offset: number, max: number
 		.select({
 			cover: flows.cover,
 			name: flows.name,
-			commission: commissions.commission,
+			commission: sql`${commissions.commission} || ''`,
 			createdAt: commissions.createdAt,
 			tx: tracePayments.paymentTx,
 			id: commissions.id

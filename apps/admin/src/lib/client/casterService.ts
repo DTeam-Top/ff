@@ -1,14 +1,12 @@
 import axios from 'axios';
 import { setUser } from './store';
-
-const HEADERS = { accept: 'application/json', api_key: import.meta.env.VITE_NEYNAR_KEY };
+import { BASE_URL } from './clientConsts';
 
 export const getCaster = async (item: { fid: string; signerUuid: string }) => {
-	const verify = await lookupSigner(item.signerUuid);
-	if (verify && verify.fid.toString() === item.fid) {
-		const res = await lookupUserByFid(Number(item.fid));
-		console.log('res---', res);
-		const user = res;
+	const verify = await axios.post(`${BASE_URL}api/verify-user`, item);
+	if (verify.data && verify.data.isVerifiedUser) {
+		const res = await axios.get(`${BASE_URL}api/user/${item.fid}`, item);
+		const user = res.data;
 
 		setUser({
 			fid: user.fid,
@@ -24,28 +22,4 @@ export const getCaster = async (item: { fid: string; signerUuid: string }) => {
 			signerUuid: item.signerUuid
 		});
 	}
-};
-
-export const lookupSigner = async (signerUuid: string) => {
-	try {
-		const signer = await axios.get(
-			`https://api.neynar.com/v2/farcaster/signer?signer_uuid=${signerUuid}`,
-			{
-				headers: HEADERS
-			}
-		);
-
-		return signer.data;
-	} catch (e: any) {
-		console.log(e);
-		throw e;
-		//await lookupSigner(signerUuid);
-	}
-};
-
-export const lookupUserByFid = async (fid: number) => {
-	const user = await axios.get(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
-		headers: HEADERS
-	});
-	return user.data.users.length > 0 ? user.data.users[0] : null;
 };
