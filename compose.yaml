@@ -25,10 +25,10 @@ services:
       db:
         condition: service_healthy
 
-  admin:
-    image: ff/admin
+  web:
+    image: ff/web
     build:
-      target: admin
+      target: web
     ports:
       - 5173:3000
     env_file:
