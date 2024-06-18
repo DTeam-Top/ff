@@ -4,7 +4,7 @@
 	import GithubIcon from './ui/icons/GithubIcon.svelte';
 </script>
 
-<div class="flex">
+<div class="hidden lg:flex">
 	<a
 		class="flex gap-2 mr-4 border border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary"
 		href="/browse"

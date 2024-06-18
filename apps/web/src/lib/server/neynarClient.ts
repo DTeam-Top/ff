@@ -5,7 +5,6 @@ const HEADERS = { accept: 'application/json', api_key: env.NEYNAR_KEY };
 
 export const lookupSigner = async (signerUuid: string) => {
 	try {
-		console.log('url---', `${env.NEYNAR_URL}signer?signer_uuid=${signerUuid}`);
 		const signer = await axios.get(`${env.NEYNAR_URL}signer?signer_uuid=${signerUuid}`, {
 			headers: HEADERS
 		});
@@ -13,7 +12,6 @@ export const lookupSigner = async (signerUuid: string) => {
 	} catch (e: any) {
 		console.log(e);
 		throw e;
-		//await lookupSigner(signerUuid);
 	}
 };
 

@@ -18,9 +18,14 @@ export const ERC721_ABI = [
 	'function approve(address, uint256) external returns (bool)',
 	'function setApprovalForAll(address, bool) external'
 ];
-export const ERC155_ABI = [];
+export const ERC1155_ABI = [
+	'function balanceOf(address account, uint256 id) external view returns (uint256)',
+	'function balanceOfBatch(tuple(address)[]  memory accounts, tuple(uint256)[] memory ids) public view  returns (uint256[] memory)',
+	'function isApprovedForAll(address account, address operator) external view returns (bool)',
+	'function setApprovalForAll(address operator, bool approved) external'
+];
 
-const spender = '0xfcac032068c867373d0ba48ab0fa83142d557069';
+const spender = '0xfcac032068c867373d0ba48ab0fa83142d557069'; //base sepolia
 
 export async function allowanceERC20(ERC20: string, owner: string, provider: any, amount: string) {
 	let balance = 0;
@@ -53,7 +58,7 @@ export async function allowanceERC721(
 }
 
 export async function allowanceERC1155(
-	ERC1122: string,
+	ERC1155: string,
 	tokenId: string,
 	provider: any,
 	amount: string,
@@ -61,7 +66,7 @@ export async function allowanceERC1155(
 ) {
 	let balance = 0;
 	try {
-		balance = await new ethers.Contract(ERC1122, ERC155_ABI, provider).ownerOf(owner, tokenId);
+		balance = await new ethers.Contract(ERC1155, ERC1155_ABI, provider).balanceOf(owner, tokenId);
 		console.log('balance', balance, formatEther(balance));
 		return Number(formatEther(balance)) > Number(amount);
 	} catch (e) {
@@ -138,6 +143,45 @@ const getERC721Approved = async (
 	} catch (error) {
 		console.error('getApproved failed, try isApprovedForAll function');
 		return await erc721Contract.isApprovedForAll(owner, dvp);
+	}
+};
+
+export async function approveERC1155(ERC1155: string, owner: string, provider: any) {
+	let allowance = false;
+	try {
+		console.log(owner, spender);
+		allowance = await getERC1155Approved(owner, ERC1155, spender, provider);
+		console.log('allowance', allowance, spender);
+		if (!allowance) {
+			const signer = await provider.getSigner();
+			const erc20Contract = new ethers.Contract(ERC1155, ERC1155_ABI, signer);
+			try {
+				const tx = await erc20Contract.setApprovalForAll(spender, true, {
+					gasLimit: 6000000
+				});
+				await tx.wait();
+				return true;
+			} catch (error) {
+				console.error('Approve erc20 failed.', error);
+				return false;
+			}
+		}
+		return true;
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
+
+const getERC1155Approved = async (owner: string, token: string, dvp: string, provider: any) => {
+	const erc1155Contract = new ethers.Contract(token, ERC1155_ABI, provider);
+
+	try {
+		return await erc1155Contract.isApprovedForAll(owner, dvp);
+	} catch (error) {
+		console.log(error);
+		console.error('isApprovedForAll failed');
+		return false;
 	}
 };
 

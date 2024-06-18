@@ -157,7 +157,7 @@
 
 							<label class="flex items-center">
 								<span>Price</span>
-								<input class="input rounded w-1/4" bind:value={price} type="number" />
+								<input class="input rounded w-2/5" bind:value={price} type="number" />
 								<div class="bg-gray-300 px-4 py-2 font-bold rounded-r text-black">ETH</div>
 							</label>
 						</div>
@@ -187,8 +187,8 @@
 								<TokenList bind:value={ERC20List} type="ERC20" />
 							{:else if tokenTabSet === 1}
 								<TokenList bind:value={ERC721List} type="ERC721" />
-								<!-- {:else}
-								<TokenList bind:value={ERC1155List} type="ERC1155" /> -->
+							{:else}
+								<TokenList bind:value={ERC1155List} type="ERC1155" />
 							{/if}
 						</svelte:fragment>
 

@@ -51,7 +51,7 @@ export const getHistoryList = async (fid: string, offset: number, max: number) =
 		.select({
 			cover: flows.cover,
 			name: flows.name,
-			commission: commissions.commission,
+			commission: sql`${commissions.commission} || ''`,
 			createdAt: commissions.createdAt,
 			tx: tracePayments.paymentTx,
 			id: commissions.id,

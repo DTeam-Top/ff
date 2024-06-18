@@ -4,6 +4,7 @@ import {
 	allowanceERC1155,
 	allowanceERC20,
 	allowanceERC721,
+	approveERC1155,
 	approveERC20,
 	approveERC721
 } from './etherService';
@@ -53,6 +54,10 @@ export const activePipe = (pathname: string, link: string) => {
 
 export function isValidInteger(tokenId: string) {
 	return /^[1-9]\d*$/.test(tokenId);
+}
+
+export function isValidTokenId(tokenId: string) {
+	return /^[0-9]\d*$/.test(tokenId);
 }
 
 export function isValidFloat(amount: string) {
@@ -154,7 +159,7 @@ export const validateData = async (
 			break;
 		}
 		default: {
-			if (!isValidInteger(tokenId)) {
+			if (!isValidTokenId(tokenId)) {
 				return 'Please input correct tokenId';
 			}
 
@@ -162,7 +167,7 @@ export const validateData = async (
 				return 'Please input correct amount';
 			}
 
-			alowance = await allowanceERC1155(ercAddress, owner, provider, amount, owner);
+			alowance = await allowanceERC1155(ercAddress, tokenId, provider, amount, owner);
 			break;
 		}
 	}
@@ -205,8 +210,7 @@ export const approve = async (
 			isApproved = await approveERC721(ercAddress, owner, provider, tokenId);
 			break;
 		default:
-			isApproved = false;
-			//alowance = await allowanceERC1155(ercAddress, owner, provider, amount, owner);
+			isApproved = await approveERC1155(ercAddress, owner, provider);
 			break;
 	}
 	return isApproved;

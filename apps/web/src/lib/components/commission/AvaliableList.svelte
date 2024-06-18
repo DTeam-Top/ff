@@ -66,4 +66,4 @@
 	</div>
 </div>
 
-<List {commissionList} {page} {currentPage} on:load={moreHandler} />
+<List type="avaliable" {commissionList} {page} {currentPage} on:load={moreHandler} />

@@ -80,7 +80,7 @@
 <div class="px-6 w-full mt-4">
 	{#each value as el, index}
 		<div class="flex items-center mb-3">
-			<div class="w-1/2 mr-2">{el.address}</div>
+			<div class="w-[450px] mr-2">{el.address}</div>
 			<div class="w-[100px]">
 				{type !== 'ERC20' ? el.tokenId : el.amount}
 			</div>
@@ -97,7 +97,7 @@
 	{/each}
 	<div>
 		<label class="flex items-center mb-6">
-			<input class="input rounded w-1/2 mr-2" bind:value={newAddress} placeholder="Address" />
+			<input class="input rounded w-[450px] mr-2" bind:value={newAddress} placeholder="Address" />
 			{#if type !== 'ERC20'}
 				<input class="input rounded w-[100px] mr-2" bind:value={newTokenId} placeholder="TokenId" />
 			{/if}
