@@ -2,6 +2,7 @@ import axios from 'axios';
 import { setFarcaster } from './store';
 import { BASE_URL, LIMIT_MAX, LIMIT_MAX_HOME } from './clientConsts';
 import { statusPipe } from './utils';
+import { env } from '$env/dynamic/public';
 export type Flow = {
 	name: string;
 	cover?: string;
@@ -73,7 +74,7 @@ export const getAllTraces = async ({ pageParam = 1 }) => {
 			result.data.result.length + (pageParam.pageParam - 1) * LIMIT_MAX_HOME === result.data.total);
 	return {
 		count: result.data.total,
-		next: !noNextPage ? `${import.meta.env.VITE_BASE_URL}?page=${pageParam.pageParam + 1}` : null,
+		next: !noNextPage ? `${env.PUBLIC_BASE_URL}?page=${pageParam.pageParam + 1}` : null,
 		results: result.data.result
 	};
 };

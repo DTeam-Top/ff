@@ -39,13 +39,13 @@ function envConfig(): {
 		}
 	};
 }
-
+console.log('env----', env.BACKED_NODE_ENV);
 function contracts() {
-	return envConfig()[env.VITE_NODE_ENV][networkConfig()[env.VITE_NODE_ENV]];
+	return envConfig()[env.BACKED_NODE_ENV][networkConfig()[env.BACKED_NODE_ENV]];
 }
 
 function getProvider() {
-	return new ethers.InfuraProvider(networkConfig()[env.VITE_NODE_ENV], env.INFURA_PROJECT_ID);
+	return new ethers.InfuraProvider(networkConfig()[env.BACKED_NODE_ENV], env.INFURA_PROJECT_ID);
 }
 
 export function getServerWallet() {
