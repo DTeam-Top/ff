@@ -1,7 +1,7 @@
 import { flows } from "dbdomain";
 import { db, provider } from "../utils";
 import { eq } from "drizzle-orm";
-import { ERC155_ABI, ERC20_ABI, ERC721_ABI } from "../abi";
+import { ERC1155_ABI, ERC20_ABI, ERC721_ABI } from "../abi";
 import { ethers, formatEther } from "ethers";
 
 export async function ownerShipChecker() {
@@ -34,7 +34,7 @@ export async function ownerShipChecker() {
         case "ERC1155": {
           const balance = await new ethers.Contract(
             token.address,
-            ERC155_ABI,
+            ERC1155_ABI,
             provider
           ).ownerOf(row.seller, token.tokenId);
           available = Number(formatEther(balance)) > Number(token.amount);

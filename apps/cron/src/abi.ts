@@ -12,4 +12,4 @@ export const ERC721_ABI = [
   "function owner() public view returns (address)",
   "function balanceOf(address) public view returns (uint256)",
 ];
-export const ERC155_ABI = [];
+export const ERC1155_ABI = [];
