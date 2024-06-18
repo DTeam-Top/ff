@@ -12,4 +12,9 @@ export const ERC721_ABI = [
   "function owner() public view returns (address)",
   "function balanceOf(address) public view returns (uint256)",
 ];
-export const ERC1155_ABI = [];
+export const ERC1155_ABI = [
+  "function balanceOf(address account, uint256 id) external view returns (uint256)",
+  "function balanceOfBatch(tuple(address)[]  memory accounts, tuple(uint256)[] memory ids) public view  returns (uint256[] memory)",
+  "function isApprovedForAll(address account, address operator) external view returns (bool)",
+  "function setApprovalForAll(address operator, bool approved) external",
+];

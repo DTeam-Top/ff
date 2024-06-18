@@ -36,7 +36,8 @@ export async function ownerShipChecker() {
             token.address,
             ERC1155_ABI,
             provider
-          ).ownerOf(row.seller, token.tokenId);
+          ).balanceOf(row.seller, token.tokenId);
+
           available = Number(formatEther(balance)) > Number(token.amount);
           break;
         }

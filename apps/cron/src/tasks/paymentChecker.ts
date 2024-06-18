@@ -3,6 +3,7 @@ import { eq, isNotNull, isNull, and } from "drizzle-orm";
 import { db, provider } from "../utils.js";
 import { formatEther, parseEther } from "ethers";
 import BigNumber from "bignumber.js";
+BigNumber.config({ EXPONENTIAL_AT: 100 });
 
 export async function paymentChecker() {
   const rows = await db()
@@ -25,17 +26,14 @@ export async function paymentChecker() {
           .update(tracePayments)
           .set({ paymentTs: Date.now(), commissionPaid: 1 }) // mark as commission paid
           .where(eq(tracePayments.id, row.trace_payments.id));
-
         await tx
           .update(flows)
           .set({ status: 3 }) // mark the flow as done
           .where(eq(flows.id, row.flows.id));
-
         await tx.insert(commissions).values({
           flow: row.flows.id,
           payment: row.trace_payments.id,
           fid: Number(row.traces.caster),
-          // TODO: change to bignumber.js for better precision
           commission: parseEther(
             new BigNumber(formatEther(row.trace_payments.amount))
               .multipliedBy(1)
