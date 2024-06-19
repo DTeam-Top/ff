@@ -1,11 +1,10 @@
-import { insertTrace } from '$lib/server/traceService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { castRequest, userRequest, verfiyUserRequest } from './requests';
-import { createCast, lookupSigner, lookupUserByFid } from '$lib/server/neynarClient';
+import { userRequest, verfiyUserRequest } from './requests';
+import { lookupSigner, lookupUserByFid } from '$lib/server/neynarClient';
 import { logger } from 'hono/logger';
 
-export const router = new Hono()
+export const neynarRouter = new Hono()
 	.use(logger())
 	.post('/verify-user', zValidator('json', verfiyUserRequest), async (c) => {
 		const { fid, signerUuid } = c.req.valid('json');
@@ -50,29 +49,4 @@ export const router = new Hono()
 			console.log(e);
 			throw c.json({ message: 'Error occured' }, 500);
 		}
-	})
-	.post('/publish', zValidator('json', castRequest), async (c) => {
-		const { fid, signerUuid, frameUrl, content, flowId } = c.req.valid('json');
-		if (!fid || !signerUuid || !frameUrl) {
-			throw c.json({ message: 'Need fid, signerUuid, frameUrl' }, 400);
-		}
-		try {
-			const cast = await createCast(signerUuid, content, frameUrl);
-			// todo delete it
-			await insertTrace({
-				cast: `${cast.cast.author.fid}_${cast.cast.hash}`,
-				flow: flowId,
-				parentCast: undefined,
-				caster: Number(fid)
-			});
-
-			return c.json(cast);
-		} catch (e) {
-			console.log(e);
-			throw c.json({ message: 'Error occured' }, 500);
-		}
 	});
-
-export const neynarApi = new Hono().route('/api', router);
-
-export type Router = typeof router;

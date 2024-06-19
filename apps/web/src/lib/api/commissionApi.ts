@@ -4,7 +4,7 @@ import { fidRequest, withdrawRequest } from './requests';
 import { getCommissionList, getHistoryList, withdraw } from '$lib/server/commissionService';
 import { logger } from 'hono/logger';
 
-export const router = new Hono()
+export const commissionRouter = new Hono()
 	.use(logger())
 	.get('/:fid', zValidator('param', fidRequest), async (c) => {
 		try {
@@ -43,7 +43,3 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	});
-
-export const commissionApi = new Hono().route('/api/commissions', router);
-
-export type Router = typeof router;

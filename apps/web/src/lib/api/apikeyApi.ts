@@ -6,7 +6,7 @@ import { logger } from 'hono/logger';
 import { getApikeyList, insertApikey, updateApikey } from '../server/apikeyService';
 import { SECRET_KEY } from '$env/static/private';
 
-export const router = new Hono()
+export const apiKeyRouter = new Hono()
 	.use(logger())
 	.get('/list/:fid', zValidator('param', fidRequest), async (c) => {
 		try {
@@ -51,7 +51,3 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	});
-
-export const apikeyApi = new Hono().route('/api/apikeys', router);
-
-export type Router = typeof router;

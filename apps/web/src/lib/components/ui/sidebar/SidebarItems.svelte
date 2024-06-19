@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { walletAddress, setWalletAddress, user, removeItem, signed } from '$lib/client/store';
+	import {
+		walletAddress,
+		setWalletAddress,
+		user,
+		removeItem,
+		signed,
+		provider
+	} from '$lib/client/store';
 	import { data } from './data';
 	import { page } from '$app/stores';
 	import { getDrawerStore } from '@skeletonlabs/skeleton';
@@ -8,7 +15,6 @@
 	import { GITHUB_URL } from '$lib/client/clientConsts';
 	import WalletIcon from '../icons/WalletIcon.svelte';
 	import UserAvatar from '$lib/components/UserAvatar.svelte';
-	import SWIN from '$lib/components/SWIN.svelte';
 	import WalletButton from '$lib/components/WalletButton.svelte';
 	import BrowseIcon from '../icons/BrowseIcon.svelte';
 
@@ -72,28 +78,9 @@
 				</a>
 			</li>
 			{#if $signed}
-				{#if $walletAddress}
-					<li
-						class={`text-center py-4 border-b border-gray-700 hover:bg-primary-hover-token `}
-						on:click={disConnectHanlder}
-					>
-						<div class="items-center font-bold">
-							<div class="mx-auto w-7">
-								<svelte:component this={WalletIcon} />
-							</div>
-							<span class="text-sm whitespace-pre font-bold">{addressPipe($walletAddress)}</span>
-						</div>
-						<div
-							class="border border-[#495A8C] items-center w-[100px] mx-auto py-1 rounded px-[15px] hover:variant-soft-primary cursor-pointer"
-						>
-							Disconnect
-						</div>
-					</li>
-				{:else}
-					<li class="mx-auto items-center">
-						<WalletButton />
-					</li>
-				{/if}
+				<li class="mx-auto items-center">
+					<WalletButton />
+				</li>
 			{/if}
 			<li class={`text-center py-4 border-b border-gray-700 hover:bg-primary-hover-token `}>
 				{#if $signed}

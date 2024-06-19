@@ -22,7 +22,7 @@
 		appChainIds: APP_SUPPORTED_CHAIN_IDS
 	});
 
-	const provider = sdk.makeWeb3Provider();
+	export const provider = sdk.makeWeb3Provider();
 	provider.on('connect', (info) => {
 		console.log('info----', info);
 	});
@@ -62,7 +62,7 @@
 {#if !$walletAddress}
 	<Button
 		title="Connect"
-		cssClass="flex gap-2 mr-4 border border-[#495A8C] rounded items-center h-[48px] px-[15px] mx-auto"
+		cssClass="flex gap-2 mr-4 lg:border lg:border-[#495A8C] rounded items-center h-[48px] px-[15px] mx-auto"
 		width="w-[130px]"
 		on:click={connectHanlder}
 		icon={WalletIcon}
@@ -70,14 +70,20 @@
 {:else}
 	<div class="relative">
 		<button
-			class="flex gap-2 border border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary cursor-pointer"
+			class="flex gap-2 lg:border lg:border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary cursor-pointer"
 			use:popup={{ event: 'click', target: 'menu' }}
 		>
 			<svelte:component this={WalletIcon} />
 			{addressPipe($walletAddress)}
-			<svelte:component this={TriangleDownIcon} />
+			<span class="lg:block hidden"> <svelte:component this={TriangleDownIcon} /></span>
 		</button>
-		<div class="card w-60 shadow-xl" data-popup="menu">
+		<div
+			class="block lg:hidden border border-[#495A8C] py-2 rounded mx-4"
+			on:click={disConnectHanlder}
+		>
+			Disconnect
+		</div>
+		<div class="card w-60 shadow-xl hidden lg:block" data-popup="menu">
 			<div class="space-y-4">
 				<nav class="list-nav">
 					<ul>

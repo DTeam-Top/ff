@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { idRequest, updateTxRequest } from './requests';
 import { logger } from 'hono/logger';
 
-export const router = new Hono()
+export const tracesRouter = new Hono()
 	.use(logger())
 	.post(
 		'/update-tx/:id',
@@ -39,7 +39,7 @@ export const router = new Hono()
 	.get('/browse', async (c) => {
 		try {
 			const { offset, max } = c.req.query();
-			const result = await getAllTraces(offset, max);
+			const result = await getAllTraces(Number(offset), Number(max));
 
 			return c.json(result);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,7 +47,3 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	});
-
-export const traceApi = new Hono().route('/api/traces', router);
-
-export type Router = typeof router;

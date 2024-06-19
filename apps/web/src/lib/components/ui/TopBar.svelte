@@ -12,8 +12,9 @@
 
 {#if $signed}
 	<SocialLinks />
-
-	<WalletButton />
+	<div class="hidden lg:block">
+		<WalletButton />
+	</div>
 	<button
 		on:click={onSingout}
 		class="flex gap-2 border border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary"

@@ -13,7 +13,7 @@ import { STATUS_PUBLISHED } from '$lib/server/serverConsts';
 import { logger } from 'hono/logger';
 import { statusMessagePipe } from '$lib/client/utils';
 
-export const router = new Hono()
+export const flowsRouter = new Hono()
 	.use(logger())
 	.post('/', zValidator('json', flowRequest), async (c) => {
 		try {
@@ -95,7 +95,3 @@ export const router = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	});
-
-export const flowApi = new Hono().route('/api/flows', router);
-
-export type Router = typeof router;

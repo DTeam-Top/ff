@@ -1,3 +1,4 @@
+import type { ProviderInterface } from '@coinbase/wallet-sdk';
 import { writable } from 'svelte/store';
 
 export const signed = writable();
@@ -97,7 +98,7 @@ export const delteStorage = (key: string) => {
 
 const provider = writable();
 
-const setProvider = (value: any) => {
+const setProvider = (value: ProviderInterface) => {
 	provider.update(() => value);
 };
 
