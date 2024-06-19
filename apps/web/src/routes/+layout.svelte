@@ -39,9 +39,14 @@
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);
 		if (item) {
-			getCaster(item).then((data) => {
-				loading = false;
-			});
+			getCaster(item)
+				.then((data) => {
+					loading = false;
+				})
+				.catch((e: any) => {
+					console.log(e);
+					loading = false;
+				});
 		} else {
 			loading = false;
 		}
