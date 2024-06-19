@@ -90,7 +90,7 @@ export const withdraw = async (address: string, fid: number) => {
 			.where(and(eq(commissions.fid, fid), isNull(commissions.withdrawnTx)));
 
 		const idList = [];
-		let amount = 0;
+		let amount: bigint = 0n;
 
 		for (const commission of commissionList) {
 			idList.push(commission.id);

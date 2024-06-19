@@ -74,3 +74,11 @@ export const castRequest = z.object({
 	content: z.string(),
 	flowId: z.string()
 });
+
+export const apiKeyRequest = z.object({
+	fid: z.number()
+});
+
+export const apiKeyUpdateRequest = z.object({
+	disabled: z.boolean()
+});

@@ -10,7 +10,7 @@
 </script>
 
 <button
-	class="text-sm font-normal text-white bg-gray-700 p-2 ml-2 flex items-center gap-2 rounded-lg hover:bg-gray-500"
+	class="text-sm font-normal text-white bg-secondary-500 p-2 ml-2 flex items-center gap-2 rounded-lg hover:variant-soft-secondary"
 	on:click={withdrawHandler}
 	disabled={loading}
 >

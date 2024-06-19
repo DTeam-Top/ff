@@ -1,0 +1,57 @@
+import { zValidator } from '@hono/zod-validator';
+import { Hono } from 'hono';
+import { sign } from 'hono/jwt';
+import { apiKeyRequest, apiKeyUpdateRequest, fidRequest } from './requests';
+import { logger } from 'hono/logger';
+import { getApikeyList, insertApikey, updateApikey } from '../server/apikeyService';
+import { SECRET_KEY } from '$env/static/private';
+
+export const router = new Hono()
+	.use(logger())
+	.get('/list/:fid', zValidator('param', fidRequest), async (c) => {
+		try {
+			const { fid } = c.req.param(); //
+
+			const { offset, max } = c.req.query();
+			const result = await getApikeyList(fid, Number(offset), Number(max));
+
+			return c.json(result);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (e: any) {
+			return c.json({ message: e.code + ': ' + e.message }, 500);
+		}
+	})
+	.post('/update/:fid', zValidator('json', apiKeyUpdateRequest), async (c) => {
+		try {
+			const { fid } = c.req.param();
+			const { disabled } = c.req.valid('json');
+
+			const result = await updateApikey(Number(fid), disabled);
+
+			return c.json(result);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (e: any) {
+			return c.json({ message: e.code + ': ' + e.message }, 500);
+		}
+	})
+	.post('/', zValidator('json', apiKeyRequest), async (c) => {
+		try {
+			const { fid } = c.req.valid('json');
+			const payload = {
+				sub: 'apikey',
+				role: 'ff'
+			};
+			console.log(SECRET_KEY);
+			const apiKey = await sign(payload, SECRET_KEY);
+			await insertApikey(fid, apiKey);
+
+			return c.json({ message: 'Success', apiKey: apiKey });
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (e: any) {
+			return c.json({ message: e.code + ': ' + e.message }, 500);
+		}
+	});
+
+export const apikeyApi = new Hono().route('/api/apikeys', router);
+
+export type Router = typeof router;

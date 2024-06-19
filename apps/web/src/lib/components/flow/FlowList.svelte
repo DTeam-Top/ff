@@ -43,7 +43,6 @@
 			'Delete Confirm',
 			'Are you sure to delete?',
 			'w-[500px]',
-			undefined,
 			async (r: boolean) => {
 				if (r) {
 					await deleteFlowById(id);
@@ -90,31 +89,31 @@
 								<Button
 									title="Edit"
 									on:click={() => actionHandler(row.id, 'edit')}
-									cssClass="bg-tertiary-500 mr-4"
+									cssClass="bg-tertiary-500 mr-4 hover:variant-soft-tertiary"
 								/>
 								<Button
 									title="Delete"
 									on:click={() => delHandler(row.id)}
-									cssClass="bg-error-500"
+									cssClass="bg-error-500 hover:variant-soft-error"
 								/>
 							{:else if row.status === 2}
 								<Button
 									title="Delete"
 									on:click={() => delHandler(row.id)}
-									cssClass="bg-error-500"
+									cssClass="bg-error-500 hover:variant-soft-error"
 								/>
 							{:else}
 								<Button
 									title="View"
 									on:click={() => actionHandler(row.id, 'view')}
-									cssClass="bg-warning-500 mr-4"
+									cssClass="bg-warning-500 mr-4 hover:variant-soft-warning"
 								/>
 
 								{#if row.traceCount > 0}
 									<Button
 										title="Trace"
 										on:click={() => traceHandler(row.id)}
-										cssClass="bg-secondary-500"
+										cssClass="bg-secondary-500 hover:variant-soft-secondary"
 									/>
 								{/if}
 							{/if}
