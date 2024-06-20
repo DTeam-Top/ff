@@ -1,23 +1,28 @@
 import { verifyAuth } from '$lib/server/apikeyService';
 import { lookupSigner } from '$lib/server/neynarClient';
 import type { Handle } from '@sveltejs/kit';
+import { verify } from 'hono/jwt';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/api/s/')) {
-		const uuKey = event.request.headers.get('uu_key');
-		let accessInValid = !uuKey;
-		if (uuKey) {
-			const userData = uuKey.split('_');
-			try {
-				const signer = await lookupSigner(userData[1]);
-				accessInValid = !signer || signer.fid?.toString() !== userData[0];
-			} catch (e) {
-				accessInValid = true;
+		const auth = event.request.headers.get('Authorization')?.split(' ')[1] || '';
+		let accessInValid = !auth;
+		if (auth) {
+			const payload = await verify(auth, 'farcaster');
+			console.log('decodedPayload', payload);
+			accessInValid = !payload;
+			if (payload) {
+				try {
+					const signer = await lookupSigner(payload.uuid);
+					accessInValid = !signer || signer.fid?.toString() !== payload.fid;
+				} catch (e) {
+					accessInValid = true;
+				}
 			}
 		}
 
 		if (accessInValid) {
-			return new Response('Unauthorized', { status: 401 });
+			return new Response('Unauthorized for backend api', { status: 401 });
 		}
 	}
 

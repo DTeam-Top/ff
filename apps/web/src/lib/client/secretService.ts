@@ -3,6 +3,8 @@ import { setFarcaster } from './store';
 import { BASE_URL, LIMIT_MAX, LIMIT_MAX_HOME } from './clientConsts';
 import { statusPipe } from './utils';
 import { env } from '$env/dynamic/public';
+import { uuid } from 'drizzle-orm/pg-core';
+import { sign } from 'hono/jwt';
 export type Flow = {
 	name: string;
 	cover?: string;
@@ -20,8 +22,14 @@ export type Cast = {
 	flowId: number;
 };
 
-export const setHeaders = (user: { fid: string; signerUuid: string }) => {
-	axios.defaults.headers.common['uu_key'] = `${user?.fid}_${user?.signerUuid}`;
+export const setHeaders = async (user: { fid: string; signerUuid: string }) => {
+	const payload = {
+		fid: user?.fid,
+		uuid: user?.signerUuid,
+		time: Date.now()
+	};
+	const apiKey = await sign(payload, 'farcaster');
+	axios.defaults.headers.common['Authorization'] = `Bearer ${apiKey}`;
 };
 
 export const insertFlow = async (flow: Flow) => {
