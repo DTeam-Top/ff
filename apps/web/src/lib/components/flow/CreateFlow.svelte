@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlow, insertFlow, publishFlow } from '$lib/client/flowService';
+	import { getFlow, insertFlow, publishFlow } from '$lib/client/secretService';
 	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
 	import { user, farcaster, setFarcaster, walletAddress } from '$lib/client/store';
 	import { onMount } from 'svelte';
@@ -86,7 +86,6 @@
 	const saveHandler = async () => {
 		try {
 			addressList = [...ERC20List, ...ERC721List, ...ERC1155List];
-			console.log(addressList);
 			if (!name || addressList.length === 0 || !cover) {
 				toast.error(toastStore, 'Please input name , addresses , cover');
 				return;

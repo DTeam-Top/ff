@@ -61,8 +61,6 @@ export function isValidTokenId(tokenId: string) {
 }
 
 export function isValidFloat(amount: string) {
-	console.log(/^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test(amount));
-	console.log(/^[1-9]\d*$/.test(amount));
 	return /^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$/.test(amount) || /^[1-9]\d*$/.test(amount);
 }
 
@@ -144,7 +142,6 @@ export const validateData = async (
 	let alowance = false;
 	switch (type) {
 		case 'ERC20': {
-			console.log(amount, isValidFloat(amount));
 			if (!isValidFloat(amount)) {
 				return 'Please input correct amount';
 			}

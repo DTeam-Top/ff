@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { COMMISSIOM_MAX } from '$lib/client/clientConsts';
-	import { getHistoryList } from '$lib/client/commissionService';
+	import { getHistoryList } from '$lib/client/secretService';
 	import { user } from '$lib/client/store';
 	import { formatEther } from 'ethers';
 	import { createEventDispatcher } from 'svelte';

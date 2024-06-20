@@ -1,7 +1,6 @@
 <script lang="ts">
 	import 'tailwindcss/tailwind.css';
 	import { browser } from '$app/environment';
-	import { getCaster } from '$lib/client/casterService';
 	import '../style.css';
 	import { USER_STORE_KEY } from '$lib/client/clientConsts';
 	import SiteName from '$lib/components/ui/SiteName.svelte';
@@ -22,6 +21,8 @@
 	import { getItem, signed } from '$lib/client/store';
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+	import { getCaster } from '$lib/client/commonService';
+	import { setHeaders } from '$lib/client/secretService';
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	let loading = true;
@@ -39,6 +40,9 @@
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);
 		if (item) {
+			console.log('$$$', item);
+
+			setHeaders(item);
 			getCaster(item)
 				.then((data) => {
 					loading = false;

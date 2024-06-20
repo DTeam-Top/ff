@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getStaticsCount } from '$lib/client/flowService';
+	import { getStaticsTotalCount } from '$lib/client/commonService';
 	import Button from './Button.svelte';
 	import Footer from './Footer.svelte';
 
 	let statistics: any[] = [];
 	$: {
-		getStaticsCount(0).then((count) => {
+		getStaticsTotalCount().then((count) => {
 			statistics = [...count.banner, ...count.card];
 		});
 	}

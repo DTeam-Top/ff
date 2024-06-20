@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getFlows, deleteFlowById } from '$lib/client/flowService';
+	import { getFlows, deleteFlowById } from '$lib/client/secretService';
 	import { user, signed } from '$lib/client/store';
 	import Button from '$lib/components/Button.svelte';
 	import ETH from '$lib/components/ETH.svelte';

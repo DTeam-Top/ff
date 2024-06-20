@@ -30,9 +30,7 @@ const spender = '0xfcac032068c867373d0ba48ab0fa83142d557069'; //base sepolia
 export async function allowanceERC20(ERC20: string, owner: string, provider: any, amount: string) {
 	let balance = 0;
 	try {
-		console.log(provider);
 		balance = await new ethers.Contract(ERC20, ERC20_ABI, provider).balanceOf(owner);
-		console.log('balance--', balance, formatEther(balance), owner);
 		return Number(formatEther(balance)) > Number(amount);
 	} catch (e) {
 		console.log(e);
@@ -49,7 +47,6 @@ export async function allowanceERC721(
 	let owner = '';
 	try {
 		owner = await new ethers.Contract(ERC721, ERC721_ABI, provider).ownerOf(tokenId);
-		console.log('owner', owner, spender, owner.toLowerCase() === spender.toLowerCase());
 		return owner.toLowerCase() === spender.toLowerCase();
 	} catch (e) {
 		console.log(e);
@@ -67,7 +64,6 @@ export async function allowanceERC1155(
 	let balance = 0;
 	try {
 		balance = await new ethers.Contract(ERC1155, ERC1155_ABI, provider).balanceOf(owner, tokenId);
-		console.log('balance', balance, formatEther(balance));
 		return Number(formatEther(balance)) > Number(amount);
 	} catch (e) {
 		console.log(e);
@@ -78,9 +74,8 @@ export async function allowanceERC1155(
 export async function approveERC20(ERC20: string, owner: string, provider: any, amount: string) {
 	let allowance = 0;
 	try {
-		console.log(provider);
 		allowance = await new ethers.Contract(ERC20, ERC20_ABI, provider).allowance(owner, spender);
-		console.log('allowance---', allowance, formatEther(allowance), amount);
+
 		if (Number(formatEther(allowance)) < Number(amount)) {
 			const signer = await provider.getSigner();
 			const erc20Contract = new ethers.Contract(ERC20, ERC20_ABI, signer);
@@ -107,7 +102,6 @@ export async function approveERC721(ERC721: string, owner: string, provider: any
 	try {
 		console.log(provider);
 		allowance = await getERC721Approved(owner, ERC721, tokenId, spender, provider);
-		console.log('allowance', allowance, spender);
 		if (!allowance) {
 			const signer = await provider.getSigner();
 			const erc20Contract = new ethers.Contract(ERC721, ERC721_ABI, signer);
@@ -149,9 +143,7 @@ const getERC721Approved = async (
 export async function approveERC1155(ERC1155: string, owner: string, provider: any) {
 	let allowance = false;
 	try {
-		console.log(owner, spender);
 		allowance = await getERC1155Approved(owner, ERC1155, spender, provider);
-		console.log('allowance', allowance, spender);
 		if (!allowance) {
 			const signer = await provider.getSigner();
 			const erc20Contract = new ethers.Contract(ERC1155, ERC1155_ABI, signer);

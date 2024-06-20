@@ -3,7 +3,7 @@
 	import dayjs from 'dayjs';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { onMount } from 'svelte';
-	import { getFlows, getStaticsCount } from '$lib/client/flowService';
+	import { getFlows, getStaticsCount } from '$lib/client/secretService';
 	import CommissionCard from '$lib/components/commission/CommissionCard.svelte';
 	import { BG_COLORLIST, LIMIT_MAX_HOME, WARP_BASE } from '$lib/client/clientConsts';
 	import { goto } from '$app/navigation';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAllTraces } from '$lib/client/flowService';
+	import { getAllTraces } from '$lib/client/secretService';
 	import { castAddressPipe } from '$lib/client/utils';
 	import UserAvatar from '$lib/components/UserAvatar.svelte';
 	import { createInfiniteQuery } from '@tanstack/svelte-query';
@@ -15,7 +15,6 @@
 		queryFn: (pageParam) => getAllTraces({ pageParam }),
 		initialPageParam: 1,
 		getNextPageParam: (lastPage) => {
-			console.log(lastPage.next);
 			if (lastPage.next) {
 				const nextUrl = new URLSearchParams(new URL(lastPage.next).search);
 				const nextCursor = nextUrl.get('page');

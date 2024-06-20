@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlow } from '$lib/client/flowService';
+	import { getFlow } from '$lib/client/secretService';
 	import { getPreviewUrl } from '$lib/client/utils';
 	import { farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';

@@ -97,23 +97,18 @@ export const withdraw = async (address: string, fid: number) => {
 			amount += commission.commission;
 		}
 
-		console.log(amount);
-
 		const available = await flowContract().available(fid);
 
 		if (available === BigInt(amount)) {
 			amount = available;
 		}
-		console.log(available, amount, available === BigInt(amount));
 		const message = keccak256(
 			encodePacked([
 				['uint256', fid],
 				['address', address]
 			])
 		);
-		console.log(message);
 		const sig = await getServerWallet().signMessage(ethers.getBytes(message));
-		console.log({ address, amount: amount.toString(), sig });
 		const tx = await flowContract().withdraw(fid, address, sig, {
 			gasLimit: 600000
 		});

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { COMMISSIOM_MAX, WARPCAST_SETTING_URL, getBaseScanURL } from '$lib/client/clientConsts';
-	import { getCommissionList } from '$lib/client/commissionService';
+	import { getCommissionList } from '$lib/client/secretService';
 	import { addressPipe } from '$lib/client/utils';
 	import { user } from '$lib/client/store';
 	import { formatEther } from 'ethers';

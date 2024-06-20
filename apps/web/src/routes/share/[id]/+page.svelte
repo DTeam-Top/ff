@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getFlow } from '$lib/client/flowService';
+	import { getFlow } from '$lib/client/secretService';
 
 	import { page } from '$app/stores';
 	import { getPreviewUrl } from '$lib/client/utils';

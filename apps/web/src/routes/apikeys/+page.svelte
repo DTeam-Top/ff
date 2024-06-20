@@ -8,7 +8,7 @@
 	import OpenEyeIcon from '$lib/components/ui/icons/OpenEyeIcon.svelte';
 	import DisableKeyIcon from '$lib/components/ui/icons/DisableKeyIcon.svelte';
 	import EnableKeyIcon from '$lib/components/ui/icons/EnableKeyIcon.svelte';
-	import { getApikeyList, insertApikey, changeApikey } from '$lib/client/apiKeyService';
+	import { getApikeyList, insertApikey, changeApikey } from '$lib/client/secretService';
 	import { modal, toast } from '$lib/client/popup';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import CopyClipBoard from '$lib/components/CopyClipBoard.svelte';

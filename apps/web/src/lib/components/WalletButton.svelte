@@ -70,12 +70,19 @@
 {:else}
 	<div class="relative">
 		<button
-			class="flex gap-2 lg:border lg:border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary cursor-pointer"
+			class="lg:flex gap-2 lg:border lg:border-[#495A8C] rounded items-center h-[48px] px-[15px] hover:variant-soft-primary cursor-pointer hidden"
 			use:popup={{ event: 'click', target: 'menu' }}
 		>
 			<svelte:component this={WalletIcon} />
 			{addressPipe($walletAddress)}
 			<span class="lg:block hidden"> <svelte:component this={TriangleDownIcon} /></span>
+		</button>
+
+		<button
+			class="flex gap-2 lg:border lg:border-[#495A8C] rounded items-center h-[48px] px-[15px] cursor-pointer lg:hidden"
+		>
+			<svelte:component this={WalletIcon} />
+			{addressPipe($walletAddress)}
 		</button>
 		<div
 			class="block lg:hidden border border-[#495A8C] py-2 rounded mx-4"
@@ -83,11 +90,11 @@
 		>
 			Disconnect
 		</div>
-		<div class="card w-60 shadow-xl hidden lg:block" data-popup="menu">
+		<div class="card w-60 shadow-xl" data-popup="menu">
 			<div class="space-y-4">
 				<nav class="list-nav">
 					<ul>
-						<li on:click={disConnectHanlder} class="p-4 hover:variant-soft-primary">Disconnect</li>
+						<li on:click={disConnectHanlder} class="p-4 hover:variant-soft-primary">Disconnect2</li>
 					</ul>
 				</nav>
 			</div>

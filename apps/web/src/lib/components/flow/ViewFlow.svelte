@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
-	import { getFlow } from '$lib/client/flowService';
+	import { getFlow } from '$lib/client/secretService';
 	import { addressPipe, getPreviewUrl } from '$lib/client/utils';
 	import { farcaster, setFarcaster, signed } from '$lib/client/store';
 	import { onMount } from 'svelte';
@@ -23,7 +23,6 @@
 	onMount(async () => {
 		setFarcaster({ id: farcasterId });
 		flow = await getFlow(farcasterId);
-		console.log(flow);
 		if (flow) {
 			isPublished = flow.status === STATUS_PUBLISHED;
 			if (isPublished) {

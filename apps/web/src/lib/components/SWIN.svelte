@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { getCaster } from '$lib/client/casterService';
 	import { CLIENT_ID, USER_STORE_KEY } from '$lib/client/clientConsts';
-	import { setItem } from '$lib/client/store';
-	import { onDestroy, onMount } from 'svelte';
+	import { setHeaders } from '$lib/client/secretService';
+	import { setItem, setUser } from '$lib/client/store';
+	import { onDestroy, onMount, setContext } from 'svelte';
 
 	onDestroy(() => {
 		if (browser) {
@@ -27,12 +27,27 @@
 		document.body.appendChild(script);
 
 		window.onSignInSuccess = async (data: any) => {
+			const user = {
+				fid: data.user.fid,
+				pft: data.user.pfp_url,
+				username: data.user.username,
+				displayName: data.user.display_name,
+				custodyAddress: data.user.custody_address,
+				followingCount: data.user.following_count,
+				followerCount: data.user.follower_count,
+				profile: data.user.profile,
+				verifications: data.user.verifications,
+				verifiedAddresses: data.user.verified_addresses,
+				signerUuid: data.signer_uuid
+			};
 			const callbackData = {
 				signerUuid: data.signer_uuid,
 				fid: data.fid
 			};
+
 			setItem(USER_STORE_KEY, window, JSON.stringify(callbackData));
-			await getCaster(callbackData);
+			setUser(user);
+			setHeaders(callbackData);
 		};
 		const signDiv = document.getElementById('sign');
 

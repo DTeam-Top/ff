@@ -160,7 +160,7 @@ export const getStatics = async (fid: number | undefined) => {
 	const fidCount = await db().execute<{ value: number }>(
 		sql`select count(distinct(fid)) from ((select  distinct(caster) as fid from traces) union (select distinct(creator) as fid from flows)) as fids;`
 	);
-	console.log(fidCount.rows[0]);
+
 	const totalData = await db()
 		.select({ value: count() })
 		.from(tracePayments)

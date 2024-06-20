@@ -72,7 +72,6 @@
 
 	const deleteAddressHandler = (index: number) => {
 		addressList.splice(index, 1);
-		console.log(addressList);
 		value = addressList;
 	};
 </script>

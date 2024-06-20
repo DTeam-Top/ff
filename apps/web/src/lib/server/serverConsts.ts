@@ -39,7 +39,6 @@ function envConfig(): {
 		}
 	};
 }
-console.log('env----', env.BACKED_NODE_ENV);
 function contracts() {
 	return envConfig()[env.BACKED_NODE_ENV][networkConfig()[env.BACKED_NODE_ENV]];
 }

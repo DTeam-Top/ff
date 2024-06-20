@@ -1,12 +1,18 @@
 import axios from 'axios';
-import { setUser } from './store';
 import { BASE_URL } from './clientConsts';
+import { setUser } from './store';
+import { setContext } from 'svelte';
 
-export const getCaster = async (item: { fid: string; signerUuid: string }) => {
+export const getStaticsTotalCount = async () => {
+	const result = await axios.get(`${BASE_URL}api/c/statics`);
+	return result.data;
+};
+
+export const getCaster = async (item: { fid: string; signerUuid: string; user: any }) => {
 	try {
-		const verify = await axios.post(`${BASE_URL}api/verify-user`, item);
+		const verify = await axios.post(`${BASE_URL}api/c/verify-user`, item);
 		if (verify.data && verify.data.isVerifiedUser) {
-			const res = await axios.get(`${BASE_URL}api/user/${item.fid}`, item);
+			const res = await axios.get(`${BASE_URL}api/c/user/${item.fid}`, item);
 			const user = res.data;
 
 			setUser({
@@ -22,6 +28,7 @@ export const getCaster = async (item: { fid: string; signerUuid: string }) => {
 				verifiedAddresses: user.verified_addresses,
 				signerUuid: item.signerUuid
 			});
+			setContext('user', user);
 		}
 	} catch (e) {
 		console.log(e);

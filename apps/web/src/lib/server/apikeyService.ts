@@ -15,7 +15,6 @@ export const getApikeyList = async (fid: string, offset: number, max: number) =>
 };
 export const insertApikey = async (fid: number, apiKey: string) => {
 	const result = await db().select().from(apiKeys).where(eq(apiKeys.owner, fid));
-	console.log(result);
 	if (result.length > 0) {
 		await db()
 			.update(apiKeys)
@@ -43,4 +42,9 @@ export const updateApikey = async (fid: number, disabled: boolean) => {
 		.set({ disabled: disabled })
 		.where(eq(apiKeys.owner, fid));
 	return result;
+};
+
+export const verifyAuth = async (auth: string) => {
+	const result = await db().select().from(apiKeys).where(eq(apiKeys.apiKey, auth));
+	return result.length > 0;
 };

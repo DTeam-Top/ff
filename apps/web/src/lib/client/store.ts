@@ -1,4 +1,5 @@
 import type { ProviderInterface } from '@coinbase/wallet-sdk';
+import { setContext } from 'svelte';
 import { writable } from 'svelte/store';
 
 export const signed = writable();
@@ -82,9 +83,7 @@ export const removeStorage = (key: string, window: any) => {
 };
 
 export const getStorage = (key: string, window: any) => {
-	console.log(key);
 	const item = window.localStorage.getItem(key);
-	console.log(item);
 	return item ? item : null;
 };
 

@@ -1,13 +1,15 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { sign } from 'hono/jwt';
 import { apiKeyRequest, apiKeyUpdateRequest, fidRequest } from './requests';
 import { logger } from 'hono/logger';
 import { getApikeyList, insertApikey, updateApikey } from '../server/apikeyService';
-import { SECRET_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+import { sign } from 'hono/jwt';
+import { time } from 'drizzle-orm/mysql-core';
 
 export const apiKeyRouter = new Hono()
 	.use(logger())
+
 	.get('/list/:fid', zValidator('param', fidRequest), async (c) => {
 		try {
 			const { fid } = c.req.param(); //
@@ -38,11 +40,10 @@ export const apiKeyRouter = new Hono()
 		try {
 			const { fid } = c.req.valid('json');
 			const payload = {
-				sub: 'apikey',
-				role: 'ff'
+				fid: fid,
+				time: Date.now()
 			};
-			console.log(SECRET_KEY);
-			const apiKey = await sign(payload, SECRET_KEY);
+			const apiKey = await sign(payload, env.JWT_SECRET);
 			await insertApikey(fid, apiKey);
 
 			return c.json({ message: 'Success', apiKey: apiKey });

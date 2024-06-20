@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getTracesByFlowId } from '$lib/client/flowService';
+	import { getTracesByFlowId } from '$lib/client/secretService';
 	import { setFarcaster, user, signed } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
@@ -23,7 +23,6 @@
 	}
 	const getTraceList = async () => {
 		list = await getTracesByFlowId($page.params.id, $user.fid);
-		console.log(list);
 	};
 </script>
 

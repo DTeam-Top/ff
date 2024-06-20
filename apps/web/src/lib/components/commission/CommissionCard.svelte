@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getCommissionList } from '$lib/client/commissionService';
+	import { getCommissionList } from '$lib/client/secretService';
 	import { user } from '$lib/client/store';
 	import { goto } from '$app/navigation';
 	import { formatEther } from 'ethers';
