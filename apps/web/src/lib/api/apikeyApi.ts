@@ -5,7 +5,6 @@ import { logger } from 'hono/logger';
 import { getApikeyList, insertApikey, updateApikey } from '../server/apikeyService';
 import { env } from '$env/dynamic/private';
 import { sign } from 'hono/jwt';
-import { time } from 'drizzle-orm/mysql-core';
 
 export const apiKeyRouter = new Hono()
 	.use(logger())
