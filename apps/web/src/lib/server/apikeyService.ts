@@ -15,6 +15,7 @@ export const getApikeyList = async (fid: string, offset: number, max: number) =>
 };
 export const insertApikey = async (fid: number, apiKey: string) => {
 	const result = await db().select().from(apiKeys).where(eq(apiKeys.owner, fid));
+	console.log(result);
 	if (result.length > 0) {
 		await db()
 			.update(apiKeys)

@@ -70,10 +70,7 @@ export const getStaticsCount = async (fid: number | undefined) => {
 };
 
 export const getTracesByFlowId = async (flowId: string, fid: number) => {
-	const result = await axios.get(
-		`${BASE_URL}api/s/traces/list/${flowId}?caster=${fid}`,
-		getHeaders()
-	);
+	const result = await axios.get(`${BASE_URL}api/s/traces/list/${flowId}?caster=${fid}`);
 	return result.data;
 };
 
@@ -81,8 +78,7 @@ export const getAllTraces = async ({ pageParam = 1 }) => {
 	const offset = (pageParam.pageParam - 1) * LIMIT_MAX_HOME;
 
 	const result = await axios.get(
-		`${BASE_URL}api/s/traces/browse?offset=${offset}&max=${LIMIT_MAX_HOME}`,
-		getHeaders()
+		`${BASE_URL}api/s/traces/browse?offset=${offset}&max=${LIMIT_MAX_HOME}`
 	);
 	const noNextPage =
 		(pageParam.pageParam === 1 && result.data.result.length < LIMIT_MAX_HOME) ||
