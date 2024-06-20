@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { setFarcaster } from './store';
-import { BASE_URL, LIMIT_MAX, LIMIT_MAX_HOME } from './clientConsts';
+import { BASE_URL, LIMIT_MAX } from './clientConsts';
 import { statusPipe } from './utils';
-import { env } from '$env/dynamic/public';
-import { uuid } from 'drizzle-orm/pg-core';
 import { sign } from 'hono/jwt';
 export type Flow = {
 	name: string;
@@ -72,23 +70,6 @@ export const getStaticsCount = async (fid: number | undefined) => {
 export const getTracesByFlowId = async (flowId: string, fid: number) => {
 	const result = await axios.get(`${BASE_URL}api/s/traces/list/${flowId}?caster=${fid}`);
 	return result.data;
-};
-
-export const getAllTraces = async ({ pageParam = 1 }) => {
-	const offset = (pageParam.pageParam - 1) * LIMIT_MAX_HOME;
-
-	const result = await axios.get(
-		`${BASE_URL}api/s/traces/browse?offset=${offset}&max=${LIMIT_MAX_HOME}`
-	);
-	const noNextPage =
-		(pageParam.pageParam === 1 && result.data.result.length < LIMIT_MAX_HOME) ||
-		(pageParam.pageParam > 1 &&
-			result.data.result.length + (pageParam.pageParam - 1) * LIMIT_MAX_HOME === result.data.total);
-	return {
-		count: result.data.total,
-		next: !noNextPage ? `${env.PUBLIC_BASE_URL}?page=${pageParam.pageParam + 1}` : null,
-		results: result.data.result
-	};
 };
 
 export const getCommissionList = async (fid: number, offset: number, max: number) => {

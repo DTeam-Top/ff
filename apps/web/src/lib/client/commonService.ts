@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { BASE_URL } from './clientConsts';
+import { BASE_URL, LIMIT_MAX_HOME } from './clientConsts';
 import { setUser } from './store';
 import { setContext } from 'svelte';
+import { env } from '$env/dynamic/public';
 
 export const getStaticsTotalCount = async () => {
 	const result = await axios.get(`${BASE_URL}api/c/statics`);
@@ -34,4 +35,19 @@ export const getCaster = async (item: { fid: string; signerUuid: string; user: a
 		console.log(e);
 		throw e;
 	}
+};
+
+export const getAllTraces = async ({ pageParam = 1 }) => {
+	const offset = (pageParam.pageParam - 1) * LIMIT_MAX_HOME;
+
+	const result = await axios.get(`${BASE_URL}api/c/browse?offset=${offset}&max=${LIMIT_MAX_HOME}`);
+	const noNextPage =
+		(pageParam.pageParam === 1 && result.data.result.length < LIMIT_MAX_HOME) ||
+		(pageParam.pageParam > 1 &&
+			result.data.result.length + (pageParam.pageParam - 1) * LIMIT_MAX_HOME === result.data.total);
+	return {
+		count: result.data.total,
+		next: !noNextPage ? `${env.PUBLIC_BASE_URL}?page=${pageParam.pageParam + 1}` : null,
+		results: result.data.result
+	};
 };

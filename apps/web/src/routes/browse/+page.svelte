@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAllTraces } from '$lib/client/secretService';
+	import { getAllTraces } from '$lib/client/commonService';
 	import { castAddressPipe } from '$lib/client/utils';
 	import UserAvatar from '$lib/components/UserAvatar.svelte';
 	import { createInfiniteQuery } from '@tanstack/svelte-query';

@@ -6,7 +6,7 @@ import { tracesRouter } from './traceApi';
 import { neynarRouter } from './neynarApi';
 import { jwt } from 'hono/jwt';
 import { env } from '$env/dynamic/private';
-import { staticsRouter } from './staticsApi';
+import { commonRouter } from './staticsApi';
 import { publicRouter } from './publicApi';
 
 //secret api, need api_key
@@ -27,4 +27,4 @@ export const publicApi = new Hono()
 	.route('/api/p', publicRouter);
 
 //common api
-export const commonApi = new Hono().route('/api/c', neynarRouter).route('/api/c', staticsRouter);
+export const commonApi = new Hono().route('/api/c', neynarRouter).route('/api/c', commonRouter);
