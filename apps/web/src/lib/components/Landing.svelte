@@ -7,7 +7,7 @@
 	let statistics: any[] = [];
 	$: {
 		getStaticsTotalCount().then((count) => {
-			statistics = [...count.banner, ...count.card];
+			statistics = count.landing;
 		});
 	}
 </script>

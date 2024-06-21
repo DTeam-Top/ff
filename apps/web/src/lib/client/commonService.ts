@@ -5,7 +5,7 @@ import { setContext } from 'svelte';
 import { env } from '$env/dynamic/public';
 
 export const getStaticsTotalCount = async () => {
-	const result = await axios.get(`${BASE_URL}api/c/statics`);
+	const result = await axios.get(`${BASE_URL}api/c/statistic `);
 	return result.data;
 };
 

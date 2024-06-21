@@ -39,133 +39,6 @@ importers:
         specifier: ^4.11.2
         version: 4.11.2
 
-  apps/web:
-    dependencies:
-      '@coinbase/wallet-sdk':
-        specifier: ^4.0.3
-        version: 4.0.3
-      '@floating-ui/dom':
-        specifier: ^1.6.5
-        version: 1.6.5
-      '@hono/zod-validator':
-        specifier: ^0.2.1
-        version: 0.2.2(hono@4.4.3)(zod@3.23.8)
-      '@neynar/nodejs-sdk':
-        specifier: ^1.26.0
-        version: 1.28.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8)
-      '@skeletonlabs/skeleton':
-        specifier: ^2.10.0
-        version: 2.10.0(svelte@4.2.17)
-      '@skeletonlabs/tw-plugin':
-        specifier: ^0.4.0
-        version: 0.4.0(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))
-      '@tanstack/svelte-query':
-        specifier: ^5.45.0
-        version: 5.45.0(svelte@4.2.17)
-      axios:
-        specifier: ^1.7.2
-        version: 1.7.2
-      dayjs:
-        specifier: ^1.11.11
-        version: 1.11.11
-      dbdomain:
-        specifier: workspace:*
-        version: link:../../packages/dbdomain
-      drizzle-kit:
-        specifier: ^0.21.4
-        version: 0.21.4
-      drizzle-orm:
-        specifier: ^0.30.10
-        version: 0.30.10(@types/better-sqlite3@7.6.10)(@types/pg@8.11.6)(@types/react@18.3.3)(better-sqlite3@10.1.0)(pg@8.11.5)(postgres@3.4.4)(react@18.3.1)
-      echarts:
-        specifier: ^5.5.0
-        version: 5.5.0
-      ethers:
-        specifier: ^6.12.1
-        version: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      hono:
-        specifier: ^4.3.6
-        version: 4.4.3
-      js-sha3:
-        specifier: ^0.9.3
-        version: 0.9.3
-      localtunnel:
-        specifier: ^2.0.2
-        version: 2.0.2
-      pg:
-        specifier: ^8.11.5
-        version: 8.11.5
-      pino:
-        specifier: ^9.1.0
-        version: 9.1.0
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-    devDependencies:
-      '@sveltejs/adapter-node':
-        specifier: ^5.0.1
-        version: 5.0.1(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2)))(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2)))
-      '@sveltejs/kit':
-        specifier: ^2.0.0
-        version: 2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2)))(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2))
-      '@sveltejs/vite-plugin-svelte':
-        specifier: ^3.0.0
-        version: 3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2))
-      '@tailwindcss/forms':
-        specifier: ^0.5.7
-        version: 0.5.7(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))
-      '@types/eslint':
-        specifier: ^8.56.0
-        version: 8.56.10
-      '@types/pg':
-        specifier: ^8.11.6
-        version: 8.11.6
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^7.0.0
-        version: 7.12.0(@typescript-eslint/parser@7.12.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
-      '@typescript-eslint/parser':
-        specifier: ^7.0.0
-        version: 7.12.0(eslint@8.57.0)(typescript@5.4.5)
-      autoprefixer:
-        specifier: ^10.4.19
-        version: 10.4.19(postcss@8.4.38)
-      eslint:
-        specifier: ^8.56.0
-        version: 8.57.0
-      eslint-config-prettier:
-        specifier: ^9.1.0
-        version: 9.1.0(eslint@8.57.0)
-      eslint-plugin-svelte:
-        specifier: ^2.35.1
-        version: 2.39.0(eslint@8.57.0)(svelte@4.2.17)(ts-node@10.9.2(typescript@5.4.5))
-      postcss:
-        specifier: ^8.4.38
-        version: 8.4.38
-      prettier:
-        specifier: ^3.1.1
-        version: 3.3.0
-      prettier-plugin-svelte:
-        specifier: ^3.1.2
-        version: 3.2.3(prettier@3.3.0)(svelte@4.2.17)
-      svelte:
-        specifier: ^4.2.7
-        version: 4.2.17
-      svelte-check:
-        specifier: ^3.6.0
-        version: 3.8.0(@babel/core@7.24.7)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(postcss@8.4.38)(svelte@4.2.17)
-      tailwindcss:
-        specifier: ^3.4.3
-        version: 3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5))
-      tslib:
-        specifier: ^2.4.1
-        version: 2.6.2
-      typescript:
-        specifier: ^5.0.0
-        version: 5.4.5
-      vite:
-        specifier: ^5.0.3
-        version: 5.2.12(@types/node@20.14.2)
-
   apps/bot:
     devDependencies:
       '@hono/node-server':
@@ -299,6 +172,133 @@ importers:
       typescript:
         specifier: ^5
         version: 5.4.5
+
+  apps/web:
+    dependencies:
+      '@coinbase/wallet-sdk':
+        specifier: ^4.0.3
+        version: 4.0.3
+      '@floating-ui/dom':
+        specifier: ^1.6.5
+        version: 1.6.5
+      '@hono/zod-validator':
+        specifier: ^0.2.1
+        version: 0.2.2(hono@4.4.3)(zod@3.23.8)
+      '@neynar/nodejs-sdk':
+        specifier: ^1.26.0
+        version: 1.28.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@skeletonlabs/skeleton':
+        specifier: ^2.10.0
+        version: 2.10.0(svelte@4.2.17)
+      '@skeletonlabs/tw-plugin':
+        specifier: ^0.4.0
+        version: 0.4.0(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))
+      '@tanstack/svelte-query':
+        specifier: ^5.45.0
+        version: 5.45.0(svelte@4.2.17)
+      axios:
+        specifier: ^1.7.2
+        version: 1.7.2
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
+      dbdomain:
+        specifier: workspace:*
+        version: link:../../packages/dbdomain
+      drizzle-kit:
+        specifier: ^0.21.4
+        version: 0.21.4
+      drizzle-orm:
+        specifier: ^0.30.10
+        version: 0.30.10(@types/better-sqlite3@7.6.10)(@types/pg@8.11.6)(@types/react@18.3.3)(better-sqlite3@10.1.0)(pg@8.11.5)(postgres@3.4.4)(react@18.3.1)
+      echarts:
+        specifier: ^5.5.0
+        version: 5.5.0
+      ethers:
+        specifier: ^6.12.1
+        version: 6.12.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      hono:
+        specifier: ^4.3.6
+        version: 4.4.3
+      js-sha3:
+        specifier: ^0.9.3
+        version: 0.9.3
+      localtunnel:
+        specifier: ^2.0.2
+        version: 2.0.2
+      pg:
+        specifier: ^8.11.5
+        version: 8.11.5
+      pino:
+        specifier: ^9.1.0
+        version: 9.1.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@sveltejs/adapter-node':
+        specifier: ^5.0.1
+        version: 5.0.1(@sveltejs/kit@2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2)))(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2)))
+      '@sveltejs/kit':
+        specifier: ^2.0.0
+        version: 2.5.10(@sveltejs/vite-plugin-svelte@3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2)))(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2))
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^3.0.0
+        version: 3.1.1(svelte@4.2.17)(vite@5.2.12(@types/node@20.14.2))
+      '@tailwindcss/forms':
+        specifier: ^0.5.7
+        version: 0.5.7(tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))
+      '@types/eslint':
+        specifier: ^8.56.0
+        version: 8.56.10
+      '@types/pg':
+        specifier: ^8.11.6
+        version: 8.11.6
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.0.0
+        version: 7.12.0(@typescript-eslint/parser@7.12.0(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/parser':
+        specifier: ^7.0.0
+        version: 7.12.0(eslint@8.57.0)(typescript@5.4.5)
+      autoprefixer:
+        specifier: ^10.4.19
+        version: 10.4.19(postcss@8.4.38)
+      eslint:
+        specifier: ^8.56.0
+        version: 8.57.0
+      eslint-config-prettier:
+        specifier: ^9.1.0
+        version: 9.1.0(eslint@8.57.0)
+      eslint-plugin-svelte:
+        specifier: ^2.35.1
+        version: 2.39.0(eslint@8.57.0)(svelte@4.2.17)(ts-node@10.9.2(typescript@5.4.5))
+      postcss:
+        specifier: ^8.4.38
+        version: 8.4.38
+      prettier:
+        specifier: ^3.1.1
+        version: 3.3.0
+      prettier-plugin-svelte:
+        specifier: ^3.1.2
+        version: 3.2.3(prettier@3.3.0)(svelte@4.2.17)
+      svelte:
+        specifier: ^4.2.7
+        version: 4.2.17
+      svelte-check:
+        specifier: ^3.6.0
+        version: 3.8.0(@babel/core@7.24.7)(postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5)))(postcss@8.4.38)(svelte@4.2.17)
+      tailwindcss:
+        specifier: ^3.4.3
+        version: 3.4.3(ts-node@10.9.2(@types/node@20.14.2)(typescript@5.4.5))
+      tslib:
+        specifier: ^2.4.1
+        version: 2.6.2
+      typescript:
+        specifier: ^5.0.0
+        version: 5.4.5
+      vite:
+        specifier: ^5.0.3
+        version: 5.2.12(@types/node@20.14.2)
 
   contracts:
     dependencies:

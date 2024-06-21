@@ -3,7 +3,7 @@
 	import { CLIENT_ID, USER_STORE_KEY } from '$lib/client/clientConsts';
 	import { setHeaders } from '$lib/client/secretService';
 	import { setItem, setUser } from '$lib/client/store';
-	import { onDestroy, onMount, setContext } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	onDestroy(() => {
 		if (browser) {
@@ -45,9 +45,9 @@
 				fid: data.fid
 			};
 
+			await setHeaders(callbackData);
 			setItem(USER_STORE_KEY, window, JSON.stringify(callbackData));
 			setUser(user);
-			setHeaders(callbackData);
 		};
 		const signDiv = document.getElementById('sign');
 

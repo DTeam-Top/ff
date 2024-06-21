@@ -73,7 +73,7 @@ export const flowsRouter = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	})
-	.get('/statics/:fid', async (c) => {
+	.get('/statistic /:fid', async (c) => {
 		try {
 			const { fid } = c.req.param();
 			const result = await getStatics(Number(fid));

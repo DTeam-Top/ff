@@ -147,15 +147,14 @@ export const getFlowById = async (id: string) => {
 };
 
 export const getStatics = async (fid: number | undefined) => {
-	const runData = await db()
-		.select({ value: count() })
+	const flowData = await db()
+		.select({ value: count(), status: flows.status })
 		.from(flows)
-		.where(and(fid ? eq(flows.creator, fid) : undefined, eq(flows.status, 1)));
+		.where(fid ? eq(flows.creator, fid) : undefined)
+		.groupBy(flows.status)
+		.orderBy(flows.status);
 
-	const dealedData = await db()
-		.select({ value: count() })
-		.from(flows)
-		.where(and(fid ? eq(flows.creator, fid) : undefined, eq(flows.status, 3)));
+	console.log(flowData);
 
 	const fidCount = await db().execute<{ value: number }>(
 		sql`select count(distinct(fid)) from ((select  distinct(caster) as fid from traces) union (select distinct(creator) as fid from flows)) as fids;`
@@ -168,13 +167,18 @@ export const getStatics = async (fid: number | undefined) => {
 		.where(fid ? eq(traces.caster, fid) : undefined);
 
 	return {
-		banner: [
-			{ title: 'Running Flows', count: runData[0].value },
-			{ title: 'Dealed Flows', count: dealedData[0].value }
-		],
-		card: [
+		landing: [
+			{ title: 'Running Flows', count: flowData[1].value },
+			{ title: 'Dealed Flows', count: flowData[3].value },
 			{ title: 'Total Volume', count: totalData[0].value, color: '#d1d5db' },
 			{ title: 'Unique Fids', count: fidCount.rows[0].count, color: '#fee4cb' }
+		],
+
+		dashboard: [
+			{ title: 'Draft Flows', count: flowData[0].value, status: 0 },
+			{ title: 'Running Flows', count: flowData[1].value, status: 1 },
+			{ title: 'Unvalible Flows', count: flowData[2].value, status: 2 },
+			{ title: 'Dealed Flows', count: flowData[3].value, status: 3 }
 		]
 	};
 };

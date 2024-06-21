@@ -9,7 +9,7 @@
 </svelte:head>
 
 {#if $signed}
-	<Content title="My Flows" />
+	<Content />
 {:else}
 	<Landing />
 {/if}

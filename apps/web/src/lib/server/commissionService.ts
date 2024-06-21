@@ -1,4 +1,4 @@
-import { count, eq, inArray, isNull, sum, and, isNotNull, sql } from 'drizzle-orm';
+import { count, eq, inArray, isNull, sum, and, isNotNull, sql, desc } from 'drizzle-orm';
 
 import { commissions, flows, tracePayments } from 'dbdomain';
 import { db } from '$lib/server/dbService';
@@ -20,7 +20,8 @@ export const getCommissionList = async (fid: string, offset: number, max: number
 		.leftJoin(tracePayments, eq(commissions.payment, tracePayments.id))
 		.where(and(eq(commissions.fid, Number(fid)), isNull(commissions.withdrawnTx)))
 		.limit(max)
-		.offset(offset);
+		.offset(offset)
+		.orderBy(desc(commissions.createdAt));
 
 	const balance = await db()
 		.select({ value: sum(commissions.commission) })
@@ -63,7 +64,8 @@ export const getHistoryList = async (fid: string, offset: number, max: number) =
 		.leftJoin(tracePayments, eq(commissions.payment, tracePayments.id))
 		.where(and(eq(commissions.fid, Number(fid)), isNotNull(commissions.withdrawnTx)))
 		.limit(max)
-		.offset(offset);
+		.offset(offset)
+		.orderBy(desc(commissions.createdAt));
 
 	const balance = await db()
 		.select({ value: sum(commissions.commission) })
@@ -137,4 +139,11 @@ export const encodePacked = (params: any) => {
 	});
 
 	return ethers.solidityPacked(types, values);
+};
+
+export const getStatistics = async (fid: string, dateFormat: string) => {
+	const result = await db().execute<{ value: number }>(
+		sql`select sum(commission), TO_CHAR(TO_TIMESTAMP(withdrawn_at / 1000), ${dateFormat}) as withdrawdate from commissions where fid = ${fid} and withdrawn_at is not null and withdrawn_at = -1  group by withdrawdate order by withdrawdate;`
+	);
+	return result.rows;
 };

@@ -40,8 +40,6 @@
 	$: if (browser) {
 		const item = getItem(USER_STORE_KEY, window);
 		if (item) {
-			console.log('$$$', item);
-
 			setHeaders(item);
 			getCaster(item)
 				.then((data) => {

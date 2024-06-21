@@ -62,8 +62,8 @@ export const publishFlow = async (flowId: string) => {
 	return result.data;
 };
 
-export const getStaticsCount = async (fid: number | undefined) => {
-	const result = await axios.get(`${BASE_URL}api/s/flows/statics/${fid}`);
+export const getStatisticsCount = async (fid: number | undefined) => {
+	const result = await axios.get(`${BASE_URL}api/s/flows/statistic /${fid}`);
 	return result.data;
 };
 
@@ -81,6 +81,11 @@ export const getHistoryList = async (fid: number, offset: number, max: number) =
 	const result = await axios.get(
 		`${BASE_URL}api/s/commissions/history/${fid}?offset=${offset}&max=${max}`
 	);
+	return result.data;
+};
+
+export const getStatistics = async (fid: number) => {
+	const result = await axios.get(`${BASE_URL}api/s/commissions/statistic/${fid}`);
 	return result.data;
 };
 

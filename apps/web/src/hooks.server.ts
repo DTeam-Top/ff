@@ -9,7 +9,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		let accessInValid = !auth;
 		if (auth) {
 			const payload = await verify(auth, 'farcaster');
-			console.log('decodedPayload', payload);
 			accessInValid = !payload;
 			if (payload) {
 				try {

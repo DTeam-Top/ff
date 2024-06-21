@@ -5,7 +5,7 @@ import { logger } from 'hono/logger';
 
 export const commonRouter = new Hono()
 	.use(logger())
-	.get('/statics', async (c) => {
+	.get('/statistic ', async (c) => {
 		try {
 			const result = await getStatics(0);
 

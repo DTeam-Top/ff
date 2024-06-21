@@ -1,15 +1,20 @@
 <script lang="ts">
-	import { setFarcaster } from '$lib/client/store';
-	import { onMount } from 'svelte';
+	import { setFarcaster, setStatus, status } from '$lib/client/store';
+	import { onMount, getContext } from 'svelte';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { FLOW_TABS } from '$lib/client/clientConsts';
 	import FlowList from '$lib/components/flow/FlowList.svelte';
+
 	onMount(() => {
 		setFarcaster({ id: 0 });
 	});
 
-	let tabSet: number = 0;
+	let tabSet: number = $status;
+	const clickHandler = (i: number) => {
+		tabSet = i;
+		setStatus(tabSet);
+	};
 </script>
 
 <svelte:head>
@@ -26,7 +31,7 @@
 
 		<TabGroup>
 			{#each FLOW_TABS as tab, i}
-				<Tab bind:group={tabSet} name="tab2" value={i}>{tab}</Tab>
+				<Tab bind:group={tabSet} name="tab" value={i} on:click={() => clickHandler(i)}>{tab}</Tab>
 			{/each}
 
 			<svelte:fragment slot="panel">

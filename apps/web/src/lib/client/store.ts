@@ -110,3 +110,11 @@ const setEthProvider = (value: any) => {
 };
 
 export { ethProvider, setEthProvider };
+
+const status = writable(0);
+
+const setStatus = (value: number) => {
+	status.update(() => value);
+};
+
+export { status, setStatus };
