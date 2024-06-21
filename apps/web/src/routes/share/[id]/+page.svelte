@@ -5,12 +5,23 @@
 	import { getPreviewUrl } from '$lib/client/utils';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import Tips from '$lib/components/Tips.svelte';
-	import { FRAME_BASE_URL } from '$lib/client/clientConsts';
+	import { FRAME_BASE_URL, STATUS_DONE, STATUS_UNAVAILABLE } from '$lib/client/clientConsts';
 
 	let frameUrl = '';
 	let prviewImage: string;
+	let message = 'No data, please check the share link.';
 	$: if ($page.params.id && !frameUrl) {
 		getFlow($page.params.id).then(async (flow) => {
+			if (flow.status === STATUS_DONE) {
+				message = 'The flow is done.';
+				return;
+			}
+
+			if (flow.status === STATUS_UNAVAILABLE) {
+				message = 'The flow is unavailable.';
+				return;
+			}
+
 			frameUrl = `${FRAME_BASE_URL}/api/${flow.id}`;
 			prviewImage = await getPreviewUrl(
 				FRAME_BASE_URL || 'http://localhost:3000',
@@ -42,7 +53,7 @@
 		</div>
 	{:else}
 		<div class="my-20 text-white text-4xl font-bold mx-auto w-1/2 text-center">
-			No data, please check the share link.
+			{message}
 		</div>
 	{/if}
 </div>

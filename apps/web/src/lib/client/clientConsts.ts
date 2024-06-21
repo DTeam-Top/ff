@@ -39,6 +39,8 @@ export const BASE_URL = env.PUBLIC_BASE_URL;
 export const GITHUB_URL = 'https://github.com/DTeam-Top/ff/';
 
 export const STATUS_PUBLISHED = 1;
+export const STATUS_UNAVAILABLE = 2;
+export const STATUS_DONE = 3;
 
 export const LIMIT_MAX = 10;
 export const LIMIT_MAX_HOME = 9;
