@@ -16,7 +16,6 @@
 	$: if ($user && $user.fid > 0) {
 		flowList = [];
 		getStaticsCount($user.fid).then((count) => {
-			console.log(count);
 			statistics = count.landing;
 		});
 		getFlowList().then(() => {});

@@ -154,8 +154,6 @@ export const getStatics = async (fid: number | undefined) => {
 		.groupBy(flows.status)
 		.orderBy(flows.status);
 
-	console.log(flowData);
-
 	const fidCount = await db().execute<{ value: number }>(
 		sql`select count(distinct(fid)) from ((select  distinct(caster) as fid from traces) union (select distinct(creator) as fid from flows)) as fids;`
 	);

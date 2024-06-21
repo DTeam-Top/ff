@@ -143,7 +143,7 @@ export const encodePacked = (params: any) => {
 
 export const getStatistics = async (fid: string, dateFormat: string) => {
 	const result = await db().execute<{ value: number }>(
-		sql`select sum(commission), TO_CHAR(TO_TIMESTAMP(withdrawn_at / 1000), ${dateFormat}) as withdrawdate from commissions where fid = ${fid} and withdrawn_at is not null and withdrawn_at = -1  group by withdrawdate order by withdrawdate;`
+		sql`select sum(commission), TO_CHAR(TO_TIMESTAMP(withdrawn_at / 1000), ${dateFormat}) as withdrawdate from commissions where fid = ${fid} and withdrawn_at is not null and withdrawn_at > -1  group by withdrawdate order by withdrawdate;`
 	);
 	return result.rows;
 };

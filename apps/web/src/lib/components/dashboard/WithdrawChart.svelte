@@ -8,91 +8,55 @@
 	let xAxisData: string[] = [];
 	let seriesData: number[] = [];
 	const getOption = (xAxisData: string[], seriesData: number[]) => {
-		return xAxisData.length > 0
-			? {
-					title: {
-						text: 'Withdraw Commissions',
-						color: '#fff',
-						top: 20,
-						left: 20,
-						textStyle: {
-							color: '#fff',
-							fontSize: '1.5rem'
-						}
-					},
-					grid: {
-						left: 40,
-						containLabel: true,
-						bottom: 50,
-						top: 70,
-						right: 0
-					},
-					tooltip: { show: true },
-					xAxis: {
-						data: xAxisData,
-						axisLabel: {
-							textStyle: {
-								color: '#fff'
-							}
-						}
-					},
-					yAxis: {
-						axisLabel: {
-							textStyle: {
-								color: '#fff'
-							}
-						}
-					},
-					series: [
-						{
-							name: 'Amount',
-							type: 'line',
-							data: seriesData
-						}
-					]
+		return {
+			title: {
+				text: 'Daily Commissions',
+				color: '#fff',
+				top: 20,
+				left: 20,
+				textStyle: {
+					color: '#fff',
+					fontSize: '1.5rem'
 				}
-			: {
-					title: {
-						text: 'Withdraw Commissions(Mock Data)',
-						color: '#fff',
-						top: 20,
-						left: 20,
-						textStyle: {
-							color: '#fff',
-							fontSize: '1.5rem'
-						}
-					},
-					grid: {
-						left: 40,
-						containLabel: true,
-						bottom: 50,
-						top: 70,
-						right: 0
-					},
-					tooltip: { show: true },
-					xAxis: {
-						data: ['2001-06-01', '2001-06-02', '2001-06-04', '2001-06-06', '2001-06-06'],
-						axisLabel: {
-							textStyle: {
-								color: '#fff'
-							}
-						}
-					},
-					yAxis: {
-						axisLabel: {
-							textStyle: {
-								color: '#fff'
-							}
-						}
-					},
-					series: [
-						{
-							name: 'Amount',
-							type: 'line',
-							data: [23, 45, 12, 45, 67]
-						}
-					]
-				};
+			},
+			graphic: {
+				invisible: xAxisData.length,
+				type: 'text',
+				left: 'center',
+				top: 'middle',
+				style: { text: 'No data available', fontSize: '1.5rem', fill: '#fff' }
+			},
+			grid: {
+				left: 40,
+				containLabel: true,
+				bottom: 50,
+				top: 70,
+				right: 0
+			},
+			tooltip: { show: true },
+			xAxis: {
+				data: xAxisData,
+				axisLabel: {
+					textStyle: {
+						color: '#fff'
+					}
+				}
+			},
+			yAxis: {
+				axisLabel: {
+					textStyle: {
+						color: '#fff'
+					}
+				}
+			},
+			series: [
+				{
+					name: 'Amount',
+					type: 'line',
+					data: seriesData
+				}
+			]
+		};
 	};
 
 	onMount(async () => {
