@@ -94,7 +94,7 @@
 			<div class="space-y-4">
 				<nav class="list-nav">
 					<ul>
-						<li on:click={disConnectHanlder} class="p-4 hover:variant-soft-primary">Disconnect2</li>
+						<li on:click={disConnectHanlder} class="p-4 hover:variant-soft-primary">Disconnect</li>
 					</ul>
 				</nav>
 			</div>

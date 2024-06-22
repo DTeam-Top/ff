@@ -58,7 +58,7 @@
 		} else {
 			name = ''; //'test';
 			addressList = [];
-			cover = 'http://localhost:5173/images/samples/sample1.jpg';
+			cover = '';
 			//https://resources.smartlayer.network/smartcat/reources/images/e5fd0c706c4eb3cc7f4295797f91e02e.png
 			//price = 0; //0.005;
 		}
@@ -191,8 +191,9 @@
 							{/if}
 						</svelte:fragment>
 
-						<TokenTip />
+						<TokenTip cssClass="hidden lg:block lg:absolute right-10 top-14" />
 					</TabGroup>
+					<TokenTip cssClass="lg:hidden" />
 					<div class="lg:w-3/5 md:w-3/5 text-white mt-2">
 						{#if !isPublished}
 							<div class="flex mt-8 justify-center text-white">

@@ -50,11 +50,11 @@
 		<div class="grid lg:grid-cols-4 gap-8 my-4 md:grid-cols-4 sm:grid-cols-2">
 			{#each statistics as { title, count, status }, i}
 				<div
-					class=" bg-[#495A8C] text-white p-5 rounded flex items-center justify-between cursor-pointer"
+					class=" bg-[#495A8C] text-white p-5 rounded flex items-center justify-between cursor-pointer hover:bg-primary-hover-token"
 					on:click={() => clickHandler(status)}
 				>
 					<div>
-						<div class="text-2xl font-bold">{count}</div>
+						<div class="text-5xl font-bold">{count}</div>
 						<div class="opacity-50">{title}</div>
 					</div>
 					<div class="text-primary-400 w-10 h-10 items-center justify-between p-2">

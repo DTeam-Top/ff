@@ -76,7 +76,7 @@
 	};
 </script>
 
-<div class="px-6 w-full mt-4">
+<div class="w-full mt-4">
 	{#each value as el, index}
 		<div class="flex items-center mb-3">
 			<div class="w-[450px] mr-2">{el.address}</div>

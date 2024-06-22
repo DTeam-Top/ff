@@ -31,7 +31,7 @@
 
 <div class=" px-6 pt-4 mt-4 hover:bg-primary-hover-token">
 	<header class="flex justify-between items-center pb-4 border-b solid border-gray-700">
-		<h3>My Commissions</h3>
+		<h3>My Availible Commissions</h3>
 		<div>
 			<button
 				class="text-primary-500 bg-transparent hover:text-primary-300"
@@ -54,13 +54,13 @@
 					{formatEther(balance)}
 					<ETH />
 				</div>
-				<div class="opacity-50">Availible Balance</div>
+				<div class="opacity-50">Balance</div>
 			</div>
 		</div>
 	</div>
 	<div>
 		{#each list as commission}
-			<div class="flex w-full border-t border-gray-700 p-4 hover:bg-gray-700 2xl:items-start">
+			<div class="flex w-full border-t border-gray-700 py-4 hover:bg-gray-700 items-center">
 				<img src={commission.cover} alt="cover" class="h-10 w-10 rounded object-cover" />
 				<div class="w-full pl-4">
 					<div class="flex w-full items-center justify-between">
@@ -71,13 +71,15 @@
 							>
 						</div>
 					</div>
-					<p class="my-2 text-sm text-gray-400">
-						{formatEther(commission.commission)}
-						<ETH />
-					</p>
-					<p class="text-right text-sm text-gray-400">
-						{dayjs(commission.createdAt).format('MMMM, DD')}
-					</p>
+					<div class="flex justify-between items-center my-2 text-sm text-gray-400">
+						<p>
+							{formatEther(commission.commission)}
+							<ETH />
+						</p>
+						<p>
+							{dayjs(commission.createdAt).format('MMMM, DD')}
+						</p>
+					</div>
 				</div>
 			</div>
 		{/each}
