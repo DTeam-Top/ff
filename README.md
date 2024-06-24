@@ -2,13 +2,19 @@
 
 ## Introduction
 
-![farcaster flow](./assets/ff.png)
+Farcaster Flow is a token distribution solution
+powered by Farcaster.
 
-The directories:
+The whole repo is a mono repo:
 
-- frame, farcaster frame
-- indexer, farcaster replicator
-- web, flow  admin web site
+- packages
+  - dbdomain, db schema
+- apps
+  - web, the flow site
+  - frame, the flow frame
+  - cron, the cron jobs watching the blockchain
+  - bot, the webhook
+- contracts, the dvp contracts supporting the token distribution
 
 ## Architecture
 
