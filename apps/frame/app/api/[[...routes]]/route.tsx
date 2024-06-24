@@ -1,21 +1,20 @@
 /** @jsxImportSource frog/jsx */
-import { ethers, keccak256, parseEther } from "ethers";
-import { Button, Frog } from "frog";
-import { devtools } from "frog/dev";
-import { handle } from "frog/next";
-import { serveStatic } from "frog/serve-static";
-import { cors } from "hono/cors";
-import { getFlowById, upateTxById } from "@/app/service/externalApi";
-import { addressPipe, castIdPipe, statusPipe } from "@/app/service/utile";
-import { neynar } from "frog/hubs";
+import { FLOWSDVP_ABI } from "@/app/service/abi";
 import {
   DVP_ADDRESS,
   INFO_CSS,
   PUBLISHED,
   TEXT_CSS,
 } from "@/app/service/constants";
-import { FLOWSDVP_ABI } from "@/app/service/abi";
 import { encodePacked, getSignWallet } from "@/app/service/ethersService";
+import { getFlowById, upateTxById } from "@/app/service/externalApi";
+import { addressPipe, castIdPipe, statusPipe } from "@/app/service/utile";
+import { ethers, keccak256, parseEther } from "ethers";
+import { Button, Frog } from "frog";
+import { devtools } from "frog/dev";
+import { neynar } from "frog/hubs";
+import { handle } from "frog/next";
+import { serveStatic } from "frog/serve-static";
 
 const app = new Frog({
   assetsPath: "/",
@@ -36,100 +35,89 @@ let obj = {
 
 let statusMassage = "";
 
-app.frame(
-  "/:flowId",
-  cors({
-    origin: "*",
-    allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
-    allowMethods: ["POST", "GET", "OPTIONS"],
-    exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
-    maxAge: 600,
-    credentials: true,
-  }),
-  async (c) => {
-    const { flowId } = c.req.param();
-    if (Number(flowId) === 0) {
-      const { name, price, image } = c.req.query();
-      obj = {
-        name,
-        price,
-        image,
-        flowId,
-        seller: "",
-        addressList: [{ type: "", address: "", amount: "", tokenId: "" }],
-        status: 1,
-      };
-    } else {
-      try {
-        const flow = await getFlowById(flowId);
+app.frame("/:flowId", async (c) => {
+  const { flowId } = c.req.param();
+  if (Number(flowId) === 0) {
+    const { name, price, image } = c.req.query();
+    obj = {
+      name,
+      price,
+      image,
+      flowId,
+      seller: "",
+      addressList: [{ type: "", address: "", amount: "", tokenId: "" }],
+      status: 1,
+    };
+  } else {
+    try {
+      const flow = await getFlowById(flowId);
 
-        if (flow) {
-          console.log("flow.status--", flow.status);
-          obj = {
-            name: flow.name,
-            price: flow.input.price,
-            image: flow.cover,
-            flowId,
-            seller: flow.seller,
-            addressList: flow.input.addressList,
-            status: flow.status,
-          };
+      if (flow) {
+        console.log("flow.status--", flow.status);
+        obj = {
+          name: flow.name,
+          price: flow.input.price,
+          image: flow.cover,
+          flowId,
+          seller: flow.seller,
+          addressList: flow.input.addressList,
+          status: flow.status,
+        };
 
-          statusMassage = statusPipe(flow.status);
-        }
-      } catch (e: any) {
-        console.log(e.response.data.message);
-
-        return e.response?.data?.message
-          ? invalidFlow(c, e.response.data.message)
-          : invalidFlow(c, "Unknow error, please connect to the admin");
+        statusMassage = statusPipe(flow.status);
       }
+    } catch (e: any) {
+      console.log(e.response.data.message);
+
+      return e.response?.data?.message
+        ? invalidFlow(c, e.response.data.message)
+        : invalidFlow(c, "Unknow error, please connect to the admin");
     }
-    console.log(obj);
-    const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}`;
-    const detailLink = `${process.env.ADMIN_BASE_URL}flows/view/${flowId}`;
-
-    return c.res({
-      action: `/finish/${flowId}`,
-      image: (
-        <div style={INFO_CSS}>
-          {obj.image && (
-            <img src={obj.image} style={{ width: "100%" }} tw={`mx-auto`} />
-          )}
-
-          {obj.status === PUBLISHED && (
-            <div
-              tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-gray-100 rounded `}
-              style={TEXT_CSS}
-            >
-              Name:&nbsp;&nbsp;{obj.name}&nbsp;&nbsp;&nbsp;&nbsp;
-              Price:&nbsp;&nbsp;
-              {obj.price} ETH
-            </div>
-          )}
-          {obj.status !== PUBLISHED && (
-            <div
-              tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-red-500 rounded `}
-              style={TEXT_CSS}
-            >
-              {statusMassage}
-            </div>
-          )}
-        </div>
-      ),
-      intents:
-        obj.status !== PUBLISHED
-          ? []
-          : [
-              <Button.Transaction target={`/pay/${flowId}`}>
-                Pay
-              </Button.Transaction>,
-              <Button.Link href={detailLink}>View Details</Button.Link>,
-              <Button.Link href={shareLink}>Share To Earn</Button.Link>,
-            ],
-    });
   }
-);
+  console.log(obj);
+  const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}`;
+  const detailLink = `${process.env.ADMIN_BASE_URL}flows/view/${flowId}`;
+
+  return c.res({
+    action: `/finish/${flowId}`,
+    image: (
+      <div style={INFO_CSS}>
+        {obj.image && (
+          <img src={obj.image} style={{ width: "100%" }} tw={`mx-auto`} />
+        )}
+
+        {obj.status === PUBLISHED && (
+          <div
+            tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-gray-100 rounded `}
+            style={TEXT_CSS}
+          >
+            Name:&nbsp;&nbsp;{obj.name}&nbsp;&nbsp;&nbsp;&nbsp;
+            Price:&nbsp;&nbsp;
+            {obj.price} ETH
+          </div>
+        )}
+        {obj.status !== PUBLISHED && (
+          <div
+            tw={`text-black  absolute bottom-0 right-0 text-4xl mb-2 bg-red-500 rounded `}
+            style={TEXT_CSS}
+          >
+            {statusMassage}
+          </div>
+        )}
+      </div>
+    ),
+    intents:
+      obj.status !== PUBLISHED
+        ? []
+        : [
+            <Button.Transaction target={`/pay/${flowId}`}>
+              Pay
+            </Button.Transaction>,
+            <Button.Link href={detailLink}>View Details</Button.Link>,
+            <Button.Link href={shareLink}>Share To Earn</Button.Link>,
+          ],
+  });
+});
 
 app.transaction("/pay/:flowId", async (c) => {
   const flowId = c.req.param("flowId");
