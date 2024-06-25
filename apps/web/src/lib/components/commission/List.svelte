@@ -27,7 +27,9 @@
 					<div class="flex items-center justify-between w-full">
 						<div class="text-white font-medium">{item.name}</div>
 						<div class="flex justify-center items-center cursor-pointer h-7 w-7">
-							<a target="_blank" href={`${getBaseScanURL()}/tx/${item.tx}`}
+							<a
+								target="_blank"
+								href={`${getBaseScanURL()}/tx/${type !== 'history' ? item.tx : item.withdrawnTx}`}
 								><img src="/images/etherscan.png" alt="etherscan" /></a
 							>
 						</div>
