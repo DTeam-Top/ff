@@ -168,7 +168,11 @@ export const getStatics = async (fid: number | undefined) => {
 		landing: [
 			{ title: 'Running Flows', count: flowData && flowData[1] ? flowData[1].value : 0 },
 			{ title: 'Dealed Flows', count: flowData && flowData[3] ? flowData[3]?.value : 0 },
-			{ title: 'Total Volume', count: totalData[0].value, color: '#d1d5db' },
+			{
+				title: 'Total Volume',
+				count: totalData && totalData[0] ? totalData[0].value : 0,
+				color: '#d1d5db'
+			},
 			{ title: 'Unique Fids', count: fidCount.rows[0]?.count, color: '#fee4cb' }
 		],
 
@@ -180,7 +184,7 @@ export const getStatics = async (fid: number | undefined) => {
 				count: flowData && flowData[2] ? flowData[2].value : 0,
 				status: 2
 			},
-			{ title: 'Dealed Flows', count: flowData && flowData[2] ? flowData[3].value : 0, status: 3 }
+			{ title: 'Dealed Flows', count: flowData && flowData[3] ? flowData[3].value : 0, status: 3 }
 		]
 	};
 };
