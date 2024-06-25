@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import Tips from '$lib/components/Tips.svelte';
-	import { FRAME_BASE_URL, STATUS_DONE, STATUS_UNAVAILABLE } from '$lib/client/clientConsts';
+	import { FRAME_BASE_URL, STATUS_DEALED, STATUS_UNAVAILABLE } from '$lib/client/clientConsts';
 	import { getPreviewUrl } from '$lib/client/commonService';
 	import Spin from '$lib/components/Spin.svelte';
 
@@ -14,9 +14,9 @@
 	let loading = true;
 	$: if ($page.params.id && !frameUrl) {
 		getFlow($page.params.id).then(async (flow) => {
-			if (flow.status === STATUS_DONE) {
+			if (flow.status === STATUS_DEALED) {
 				loading = false;
-				message = 'The flow is done.';
+				message = 'The flow is dealed.';
 				return;
 			}
 

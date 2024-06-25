@@ -200,7 +200,7 @@ export const statusPipe = (type: string) => {
 			return 1;
 		case 'unavailable':
 			return 2;
-		default: //done
+		default: //dealed
 			return 3;
 	}
 };

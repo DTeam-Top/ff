@@ -31,7 +31,7 @@ export const COMMISSIOM_MAX = 12;
 
 export const COMISSION_TABS = ['Avaliable', 'History'];
 
-export const FLOW_TABS = ['Draft', 'Published', 'Unavailable', 'Done'];
+export const FLOW_TABS = ['Draft', 'Published', 'Unavailable', 'Dealed'];
 
 export const CLIENT_ID = env.PUBLIC_CLIENT_ID;
 export const FRAME_BASE_URL = env.PUBLIC_FRAME_BASE_URL;
@@ -40,7 +40,7 @@ export const GITHUB_URL = 'https://github.com/DTeam-Top/ff/';
 
 export const STATUS_PUBLISHED = 1;
 export const STATUS_UNAVAILABLE = 2;
-export const STATUS_DONE = 3;
+export const STATUS_DEALED = 3;
 
 export const LIMIT_MAX = 10;
 export const LIMIT_MAX_HOME = 9;

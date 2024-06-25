@@ -29,7 +29,7 @@ export async function paymentChecker() {
             .where(eq(tracePayments.id, row.trace_payments.id));
           await tx
             .update(flows)
-            .set({ status: 3 }) // mark the flow as done
+            .set({ status: 3 }) // mark the flow as dealed
             .where(eq(flows.id, row.flows.id));
           await tx.insert(commissions).values({
             flow: row.flows.id,

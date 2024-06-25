@@ -14,7 +14,7 @@
 	let currentPage = 0;
 	let total = 0;
 	let loading = true;
-	export let type = 'done';
+	export let type = 'dealed';
 	$: if (!$signed) {
 		goto('/');
 	}
