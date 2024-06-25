@@ -17,6 +17,7 @@ import { handle } from "frog/next";
 import { serveStatic } from "frog/serve-static";
 
 const app = new Frog({
+  title: "ff",
   assetsPath: "/",
   basePath: "/api",
   hub: neynar({ apiKey: `${process.env.NEYNAR_KEY}` }),
@@ -36,6 +37,7 @@ let obj = {
 let statusMassage = "";
 
 app.frame("/:flowId", async (c) => {
+  console.log(c);
   const { flowId } = c.req.param();
   if (Number(flowId) === 0) {
     const { name, price, image } = c.req.query();
@@ -50,7 +52,9 @@ app.frame("/:flowId", async (c) => {
     };
   } else {
     try {
+      console.log("$$$$");
       const flow = await getFlowById(flowId);
+      console.log(flow);
 
       if (flow) {
         console.log("flow.status--", flow.status);
@@ -67,14 +71,15 @@ app.frame("/:flowId", async (c) => {
         statusMassage = statusPipe(flow.status);
       }
     } catch (e: any) {
-      console.log(e.response.data.message);
+      console.log(e);
+      console.log(e.response?.data);
 
-      return e.response?.data?.message
-        ? invalidFlow(c, e.response.data.message)
+      return e.response?.data
+        ? invalidFlow(c, e.response.data)
         : invalidFlow(c, "Unknow error, please connect to the admin");
     }
   }
-  console.log(obj);
+  console.log("obj--", obj);
   const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}`;
   const detailLink = `${process.env.ADMIN_BASE_URL}flows/view/${flowId}`;
 
@@ -114,7 +119,8 @@ app.frame("/:flowId", async (c) => {
               Pay
             </Button.Transaction>,
             <Button.Link href={detailLink}>View Details</Button.Link>,
-            <Button.Link href={shareLink}>Share To Earn</Button.Link>,
+            // <Button.Link href={shareLink}>Share To Earn</Button.Link>,
+            <Button>test</Button>,
           ],
   });
 });
@@ -201,13 +207,12 @@ app.transaction("/pay/:flowId", async (c) => {
 });
 
 app.frame("/finish/:flowId", async (c) => {
-  const { transactionId, buttonIndex, frameData, verified } = c;
+  const { transactionId, frameData, verified } = c;
   if (!verified) console.log("Frame verification failed");
 
   const flowId = c.req.param("flowId");
   if (frameData) {
     const castId = castIdPipe(frameData?.castId);
-
     if (transactionId) {
       await upateTxById(flowId, transactionId, castId, obj.price);
       return transactionSucceed(c, flowId, transactionId);
@@ -220,7 +225,7 @@ app.frame("/finish/:flowId", async (c) => {
 });
 
 const transactionSucceed = (c: any, flowId: string, transactionId: string) => {
-  c.res({
+  return c.res({
     action: `/${flowId}`,
     image: (
       <div style={INFO_CSS}>
