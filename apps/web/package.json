@@ -13,7 +13,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"jwt": "node scripts/jwt.cjs"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "^5.0.1",
@@ -50,6 +51,7 @@
 		"axios": "^1.7.2",
 		"dayjs": "^1.11.11",
 		"dbdomain": "workspace:*",
+		"dotenv": "^16.4.5",
 		"drizzle-kit": "^0.21.4",
 		"drizzle-orm": "^0.30.10",
 		"echarts": "^5.5.0",

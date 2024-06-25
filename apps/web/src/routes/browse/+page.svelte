@@ -8,10 +8,8 @@
 	import WarpIcon from '$lib/components/ui/icons/WarpIcon.svelte';
 	import DetailIcon from '$lib/components/ui/icons/DetailIcon.svelte';
 	import { BASE_URL } from '$lib/client/clientConsts';
-	//let intervalMs = 5000;
 	const query = createInfiniteQuery({
 		queryKey: ['traces'],
-		//refetchInterval: intervalMs,
 		queryFn: (pageParam) => getAllTraces({ pageParam }),
 		initialPageParam: 1,
 		getNextPageParam: (lastPage) => {
@@ -32,7 +30,7 @@
 </svelte:head>
 
 <div class="flex flex-wrap h-full">
-	<div class="w-full py-6 px-6 my-10">
+	<div class="w-full py-6 px-6">
 		{#if $query.isLoading}
 			<p>Loading...</p>
 		{:else if $query.isError}

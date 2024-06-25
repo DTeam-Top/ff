@@ -1,12 +1,12 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow } from '$lib/client/secretService';
-	import { getPreviewUrl } from '$lib/client/utils';
 	import { farcaster, setFarcaster } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { FRAME_BASE_URL, STATUS_PUBLISHED } from '$lib/client/clientConsts';
 	import { toast } from '$lib/client/popup';
 	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { getPreviewUrl } from '$lib/client/commonService';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow, insertFlow, publishFlow } from '$lib/client/secretService';
-	import { errorPipe, getPreviewUrl } from '$lib/client/utils';
+	import { errorPipe } from '$lib/client/utils';
 	import { user, farcaster, setFarcaster, walletAddress } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import Tips from '$lib/components/Tips.svelte';
@@ -17,6 +17,7 @@
 	import TokenList from './TokenList.svelte';
 	import { goto } from '$app/navigation';
 	import TokenTip from './TokenTip.svelte';
+	import { getPreviewUrl } from '$lib/client/commonService';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -133,7 +134,7 @@
 	}
 </script>
 
-<div class="p-6 m-4 text-black">
+<div class="p-6 text-black">
 	<ol class="breadcrumb mb-8">
 		<li class="crumb"><a class="anchor" href="/flows">Flow list</a></li>
 		<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
@@ -161,14 +162,14 @@
 							</label>
 						</div>
 						<div class="flex justify-start items-start mb-4">
-							<label class="flex items-center w-[400px] mr-8">
+							<label class="flex items-start w-[400px] mr-8">
 								<span>Cover</span>
 								<textarea class="textarea" rows="5" placeholder="Image's url" bind:value={cover} />
 							</label>
-							<label class="flex items-center">
+							<label class="flex items-start">
 								<span>Preview</span>
 								{#if cover}
-									<img src={cover} alt="corver" class="w-40" />
+									<img src={cover} alt="corver" class="w-[400px]" />
 								{:else}
 									<img src="/images/placeholder.png" alt="corver" class="w-40 bg-gray-300" />
 								{/if}

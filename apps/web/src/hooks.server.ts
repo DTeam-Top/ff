@@ -1,3 +1,4 @@
+import { env } from '$env/dynamic/private';
 import { verifyAuth } from '$lib/server/apikeyService';
 import { lookupSigner } from '$lib/server/neynarClient';
 import type { Handle } from '@sveltejs/kit';
@@ -8,7 +9,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		const auth = event.request.headers.get('Authorization')?.split(' ')[1] || '';
 		let accessInValid = !auth;
 		if (auth) {
-			const payload = await verify(auth, 'farcaster');
+			const payload = await verify(auth, env.JWT_SECRET);
 			accessInValid = !payload;
 			if (payload) {
 				try {

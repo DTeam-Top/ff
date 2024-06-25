@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { COMMISSIOM_MAX, WARPCAST_SETTING_URL, getBaseScanURL } from '$lib/client/clientConsts';
+	import { COMMISSIOM_MAX, WARPCAST_SETTING_URL } from '$lib/client/clientConsts';
 	import { getCommissionList } from '$lib/client/secretService';
-	import { addressPipe } from '$lib/client/utils';
 	import { user } from '$lib/client/store';
 	import { formatEther } from 'ethers';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import List from './List.svelte';
 	import ETH from '$lib/components/ETH.svelte';
+	import Spin from '../Spin.svelte';
 	export let needRefresh = false;
 	let commissionList: any[] = [];
 	let total = 0;
@@ -65,5 +65,8 @@
 		<span class="ml-8">Balance: {formatEther(balance)} <ETH /></span>
 	</div>
 </div>
-
-<List type="avaliable" {commissionList} {page} {currentPage} on:load={moreHandler} />
+{#if loading}
+	<Spin />
+{:else}
+	<List type="avaliable" {commissionList} {page} {currentPage} on:load={moreHandler} />
+{/if}

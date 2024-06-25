@@ -2,16 +2,13 @@ import {
 	getFlowList,
 	upsertFlow,
 	deleteFlow,
-	getFlowById,
 	getStatics,
 	publishFlow
 } from '$lib/server/flowService';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { flowRequest, idRequest } from './requests';
-import { STATUS_PUBLISHED } from '$lib/server/serverConsts';
 import { logger } from 'hono/logger';
-import { statusMessagePipe } from '$lib/client/utils';
 
 export const flowsRouter = new Hono()
 	.use(logger())
@@ -58,22 +55,7 @@ export const flowsRouter = new Hono()
 			return c.json({ message: e.code + ': ' + e.message }, 500);
 		}
 	})
-	.get('/get/:id', zValidator('param', idRequest), async (c) => {
-		try {
-			const { id } = c.req.param();
-			const { type } = c.req.query();
-			const result = await getFlowById(id);
-			if (type !== 'edit' && result && result.status !== STATUS_PUBLISHED) {
-				return c.json({ message: statusMessagePipe(result.status) }, 500);
-			}
-			return c.json(result);
-
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (e: any) {
-			return c.json({ message: e.code + ': ' + e.message }, 500);
-		}
-	})
-	.get('/statistic /:fid', async (c) => {
+	.get('/statistic/:fid', async (c) => {
 		try {
 			const { fid } = c.req.param();
 			const result = await getStatics(Number(fid));

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { setFarcaster } from './store';
 import { BASE_URL, LIMIT_MAX } from './clientConsts';
 import { statusPipe } from './utils';
-import { sign } from 'hono/jwt';
+import { generateApiKey } from './commonService';
 export type Flow = {
 	name: string;
 	cover?: string;
@@ -21,12 +21,8 @@ export type Cast = {
 };
 
 export const setHeaders = async (user: { fid: string; signerUuid: string }) => {
-	const payload = {
-		fid: user?.fid,
-		uuid: user?.signerUuid,
-		time: Date.now()
-	};
-	const apiKey = await sign(payload, 'farcaster');
+	const apiKey = await generateApiKey(user);
+	console.log('apiKey----', apiKey);
 	axios.defaults.headers.common['Authorization'] = `Bearer ${apiKey}`;
 };
 
@@ -53,7 +49,7 @@ export const deleteFlowById = async (id: number) => {
 };
 
 export const getFlow = async (id: string) => {
-	const result = await axios.get(`${BASE_URL}api/s/flows/get/${id}?type=edit`);
+	const result = await axios.get(`${BASE_URL}api/c/flows/get/${id}?type=edit`);
 	return result.data;
 };
 
@@ -63,7 +59,7 @@ export const publishFlow = async (flowId: string) => {
 };
 
 export const getStatisticsCount = async (fid: number | undefined) => {
-	const result = await axios.get(`${BASE_URL}api/s/flows/statistic /${fid}`);
+	const result = await axios.get(`${BASE_URL}api/s/flows/statistic/${fid}`);
 	return result.data;
 };
 

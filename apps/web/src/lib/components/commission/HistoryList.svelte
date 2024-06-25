@@ -6,6 +6,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import List from './List.svelte';
 	import ETH from '$lib/components/ETH.svelte';
+	import Spin from '../Spin.svelte';
 
 	export let needRefresh = false;
 	let commissionList: any[] = [];
@@ -14,6 +15,7 @@
 	let offset: number = 0;
 	let page = 0;
 	let currentPage = 1;
+	let loading = false;
 	const dispatch = createEventDispatcher();
 
 	$: if (needRefresh) {
@@ -25,11 +27,13 @@
 	}
 
 	const refreshCommissionList = () => {
+		loading = true;
 		getHistoryList($user.fid, offset, COMMISSIOM_MAX).then((result) => {
 			total = result.total;
 			balance = result.balance;
 			commissionList = [...commissionList, ...result.commissionList];
 			page = Math.ceil(result.total / COMMISSIOM_MAX);
+			loading = false;
 			dispatch('refresh', { result: false });
 		});
 	};
@@ -47,4 +51,8 @@
 	Total: {total}
 	<span class="ml-8">Balance: {formatEther(balance)} <ETH /></span>
 </div>
-<List {commissionList} {page} {currentPage} on:load={moreHandler} />
+{#if loading}
+	<Spin />
+{:else}
+	<List {commissionList} {page} {currentPage} on:load={moreHandler} />
+{/if}

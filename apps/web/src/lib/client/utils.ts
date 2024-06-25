@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as sha3 from 'js-sha3';
 import {
 	allowanceERC1155,
@@ -21,26 +20,6 @@ export function errorPipe(message: string) {
 		return message;
 	}
 }
-
-export const getPreviewUrl = async (
-	baseUrl: string,
-	name: string,
-	cover: string,
-	price: number
-) => {
-	let previewUrl = `${baseUrl}/api/0?name=${name}&price=${price}`;
-	if (cover) {
-		previewUrl += `&image=${cover}`;
-	}
-	const res = await axios.get(previewUrl);
-
-	const parser = new DOMParser();
-	const document = parser.parseFromString(res.data, 'text/html');
-
-	const prviewImage = document?.querySelector('meta[property="fc:frame:image"]').content;
-
-	return prviewImage;
-};
 
 export const activePipe = (pathname: string, link: string) => {
 	if (link === '/' && pathname === link) {
@@ -230,24 +209,4 @@ export const castAddressPipe = (cast: string, usernmae: string) => {
 	const castData = cast.split('_');
 	const castId = castData[1].slice(0, 10);
 	return `${WARPCAST_URL}${usernmae}/${castId}`;
-};
-
-export const statusMessagePipe = (status: number) => {
-	let message = '';
-	switch (status) {
-		case 0:
-			message = 'This flow is not published';
-			break;
-		case 1:
-			break;
-		case 2:
-			message = 'This flow is unavailable';
-			break;
-		case 3:
-			message = 'This flow is dealed';
-			break;
-		default:
-			break;
-	}
-	return message;
 };

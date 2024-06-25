@@ -7,11 +7,13 @@
 	import { Paginator, getModalStore, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import { LIMIT_MAX } from '$lib/client/clientConsts';
 	import { modal } from '$lib/client/popup';
+	import Spin from '../Spin.svelte';
 	const modalStore = getModalStore();
 	let list: any[] = [];
 	let offset = 0;
 	let currentPage = 0;
 	let total = 0;
+	let loading = true;
 	export let type = 'done';
 	$: if (!$signed) {
 		goto('/');
@@ -23,6 +25,7 @@
 	let paginationSettings = {};
 
 	const getFlowList = async () => {
+		loading = true;
 		const result = await getFlows($user.fid, type, offset);
 		total = result.total;
 		paginationSettings = {
@@ -32,6 +35,7 @@
 			amounts: [5, 10]
 		} satisfies PaginationSettings;
 		list = result.list;
+		loading = false;
 	};
 	const actionHandler = (id: number, type: string) => {
 		goto(`/flows/${type}/${id}`);
@@ -63,7 +67,9 @@
 </script>
 
 <div class="table-container mt-4">
-	{#if list.length > 0}
+	{#if loading}
+		<Spin />
+	{:else if list.length > 0}
 		<table class="table table-hover">
 			<thead>
 				<tr>

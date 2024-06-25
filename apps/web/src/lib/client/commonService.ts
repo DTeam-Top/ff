@@ -5,7 +5,7 @@ import { setContext } from 'svelte';
 import { env } from '$env/dynamic/public';
 
 export const getStaticsTotalCount = async () => {
-	const result = await axios.get(`${BASE_URL}api/c/statistic `);
+	const result = await axios.get(`${BASE_URL}api/c/statistic`);
 	return result.data;
 };
 
@@ -50,4 +50,29 @@ export const getAllTraces = async ({ pageParam = 1 }) => {
 		next: !noNextPage ? `${env.PUBLIC_BASE_URL}?page=${pageParam.pageParam + 1}` : null,
 		results: result.data.result
 	};
+};
+
+export const getPreviewUrl = async (
+	baseUrl: string,
+	name: string,
+	cover: string,
+	price: number
+) => {
+	let previewUrl = `${baseUrl}/api/0?name=${name}&price=${price}`;
+	if (cover) {
+		previewUrl += `&image=${cover}`;
+	}
+	const res = await axios.get(previewUrl);
+
+	const parser = new DOMParser();
+	const document = parser.parseFromString(res.data, 'text/html');
+
+	const prviewImage = document?.querySelector('meta[property="fc:frame:image"]').content;
+
+	return prviewImage;
+};
+
+export const generateApiKey = async (item: { fid: string; signerUuid: string }) => {
+	const res = await axios.post(`${BASE_URL}api/c/generate`, item);
+	return res.data.apiKey;
 };

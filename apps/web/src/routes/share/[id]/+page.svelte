@@ -2,10 +2,10 @@
 	import { getFlow } from '$lib/client/secretService';
 
 	import { page } from '$app/stores';
-	import { getPreviewUrl } from '$lib/client/utils';
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import Tips from '$lib/components/Tips.svelte';
 	import { FRAME_BASE_URL, STATUS_DONE, STATUS_UNAVAILABLE } from '$lib/client/clientConsts';
+	import { getPreviewUrl } from '$lib/client/commonService';
 
 	let frameUrl = '';
 	let prviewImage: string;

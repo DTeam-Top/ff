@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FrameButtons from '$lib/components/FrameButtons.svelte';
 	import { getFlow } from '$lib/client/secretService';
-	import { addressPipe, getPreviewUrl } from '$lib/client/utils';
+	import { addressPipe } from '$lib/client/utils';
 	import { farcaster, setFarcaster, signed } from '$lib/client/store';
 	import { onMount } from 'svelte';
 	import { getToastStore } from '@skeletonlabs/skeleton';
@@ -10,6 +10,7 @@
 	import { toast } from '$lib/client/popup';
 	import ListIcon from '$lib/components/ui/icons/ListIcon.svelte';
 	import ETH from '$lib/components/ETH.svelte';
+	import { getPreviewUrl } from '$lib/client/commonService';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -85,7 +86,7 @@
 						<div class="w-[80px] text-right pr-3">Traces:</div>
 						<div class="flex">
 							{flow.traceCount}
-							{#if $signed}
+							{#if $signed && flow.traceCount > 0}
 								<a
 									href={`/flows/trace/${flow.id}`}
 									class="ml-8 underline cursor-pointer text-primary-500 hover:text-primary-300"

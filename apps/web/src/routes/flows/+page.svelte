@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { setFarcaster, setStatus, status } from '$lib/client/store';
-	import { onMount, getContext } from 'svelte';
+	import { setFarcaster, setStatus, status, signed } from '$lib/client/store';
+	import { onMount } from 'svelte';
 	import CreateButton from '$lib/components/CreateButton.svelte';
 	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import { FLOW_TABS } from '$lib/client/clientConsts';
 	import FlowList from '$lib/components/flow/FlowList.svelte';
+	import { goto } from '$app/navigation';
 
 	onMount(() => {
 		setFarcaster({ id: 0 });
@@ -15,6 +16,10 @@
 		tabSet = i;
 		setStatus(tabSet);
 	};
+
+	$: if (!$signed) {
+		goto('/');
+	}
 </script>
 
 <svelte:head>

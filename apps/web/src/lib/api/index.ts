@@ -6,8 +6,9 @@ import { tracesRouter } from './traceApi';
 import { neynarRouter } from './neynarApi';
 import { jwt } from 'hono/jwt';
 import { env } from '$env/dynamic/private';
-import { commonRouter } from './staticsApi';
 import { publicRouter } from './publicApi';
+import { frameRouter } from './frameApi';
+import { commonRouter } from './commonApi';
 
 //secret api, need api_key
 export const secretApi = new Hono()
@@ -20,7 +21,7 @@ export const secretApi = new Hono()
 export const publicApi = new Hono()
 	.use('*', (c, next) => {
 		const jwtMiddleware = jwt({
-			secret: env.JWT_SECRET?.toString() || 'supersecret'
+			secret: env.JWT_SECRET?.toString() || 'SuPeRpaSsW0rd'
 		});
 		return jwtMiddleware(c, next);
 	})
@@ -28,3 +29,21 @@ export const publicApi = new Hono()
 
 //common api
 export const commonApi = new Hono().route('/api/c', neynarRouter).route('/api/c', commonRouter);
+
+//frame api, need jwt
+export const frameApi = new Hono()
+	.use('*', (c, next) => {
+		const payload = c.get('jwtPayload');
+		console.log(
+			'frameApi',
+			env.JWT_SECRET?.toString() || 'SuPeRpaSsW0rd',
+			c.req.header('Authorization'),
+			payload
+		);
+		const jwtMiddleware = jwt({
+			secret: env.JWT_SECRET?.toString() || 'SuPeRpaSsW0rd'
+		});
+
+		return jwtMiddleware(c, next);
+	})
+	.route('/api/f', frameRouter);

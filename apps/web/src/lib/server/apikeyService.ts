@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { apiKeys } from 'dbdomain';
 import { db } from '$lib/server/dbService';
@@ -46,6 +46,9 @@ export const updateApikey = async (fid: number, disabled: boolean) => {
 };
 
 export const verifyAuth = async (auth: string) => {
-	const result = await db().select().from(apiKeys).where(eq(apiKeys.apiKey, auth));
+	const result = await db()
+		.select()
+		.from(apiKeys)
+		.where(and(eq(apiKeys.apiKey, auth), eq(apiKeys.disabled, false)));
 	return result.length > 0;
 };
