@@ -18,6 +18,19 @@ The flow site implements:
 
 ## How To Run
 
+### Dev
+
+```sh
+pnpm install
+pnpm run web dev
+```
+
+### Build
+
+```sh
+pnpm run web build
+```
+
 ## Integration
 
 The example of API integration:

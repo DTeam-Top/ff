@@ -4,11 +4,15 @@ A webhook for creating a cast on farcaster.
 
 ## How To Run
 
-```sh
-pnpm i
-pnpm dev
-```
+### Dev
 
 ```sh
-open http://localhost:3000
+pnpm install
+pnpm run bot dev
+```
+
+### Build
+
+```sh
+pnpm run bot build
 ```

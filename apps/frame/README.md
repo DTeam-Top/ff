@@ -4,9 +4,19 @@ The flow frame running in a farcaster client.
 
 ## How To Run
 
+### Dev
+
 ```sh
 pnpm install
-pnpm run dev
+pnpm run frame dev
 ```
 
-Head to http://localhost:3000/api
+### Build
+
+```sh
+pnpm run frame build
+```
+
+### Access Dev
+
+Head to http://localhost:3000/api/dev
