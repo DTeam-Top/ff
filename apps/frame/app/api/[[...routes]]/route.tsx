@@ -17,7 +17,7 @@ import { handle } from "frog/next";
 import { serveStatic } from "frog/serve-static";
 
 const app = new Frog({
-  title: "ff",
+  title: "Farcaster Flow", // Frame title
   assetsPath: "/",
   basePath: "/api",
   hub: neynar({ apiKey: `${process.env.NEYNAR_KEY}` }),
@@ -52,7 +52,6 @@ app.frame("/:flowId", async (c) => {
     };
   } else {
     try {
-      console.log("$$$$");
       const flow = await getFlowById(flowId);
       console.log(flow);
 
@@ -119,8 +118,7 @@ app.frame("/:flowId", async (c) => {
               Pay
             </Button.Transaction>,
             <Button.Link href={detailLink}>View Details</Button.Link>,
-            // <Button.Link href={shareLink}>Share To Earn</Button.Link>,
-            <Button>test</Button>,
+            <Button.Link href={shareLink}>Share To Earn</Button.Link>,
           ],
   });
 });
