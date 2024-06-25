@@ -14,7 +14,7 @@ export const traces = pgTable(
   "traces",
   {
     id: serial("id").primaryKey(),
-    cast: text("cast").notNull(), // cast id for a flow
+    cast: text("cast_id").notNull(), // cast id for a flow
     flow: uuid("flow_id").notNull(), // flow id
     parentCast: text("parent_cast"), // parent cast id
     caster: integer("caster").notNull(), // trace caster fid
