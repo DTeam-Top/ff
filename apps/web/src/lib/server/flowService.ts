@@ -163,20 +163,24 @@ export const getStatics = async (fid: number | undefined) => {
 		.from(tracePayments)
 		.innerJoin(traces, eq(traces.id, tracePayments.trace))
 		.where(fid ? eq(traces.caster, fid) : undefined);
-
+	console.log(flowData, totalData, fidCount.rows);
 	return {
 		landing: [
-			{ title: 'Running Flows', count: flowData[1].value },
-			{ title: 'Dealed Flows', count: flowData[3].value },
+			{ title: 'Running Flows', count: flowData && flowData[1] ? flowData[1].value : 0 },
+			{ title: 'Dealed Flows', count: flowData && flowData[3] ? flowData[3]?.value : 0 },
 			{ title: 'Total Volume', count: totalData[0].value, color: '#d1d5db' },
-			{ title: 'Unique Fids', count: fidCount.rows[0].count, color: '#fee4cb' }
+			{ title: 'Unique Fids', count: fidCount.rows[0]?.count, color: '#fee4cb' }
 		],
 
 		dashboard: [
-			{ title: 'Draft Flows', count: flowData[0].value, status: 0 },
-			{ title: 'Running Flows', count: flowData[1].value, status: 1 },
-			{ title: 'Unvalible Flows', count: flowData[2].value, status: 2 },
-			{ title: 'Dealed Flows', count: flowData[3].value, status: 3 }
+			{ title: 'Draft Flows', count: flowData && flowData[0] ? flowData[0].value : 0, status: 0 },
+			{ title: 'Running Flows', count: flowData && flowData[1] ? flowData[1].value : 0, status: 1 },
+			{
+				title: 'Unvalible Flows',
+				count: flowData && flowData[2] ? flowData[2].value : 0,
+				status: 2
+			},
+			{ title: 'Dealed Flows', count: flowData && flowData[2] ? flowData[3].value : 0, status: 3 }
 		]
 	};
 };
