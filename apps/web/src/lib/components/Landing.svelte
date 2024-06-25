@@ -23,7 +23,7 @@
 			<p class="py-4">
 				A seamless token distribution solution built right on top of Farcaster. It’s designed to
 				make distributing tokens as effortless as a flow. Embrace the simplicity, efficiency and
-				socialFi.
+				SocialFi.
 			</p>
 			<Button
 				title="Browse"
