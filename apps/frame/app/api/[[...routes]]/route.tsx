@@ -125,9 +125,11 @@ app.frame("/:flowId", async (c) => {
 
 app.transaction("/pay/:flowId", async (c) => {
   const flowId = c.req.param("flowId");
+  const flow = await getFlowById(flowId);
+  console.log(flow);
   console.log(c);
   const { address, frameData } = c;
-  if (!frameData) {
+  if (!frameData || flow.status === PUBLISHED) {
     return c.contract({
       abi: FLOWSDVP_ABI,
       // @ts-ignore   using this to remove the ts error by hwh
