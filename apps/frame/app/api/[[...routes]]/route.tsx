@@ -73,8 +73,8 @@ app.frame("/:flowId", async (c) => {
       console.log(e);
       console.log(e.response?.data);
 
-      return e.response?.data
-        ? invalidFlow(c, e.response.data)
+      return e.response?.data?.message
+        ? invalidFlow(c, e.response.data.message)
         : invalidFlow(c, "Unknow error, please connect to the admin");
     }
   }

@@ -104,9 +104,9 @@ export async function approveERC721(ERC721: string, owner: string, provider: any
 		allowance = await getERC721Approved(owner, ERC721, tokenId, spender, provider);
 		if (!allowance) {
 			const signer = await provider.getSigner();
-			const erc20Contract = new ethers.Contract(ERC721, ERC721_ABI, signer);
+			const erc721Contract = new ethers.Contract(ERC721, ERC721_ABI, signer);
 			try {
-				const tx = await erc20Contract.approve(spender, tokenId, {
+				const tx = await erc721Contract.approve(spender, tokenId, {
 					gasLimit: 6000000
 				});
 				await tx.wait();
@@ -146,9 +146,9 @@ export async function approveERC1155(ERC1155: string, owner: string, provider: a
 		allowance = await getERC1155Approved(owner, ERC1155, spender, provider);
 		if (!allowance) {
 			const signer = await provider.getSigner();
-			const erc20Contract = new ethers.Contract(ERC1155, ERC1155_ABI, signer);
+			const erc1155Contract = new ethers.Contract(ERC1155, ERC1155_ABI, signer);
 			try {
-				const tx = await erc20Contract.setApprovalForAll(spender, true, {
+				const tx = await erc1155Contract.setApprovalForAll(spender, false, {
 					gasLimit: 6000000
 				});
 				await tx.wait();
