@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>Create</title>
+	<title>Create Flow</title>
 	<meta name="description" content="Create flow" />
 </svelte:head>
 

@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>Edit</title>
+	<title>Edit Flow</title>
 	<meta name="description" content="Edit flow" />
 </svelte:head>
 {#if $page.params.id}

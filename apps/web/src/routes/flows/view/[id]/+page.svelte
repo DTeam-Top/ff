@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>View</title>
+	<title>View Flow</title>
 	<meta name="description" content="View flow" />
 </svelte:head>
 {#if $page.params.id}

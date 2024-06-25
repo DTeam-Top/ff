@@ -26,7 +26,7 @@
 </script>
 
 <svelte:head>
-	<title>Browse</title>
+	<title>Browse Running Traces</title>
 </svelte:head>
 
 <div class="flex flex-wrap h-full">

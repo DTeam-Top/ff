@@ -21,8 +21,9 @@
 				Distributing Tokens <br />Like A <span class="text-primary-500">Flow</span>.
 			</h2>
 			<p class="py-4">
-				This is the decription of facaster flow is the decription of facaster flow...<br />This is
-				the decription of facaster flow.....
+				A seamless token distribution solution built right on top of Farcaster. It’s designed to
+				make distributing tokens as effortless as a flow. Embrace the simplicity, efficiency and
+				socialFi.
 			</p>
 			<Button
 				title="Browse"
