@@ -22,7 +22,6 @@ export type Cast = {
 
 export const setHeaders = async (user: { fid: string; signerUuid: string }) => {
 	const apiKey = await generateApiKey(user);
-	console.log('apiKey----', apiKey);
 	axios.defaults.headers.common['Authorization'] = `Bearer ${apiKey}`;
 };
 

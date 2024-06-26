@@ -18,6 +18,5 @@ export const encodePacked = (params: any) => {
     values.push(itemArray[1]);
   });
 
-  console.log(ethers.solidityPacked(types, values));
   return ethers.solidityPacked(types, values);
 };

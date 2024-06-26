@@ -33,13 +33,6 @@ export const commonApi = new Hono().route('/api/c', neynarRouter).route('/api/c'
 //frame api, need jwt
 export const frameApi = new Hono()
 	.use('*', (c, next) => {
-		const payload = c.get('jwtPayload');
-		console.log(
-			'frameApi',
-			env.JWT_SECRET?.toString() || 'SuPeRpaSsW0rd',
-			c.req.header('Authorization'),
-			payload
-		);
 		const jwtMiddleware = jwt({
 			secret: env.JWT_SECRET?.toString() || 'SuPeRpaSsW0rd'
 		});

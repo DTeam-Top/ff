@@ -42,11 +42,8 @@ export const apiKeyRouter = new Hono()
 				fid: fid,
 				time: Date.now()
 			};
-			console.log(env);
-			console.log(env.JWT_SECRET);
 
 			const apiKey = await sign(payload, env.JWT_SECRET);
-			console.log(apiKey);
 			await insertApikey(fid, apiKey);
 
 			return c.json({ message: 'Success', apiKey: apiKey });

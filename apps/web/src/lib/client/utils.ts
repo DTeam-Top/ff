@@ -175,7 +175,6 @@ export const approve = async (
 	owner: string,
 	provider: any
 ) => {
-	console.log(type);
 	let isApproved = false;
 
 	switch (type) {

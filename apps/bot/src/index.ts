@@ -15,9 +15,7 @@ app.post("/", async (c) => {
   }
 
   const webhookSecret = env.NEYNAR_WEBHOOK_SECRET;
-  console.log(webhookSecret);
 
-  console.log(env.VERIFY_DOMAIN);
   if (!webhookSecret) {
     throw new Error(
       "Make sure you set NEYNAR_WEBHOOK_SECRET in your .env file"
@@ -35,14 +33,9 @@ app.post("/", async (c) => {
   }
 
   const reqData = JSON.parse(body);
-  console.log(JSON.stringify(reqData));
 
   switch (reqData.type) {
     case TYPE_CREATED: {
-      console.log(reqData.data.embeds.length);
-      console.log(reqData.data.embeds[0]);
-      console.log(env.VERIFY_DOMAIN);
-
       if (
         !reqData.data.embeds.length ||
         reqData.data.embeds[0].url.indexOf(env.VERIFY_DOMAIN) === -1

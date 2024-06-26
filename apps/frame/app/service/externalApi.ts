@@ -13,7 +13,6 @@ export const upateTxById = async (
   cast: string,
   amount: string
 ) => {
-  console.log({ paymentTx: tx, amount: amount, cast });
   try {
     const result = await axios.post(
       `${process.env.ADMIN_BASE_URL}api/f/traces/update-tx/${id}`,
@@ -22,9 +21,8 @@ export const upateTxById = async (
         headers: { Authorization: `Bearer ${process.env.ADMIN_API_KEY}` },
       }
     );
-    console.log(result.data);
     return result.data;
   } catch (e: any) {
-    console.log("sdfsdf---", JSON.stringify(e.response.data));
+    console.log("error: ", JSON.stringify(e.response.data));
   }
 };

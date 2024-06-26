@@ -2,7 +2,6 @@ import { db } from "./utils";
 import { traces } from "dbdomain";
 
 export const createTrace = async (data: any) => {
-  console.log(data);
   const url = new URL(data.embeds[0].url);
   const params = url.pathname.split("/api/");
 
@@ -22,8 +21,6 @@ export const createTrace = async (data: any) => {
         avatar: data.author.pfp_url,
       },
     };
-
-    console.log(trace);
 
     const result = await db()
       .insert(traces)

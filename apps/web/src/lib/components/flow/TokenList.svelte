@@ -5,8 +5,9 @@
 	import { getToastStore } from '@skeletonlabs/skeleton';
 	import TrashIcon from '$lib/components/ui/icons/TrashIcon.svelte';
 	import PlusIcon from '$lib/components/ui/icons/PlusIcon.svelte';
-	import { walletAddress, ethProvider } from '$lib/client/store';
+	import { walletAddress, ethProvider, provider } from '$lib/client/store';
 	import Loading from '$lib/components/Loading.svelte';
+	import { connectWallet } from '$lib/client/etherService';
 	const toastStore = getToastStore();
 
 	export let value: any[] = [];
@@ -24,45 +25,55 @@
 
 	const addAddressHandler = async () => {
 		loading = true;
-		totalAmount =
-			Number(newAmount) + addressList.reduce((sum, current) => sum + Number(current.amount), 0);
+		try {
+			if (!$walletAddress) {
+				const result = await connectWallet($provider);
+				console.log(result);
+			}
 
-		const validate = await validateData(
-			type,
-			newAddress,
-			totalAmount.toString(),
-			newTokenId,
-			$walletAddress,
-			$ethProvider
-		);
-		if (validate) {
-			toast.error(toastStore, validate);
+			totalAmount =
+				Number(newAmount) + addressList.reduce((sum, current) => sum + Number(current.amount), 0);
+
+			const validate = await validateData(
+				type,
+				newAddress,
+				totalAmount.toString(),
+				newTokenId,
+				$walletAddress,
+				$ethProvider
+			);
+			if (validate) {
+				toast.error(toastStore, validate);
+				loading = false;
+				return;
+			}
+
+			const isApproved = await approve(
+				type,
+				newAddress,
+				totalAmount.toString(),
+				newTokenId,
+				$walletAddress,
+				$ethProvider
+			);
+
+			if (!isApproved) {
+				toast.error(toastStore, 'You have no right to add this address');
+				loading = false;
+				return;
+			}
 			loading = false;
-			return;
-		}
 
-		const isApproved = await approve(
-			type,
-			newAddress,
-			totalAmount.toString(),
-			newTokenId,
-			$walletAddress,
-			$ethProvider
-		);
+			let newLine = {};
 
-		if (!isApproved) {
-			toast.error(toastStore, 'You have no right to add this address');
+			newLine = prepareAddressData(type, newAddress, newAmount, newTokenId);
+			addressList.push(newLine);
+			value = addressList;
+			initData();
+		} catch (e) {
+			console.log(e);
 			loading = false;
-			return;
 		}
-		loading = false;
-
-		let newLine = {};
-
-		newLine = prepareAddressData(type, newAddress, newAmount, newTokenId);
-		addressList.push(newLine);
-		value = addressList;
-		initData();
 	};
 	const initData = () => {
 		newAddress = '';

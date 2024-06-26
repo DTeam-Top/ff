@@ -6,7 +6,6 @@ import { ethers, formatEther } from "ethers";
 
 export async function ownerShipChecker() {
   const rows = await db().select().from(flows).where(eq(flows.status, 1));
-  console.log(rows);
   for (const row of rows) {
     for (const token of row.input.addressList) {
       let available = true;
@@ -21,7 +20,6 @@ export async function ownerShipChecker() {
           break;
         }
         case "ERC721": {
-          console.log(token);
           const owner = await new ethers.Contract(
             token.address,
             ERC721_ABI,

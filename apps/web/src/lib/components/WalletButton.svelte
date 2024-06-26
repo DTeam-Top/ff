@@ -18,7 +18,7 @@
 	const APP_SUPPORTED_CHAIN_IDS = [84532];
 
 	const sdk = new CoinbaseWalletSDK({
-		appName: 'Farcaster flow',
+		appName: 'Farcaster Flow',
 		appChainIds: APP_SUPPORTED_CHAIN_IDS
 	});
 
@@ -39,7 +39,6 @@
 			method: 'eth_requestAccounts'
 		});
 
-		console.log(addresses);
 		if (addresses.length > 0) {
 			setWalletAddress(addresses[0]);
 			setStorage(disconnectedKey, window, false);

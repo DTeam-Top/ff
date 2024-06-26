@@ -37,7 +37,6 @@ let obj = {
 let statusMassage = "";
 
 app.frame("/:flowId", async (c) => {
-  console.log(c);
   const { flowId } = c.req.param();
   if (Number(flowId) === 0) {
     const { name, price, image } = c.req.query();
@@ -53,10 +52,8 @@ app.frame("/:flowId", async (c) => {
   } else {
     try {
       const flow = await getFlowById(flowId);
-      console.log(flow);
 
       if (flow) {
-        console.log("flow.status--", flow.status);
         obj = {
           name: flow.name,
           price: flow.input.price,
@@ -70,15 +67,12 @@ app.frame("/:flowId", async (c) => {
         statusMassage = statusPipe(flow.status);
       }
     } catch (e: any) {
-      console.log(e);
-      console.log(e.response?.data);
-
       return e.response?.data?.message
         ? invalidFlow(c, e.response.data.message)
         : invalidFlow(c, "Unknow error, please connect to the admin");
     }
   }
-  console.log("obj--", obj);
+
   const shareLink = `${process.env.ADMIN_BASE_URL}share/${flowId}`;
   const detailLink = `${process.env.ADMIN_BASE_URL}flows/view/${flowId}`;
 
@@ -126,8 +120,6 @@ app.frame("/:flowId", async (c) => {
 app.transaction("/pay/:flowId", async (c) => {
   const flowId = c.req.param("flowId");
   const flow = await getFlowById(flowId);
-  console.log(flow);
-  console.log(c);
   const { address, frameData } = c;
   if (!frameData || flow.status === PUBLISHED) {
     return c.contract({
@@ -156,8 +148,6 @@ app.transaction("/pay/:flowId", async (c) => {
   const signer = await getSignWallet();
 
   const sig = await signer.signMessage(ethers.getBytes(message));
-  console.log("sig--", sig);
-  console.log("obj---", obj);
 
   const ERC20List: any[] = [];
   obj.addressList
@@ -193,7 +183,6 @@ app.transaction("/pay/:flowId", async (c) => {
     sig,
   ];
 
-  console.log("args----", args, ERC20List, ERC721List, ERC1155List);
   return c.contract({
     abi: FLOWSDVP_ABI,
     // @ts-ignore   using this to remove the ts error by hwh

@@ -46,6 +46,7 @@ export async function allowanceERC721(
 ) {
 	let owner = '';
 	try {
+		console.log(provider);
 		owner = await new ethers.Contract(ERC721, ERC721_ABI, provider).ownerOf(tokenId);
 		return owner.toLowerCase() === spender.toLowerCase();
 	} catch (e) {
@@ -100,7 +101,6 @@ export async function approveERC20(ERC20: string, owner: string, provider: any, 
 export async function approveERC721(ERC721: string, owner: string, provider: any, tokenId: string) {
 	let allowance = '';
 	try {
-		console.log(provider);
 		allowance = await getERC721Approved(owner, ERC721, tokenId, spender, provider);
 		if (!allowance) {
 			const signer = await provider.getSigner();
@@ -170,9 +170,8 @@ const getERC1155Approved = async (owner: string, token: string, dvp: string, pro
 
 	try {
 		return await erc1155Contract.isApprovedForAll(owner, dvp);
-	} catch (error) {
-		console.log(error);
-		console.error('isApprovedForAll failed');
+	} catch (e) {
+		console.log(e);
 		return false;
 	}
 };
@@ -181,6 +180,7 @@ export const connectWallet = async (provider: any) => {
 	const addresses: string[] = await provider.request({
 		method: 'eth_requestAccounts'
 	});
+	console.log(addresses);
 	if (addresses.length > 0) {
 		setWalletAddress(addresses[0]);
 	}

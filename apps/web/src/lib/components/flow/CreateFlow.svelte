@@ -18,6 +18,7 @@
 	import { goto } from '$app/navigation';
 	import TokenTip from './TokenTip.svelte';
 	import { getPreviewUrl } from '$lib/client/commonService';
+	import Spin from '../Spin.svelte';
 	const toastStore = getToastStore();
 
 	export let farcasterId = 'uuid';
@@ -107,7 +108,6 @@
 			});
 			toast.success(toastStore, 'Save success!');
 		} catch (e: any) {
-			console.log(e.response);
 			toast.error(toastStore, errorPipe(e.response?.data?.message));
 		}
 	};
@@ -220,7 +220,7 @@
 				{:else if tabSet === 1}
 					<div class="px-6">
 						{#if loading}
-							Loading ...
+							<Spin />
 						{:else if prviewImage}
 							<div class="border border-gray-700 rounded-3xl p-4 w-3/5 mx-auto">
 								<div class="relative rounded-lg relative w-full mb-4 pb-4 bg-[#f3f3f3]">

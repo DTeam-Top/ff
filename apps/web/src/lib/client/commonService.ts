@@ -29,7 +29,6 @@ export const getCaster = async (item: { fid: string; signerUuid: string; user: a
 				verifiedAddresses: user.verified_addresses,
 				signerUuid: item.signerUuid
 			});
-			setContext('user', user);
 		}
 	} catch (e) {
 		console.log(e);

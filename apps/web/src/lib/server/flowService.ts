@@ -1,7 +1,7 @@
 import { db } from '$lib/server/dbService';
 import { LOGGER, STATUS_PUBLISHED } from '$lib/server/serverConsts';
 import { flows, tracePayments, traces } from 'dbdomain';
-import { count, countDistinct, eq, sql, and, ne } from 'drizzle-orm';
+import { count, eq, sql, and } from 'drizzle-orm';
 
 export type Flow = {
 	id?: string;
@@ -15,10 +15,10 @@ export type Flow = {
 	seller: string;
 };
 
-const logger = LOGGER.child({ from: 'db flowService' });
+const logger = LOGGER.child({ from: 'server flowService' });
 
 export const upsertFlow = async (flow: Flow) => {
-	logger.info(flow);
+	logger.info('upsertflow %o', flow);
 	let result;
 	try {
 		if (flow.id !== 'uuid') {
@@ -49,7 +49,7 @@ export const upsertFlow = async (flow: Flow) => {
 		return result.length > 0 ? result[0] : null;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (e: any) {
-		logger.error(e);
+		logger.error('upsertflow error: %o', e);
 		throw e;
 	}
 };
@@ -154,7 +154,7 @@ export const getStatics = async (fid: number | undefined) => {
 		.groupBy(flows.status)
 		.orderBy(flows.status);
 
-	const fidCount = await db().execute<{ value: number }>(
+	const fidCount = await db().execute<{ count: number }>(
 		sql`select count(distinct(fid)) from ((select  distinct(caster) as fid from traces) union (select distinct(creator) as fid from flows)) as fids;`
 	);
 
@@ -163,17 +163,15 @@ export const getStatics = async (fid: number | undefined) => {
 		.from(tracePayments)
 		.innerJoin(traces, eq(traces.id, tracePayments.trace))
 		.where(fid ? eq(traces.caster, fid) : undefined);
-	console.log(flowData, totalData, fidCount.rows);
 	return {
 		landing: [
 			{ title: 'Running Flows', count: flowData && flowData[1] ? flowData[1].value : 0 },
 			{ title: 'Dealed Flows', count: flowData && flowData[3] ? flowData[3]?.value : 0 },
 			{
 				title: 'Total Volume',
-				count: totalData && totalData[0] ? totalData[0].value : 0,
-				color: '#d1d5db'
+				count: totalData && totalData[0] ? totalData[0].value : 0
 			},
-			{ title: 'Unique Fids', count: fidCount.rows[0]?.count, color: '#fee4cb' }
+			{ title: 'Unique Fids', count: fidCount.rows[0]?.count }
 		],
 
 		dashboard: [

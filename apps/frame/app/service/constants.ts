@@ -48,12 +48,6 @@ export function nodeConfig() {
   };
 }
 
-console.log(
-  "node-env",
-  process.env.NODE_ENV,
-  nodeConfig()[process.env.NODE_ENV]?.dvp
-);
-
 export const DVP_ADDRESS: `0x${string}` = nodeConfig()[process.env.NODE_ENV]
   ?.dvp as `0x${string}`;
 

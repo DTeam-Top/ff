@@ -56,8 +56,6 @@ export const commonRouter = new Hono()
 				uuid: signerUuid,
 				time: Date.now()
 			};
-			console.log(env);
-			console.log(env.JWT_SECRET);
 			const apiKey = await sign(payload, env.JWT_SECRET);
 			return c.json({ apiKey: apiKey });
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
