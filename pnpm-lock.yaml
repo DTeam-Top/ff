@@ -229,6 +229,9 @@ importers:
       localtunnel:
         specifier: ^2.0.2
         version: 2.0.2
+      logrocket:
+        specifier: ^8.1.0
+        version: 8.1.0
       pg:
         specifier: ^8.11.5
         version: 8.11.5
@@ -4361,6 +4364,9 @@ packages:
   log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
+
+  logrocket@8.1.0:
+    resolution: {integrity: sha512-0PRv9lnS90KBrL3mfiQzcKEPvNT3N55pRN0PRe/q3DqWFQbIW1p72MmMp9a3Qi9la6o+TXri7r68ZE0AM7vsDA==}
 
   long-timeout@0.1.1:
     resolution: {integrity: sha512-BFRuQUqc7x2NWxfJBCyUrN8iYUYznzL9JROmRz1gZ6KlOIgmoD+njPVbb+VNn2nGMKggMsK79iUNErillsrx7w==}
@@ -11233,6 +11239,8 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
+
+  logrocket@8.1.0: {}
 
   long-timeout@0.1.1: {}
 

@@ -54,3 +54,5 @@ export const ERC721 = '0xCd5eF176A4Af5CbEfC6F72F478726E882C49b1D7';
 export const ERC1155 = '0xcaD7587a5072CB8dF1E20aeB9B7816e41A756c48';
 export const BASESCAN_URL = 'https://sepolia.basescan.org/address';
 export const WARPCAST_URL = 'https://warpcast.com/';
+
+export const includeHostname = ['ff-admin.autographnft.io'];

@@ -48,6 +48,7 @@ export async function allowanceERC721(
 	try {
 		console.log(provider);
 		owner = await new ethers.Contract(ERC721, ERC721_ABI, provider).ownerOf(tokenId);
+		console.log('721', owner, ERC721, tokenId, spender);
 		return owner.toLowerCase() === spender.toLowerCase();
 	} catch (e) {
 		console.log(e);

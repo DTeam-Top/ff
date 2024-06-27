@@ -2,7 +2,7 @@
 	import 'tailwindcss/tailwind.css';
 	import { browser } from '$app/environment';
 	import '../style.css';
-	import { USER_STORE_KEY } from '$lib/client/clientConsts';
+	import { includeHostname, USER_STORE_KEY } from '$lib/client/clientConsts';
 	import SiteName from '$lib/components/ui/SiteName.svelte';
 	import {
 		AppShell,
@@ -24,6 +24,17 @@
 	import { getCaster } from '$lib/client/commonService';
 	import { setHeaders } from '$lib/client/secretService';
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+	import LogRocket from 'logrocket';
+	LogRocket.init('yanavk/ff-7nxhj');
+	$: if (includeHostname.includes(window.location.hostname)) {
+		LogRocket.identify('ff', {
+			name: 'Farcaster',
+			email: 'ff@ff.com',
+
+			// Add your own custom user variables here, ie:
+			subscriptionType: 'pro'
+		});
+	}
 
 	let loading = true;
 
