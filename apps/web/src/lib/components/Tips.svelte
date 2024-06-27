@@ -22,7 +22,7 @@
 >
 	<span class="font-bold mr-2">Tips:</span>
 	Click to copy this url
-	<span class="font-bold mx-2">{frameUrl}</span>
+	<span class="font-bold mx-2 break-all">{frameUrl}</span>
 	, and {text} it into your farcaster.
 </div>
 
