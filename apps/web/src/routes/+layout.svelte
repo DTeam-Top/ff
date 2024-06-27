@@ -26,7 +26,8 @@
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 	import LogRocket from 'logrocket';
 	LogRocket.init('yanavk/ff-7nxhj');
-	$: if (includeHostname.includes(window.location.hostname)) {
+	$: if (browser && window !== undefined && includeHostname.includes(window.location.hostname)) {
+		console.log(window.location.hostname);
 		LogRocket.identify('ff', {
 			name: 'Farcaster',
 			email: 'ff@ff.com',
