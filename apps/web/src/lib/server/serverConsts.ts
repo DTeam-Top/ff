@@ -56,3 +56,10 @@ export function flowContract() {
 }
 
 export const STATUS_PUBLISHED = 1;
+
+export const catcheConfig = {
+	max: 10000, // max cache size
+	ttl: 48 * 60 * 60 * 1000 // 48 hours
+};
+
+export const USER_CACHE = 'user-cache';

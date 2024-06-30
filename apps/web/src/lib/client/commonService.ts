@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { BASE_URL, LIMIT_MAX_HOME } from './clientConsts';
 import { setUser } from './store';
-import { setContext } from 'svelte';
 import { env } from '$env/dynamic/public';
 
 export const getStaticsTotalCount = async () => {
